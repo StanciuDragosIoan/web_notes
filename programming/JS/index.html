@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 class="header">JS Engine + async code</h1>
+
+    <p class="text">
+      JS is a single-threaded language that uses a callback queue.
+    </p>
+    <p class="text">
+      JS Being single threaded means it has only one callstack and one memory
+      heap.
+    </p>
+    <p class="text">
+      It executes code in order and must finish executing a piece code before
+      moving onto the next.
+    </p>
+    <p class="text">
+      It's synchronous, but at times that can be harmful. For example, if a
+      function takes awhile to execute or has to wait on something, it freezes
+      everything up in the meanwhile.
+    </p>
+    <p class="text">
+      A good example of this happening is the window alert function:
+    </p>
+    <pre class="code">
+        alert("Hello World");
+        </pre
+    >
+    <p class="text">
+      You can't interact with the webpage at all until you hit OK and dismiss
+      the alert. You're stuck.
+    </p>
+    <p class="text">
+      The V8 engine and the web APIs allow us to run code asynchronously. The
+      engine is built by Google Chrome in C++
+    </p>
+    <p class="text">Simple code snippet:</p>
+    <pre class="code">
+      console.log("first");
+
+      setTimeout(() => 
+        { console.log("second") }
+          , 1000);
+
+      console.log("third")
+    </pre>
+    <p class="text">output of the code above:</p>
+    <pre class="code">
+      first
+      third
+      undefined
+      second
+    </pre>
+    <p class="text">explanation:</p>
+    <p class="text">
+      <span class="snippet">console.log("first");</span> is on the stack first,
+      so it gets printed. Next, the engine notices
+      <span class="snippet">setTimeout()</span>, which isn't handled by
+      Javascript and pushes it off to the WebAPI to be done asynchronously. The
+      call stack moves on without caring about the code handed off to the Web
+      APIs and <span class="snippet">console.log("three");</span> is printed.
+    </p>
+    <p class="text">
+      Next, the Javascript engine's event loop kicks in (once the callstack is
+      clear), like a little kid asking "Are we there yet?" on a road trip. It
+      starts firing, waiting for events to be pushed into it. Since the
+      <span class="snippet">setTimeout()</span> isn't finished, it returns
+      undefined, as the default, well because it hasn't been given the value
+      yet. Once the callback finally does return (finishes executing) we get
+      <span class="snippet">console.log("second");</span> printed.
+    </p>
+  </body>
+</html>

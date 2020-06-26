@@ -1,0 +1,42 @@
+body {
+  font-family: "Roboto";
+  background: #ccc;
+}
+
+.text {
+  padding: 1rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  background: #fff;
+  max-width: 1265px;
+  display: block;
+  margin: auto;
+}
+
+.header {
+  padding: 3rem;
+  font-size: 4rem;
+  line-height: 2rem;
+  background: #fff;
+  text-align: center;
+  max-width: 1200px;
+  display: block;
+  margin: auto;
+}
+
+.code {
+  background: #000;
+  color: #00e000;
+  font-size: 2rem;
+  padding: 1rem;
+  padding-top: 2rem;
+  max-width: 1265px;
+  display: block;
+  margin: auto;
+  line-height: 3rem;
+}
+
+.snippet {
+  background: #ccc;
+  padding: 0.5rem;
+}
