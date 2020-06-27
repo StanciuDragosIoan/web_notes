@@ -8,7 +8,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
-    <title>Document</title>
+    <title>JavaScript</title>
   </head>
   <body>
     <h1 class="header">JS Engine + async code</h1>
@@ -63,12 +63,13 @@
     </pre>
     <p class="text">explanation:</p>
     <p class="text">
-      <span class="snippet">console.log("first");</span> is on the stack first,
-      so it gets printed. Next, the engine notices
+      <span class="snippet">console.log("first");</span> is on the top of the
+      stack, so it gets printed first. Next, the engine notices
       <span class="snippet">setTimeout()</span>, which isn't handled by
-      Javascript and pushes it off to the WebAPI to be done asynchronously. The
-      call stack moves on without caring about the code handed off to the Web
-      APIs and <span class="snippet">console.log("three");</span> is printed.
+      Javascript and pushes it off to the WebAPI to be executed asynchronously.
+      The call stack moves on without caring about the code handed off to the
+      Web APIs and <span class="snippet">console.log("three");</span> is
+      printed.
     </p>
     <p class="text">
       Next, the Javascript engine's event loop kicks in (once the callstack is
@@ -79,5 +80,286 @@
       yet. Once the callback finally does return (finishes executing) we get
       <span class="snippet">console.log("second");</span> printed.
     </p>
+    <h1 class="header">JS Event Loop</h1>
+    <p class="text">
+      JS is a single-threaded, non-blocking, asynchronous, concurrent language.
+    </p>
+    <p class="text">
+      It has a call stack, an event loop, a callback queue and some APIs (web
+      APIs or Node JS APIs to perform background tasks such as network request.
+    </p>
+    <p class="text center bold">the V8 Engine:</p>
+    <div class="devPic">
+      <img src="img/v8.png" alt="v8 engine pic" />
+    </div>
+    <p class="text">
+      It has a single call stack and a single memory heap. In the call stack it
+      executes the functions in stack frames (each function has its own frame)
+      and it also holds the execution contexts of the functions. In the heap it
+      allocates and frees up memory.
+    </p>
+    <p class="text">
+      The V8 engine does not have the Web APIs like setTimeout, DOM,
+      ajax/hmlXttp request APIs. (these are web APIs available in the browser or
+      in node JS).
+    </p>
+    <p class="text center bold">Bigger picture:</p>
+    <div class="devPic">
+      <img src="img/bigPic.png" alt="v8 engine + web APIs pic" />
+    </div>
+    <p class="text">
+      Apart from the V8 Runtime and the Web APIs, we also have an event loop and
+      a callback queue available in the browser/in node JS.
+    </p>
+    <p class="text center bold">The call stack</p>
+    <p class="text">
+      JS is single threaded so it can only do 1 thing at a time (it has a single
+      thread and a single call stack).
+    </p>
+    <p class="text">
+      The call stack is a data structure that records where in the programe we
+      are (at runtime). If we step into a function, we put it onto the stack, if
+      we return from a function we pop it off the stack. The stack also has a
+      Last In First Out order of execution so the last function put onto the
+      stack will be the first one to run.
+    </p>
+    <p class="text center bold">Code snippet:</p>
+    <pre class="code">
+      function multiply(a, b){
+        return a * b;
+      }
+
+      function square(n) {
+        return multiply(n, n);
+      }
+
+      function printSquare(n){
+        var squared = square(n);
+        console.log(squared);
+      }
+
+      printSquare(4);
+    </pre>
+    <p class="text">
+      The code snippet above will call a
+      <span class="snippet">main();</span> function (which is implicit like the
+      file itself being executed)has some function definitions and then it will
+      call <span class="snippet">printSquare();</span> and push it onto the
+      stack.
+    </p>
+    <p class="text">
+      Inside <span class="snippet">printSquare()</span> it will call
+      <span class="snippet">square();</span> and push it onto the stack.
+    </p>
+    <p class="text">
+      Inside <span class="snippet">square();</span> it will call
+      <span class="snippet">multiply();</span> and push it onto the stack.
+    </p>
+    <p class="text">
+      Inside <span class="snippet">multiply();</span> it will return so it will
+      push it off the stack (note the last one to pe pushed onto the stack was
+      the first function to be executed and popped off the stack).
+    </p>
+    <p class="text">
+      Next it will return from <span class="snippet">square();</span> and it
+      will push it off the stack.
+    </p>
+    <p class="text">
+      Next it will allocate <span class="snippet">squared</span> variable, it
+      will push <span class="snippet">console.log();</span> onto the stack, log
+      the variable <span class="snippet">squared</span>, pop the
+      <span class="snippet">console.log();</span> off the stack and finally pop
+      <span class="snippet">printSquare();</span> off the stack.
+    </p>
+    <p class="text center bold">a visual representation of the stack:</p>
+    <div class="devPic">
+      <img src="img/callstack.png" alt="call stack" />
+    </div>
+    <p class="text">
+      After calling <span class="snippet">multiply();</span> and
+      <span class="snippet">square();</span> the script will pop them off the
+      stack, it will put the<span class="snippet">console.log();</span> call
+      onto the stack, execute it, pop it off the stack and finally pop the
+      <span class="snippet">printSquare();</span> call off the stack.
+    </p>
+    <p class="text">
+      We even get the stack trace (the state of the stack when the error
+      happened) printed in case of an error. If we run the code below in a
+      browser:
+    </p>
+    <pre class="code">
+      function foo() {
+        throw new Error("Oops!");
+      }
+
+      function bar() {
+        foo();
+      }
+
+      function baz() {
+        bar();
+      }
+
+      baz();
+    </pre>
+    <p class="text">
+      we get printed a visual representation of the stack at the moment when the
+      error was thrown:
+    </p>
+    <div class="devPic">
+      <img src="img/error.png" alt="error and stack trace" />
+    </div>
+    <p class="text">
+      <span class="snippet">baz()</span> which was called by this
+      <span class="snippet">&lt;anonymous&gt;</span> function (our
+      <span class="snippet">main()</span>
+      function in the picture above with the call stack) called
+      <span class="snippet">bar()</span> which called
+      <span class="snippet">foo()</span> which threw and error).
+    </p>
+    <p class="text center bold">Stack overflow (or blowing the stack):</p>
+    <pre class="code">
+      function foo(){
+        return foo();
+      }
+
+      foo();
+    </pre>
+    <p class="text center">
+      If we run the code above, we get the following error:
+    </p>
+    <div class="devPic">
+      <img src="img/stackoverflow.png" alt="stackoverflow" />
+    </div>
+    <p class="text">
+      A function which calls itself recursively without a breaking condition
+      will cause a stack overflow (eat up all the memory available) and chrome
+      kills this case with this error (note how all the
+      <span class="snippet">foo()</span> calls are made by the
+      <span class="snippet">&lt;anonymous&gt;</span> main function
+    </p>
+
+    <p class="text center bold">Blocking (when things are slow)</p>
+    <p class="text">
+      Blocking code is code that is slow (for instance a synchronous network
+      request) and blocks the stack (because it is onto it and all the other
+      code has to wait for it to execute). Another example is the
+      <span class="snippet">alert();</span> call which blocks the browser until
+      the user dismisses the alert.
+    </p>
+    <pre class="code">
+      //synchronous network requests
+      let foo = getSyncFile1(); //wait till request finishes
+      let bar = getSyncFile2(); //same..
+      let baz = getSyncFile3(); // ...
+
+      console.log(foo);
+      console.log(bar);
+      console.log(baz);
+    </pre>
+    <p class="text">
+      If we run the code above, each network request would block the stack until
+      it finishes (each request would be put onto the stack, then the script
+      waits for it to finish, then the next request is pushed onto the stack,
+      then the script waits for it to finish too, etc... and only after the 3
+      requests are completed we can push the 3 console logs onto the stack and
+      clear it).
+    </p>
+    <p class="text">
+      This is how a single threaded synchronous programming language works and
+      if we ran the code above in a browser, we would notice that because the
+      requests are made synchronously, while a request is going on, everything
+      else freezes (buttons/UI).
+    </p>
+    <p class="text">
+      A sollution for this problem would be to use asynchronous calls through
+      callback functions for the network requests instead of synchronous ones.
+    </p>
+    <p class="text center bold">Async Callbacks and the Call Stack</p>
+    <pre class="code">
+      console.log("hi");
+
+      setTimeout(function cb() {
+        console.log("there");
+      }, 5000);
+
+      console.log("JSConfEU");
+    </pre>
+    <p class="text">
+      When the code above is executed, the first
+      <span class="snippet">console.log("hi");</span> is pushed onto the stack,
+      executed and popped off then the
+      <span class="snippet">setTimeout();</span> is called (pushed onto the
+      stack, then popped off), next the second
+      <span class="snippet">console.log("JSConfEU");</span> is pushed onto the
+      stack, executed and popped off, and finally after 5 seconds the
+      <span class="snippet">console.log("there");</span> is pushed onto the
+      stack, executed and popped off.
+    </p>
+    <p class="text">
+      The 5 seconds count demanded by the
+      <span class="snippet">setTimeout();</span> call was handled by a web API
+      (the setTimeout web API), once the web API finished, the last
+      <span class="snippet">console.log("there")</span> was pushed onto the
+      stack.
+    </p>
+    <p class="text center bold">Concurrency & The Event Loop</p>
+    <p class="text">
+      Besides the runtime (V8 engine) the browser also gives us these web APIs
+      (node JS has them too implemented in C++) like setTimeout, which are like
+      separate threads which we can use to perform concurrent actions.
+    </p>
+    <p class="text">
+      In the code snippet above, the 5 seconds counting was handled by the
+      setTimeout web API, once it finished, it passed the callback function (cb)
+      to the callback queue (also known as the task queue). The
+      <span class="bold">Event Loop</span>
+      checks continuously if the stack is empty and if there is a function in
+      the callback queue, waiting to be executed. And in this case it handles
+      the
+      <span class="snippet">cb()</span>
+      call to the stack. If there are more callback functions in the queue, it
+      handles them one by one to the stack, starting with the first.
+    </p>
+    <div class="devPic">
+      <img src="img/eventloop.gif" alt="event loop" />
+    </div>
+    <p class="text center">code snippet:</p>
+    <pre class="code">
+      setTimeout(function timeout(){
+        console.log("hi");
+      }, 1000);
+
+      setTimeout(function timeout(){
+        console.log("hi");
+      }, 1000);
+
+      setTimeout(function timeout(){
+        console.log("hi");
+      }, 1000);
+
+      setTimeout(function timeout(){
+        console.log("hi");
+      }, 1000);
+    </pre>
+    <p class="text">
+      If we run the snippet above, all the console logs will show in roughly 1
+      second but the event loop will queue all of the callbacks.
+      <span class="snippet">SetTimeout()</span>
+      guarantees a minimal delay until the execution (1 second in this case).
+      Just like when running <span class="snippet">setTimeout()</span> with a 0
+      countdown, it will still delay the execution.
+    </p>
+    <p class="text">
+      Check this tool (run code in it) to visualise how the code is executed:
+      <a
+        href="http://latentflip.com/loupe/?code=JC5vbignYnV0dG9uJywgJ2NsaWNrJywgZnVuY3Rpb24gb25DbGljaygpIHsKICAgIHNldFRpbWVvdXQoZnVuY3Rpb24gdGltZXIoKSB7CiAgICAgICAgY29uc29sZS5sb2coJ1lvdSBjbGlja2VkIHRoZSBidXR0b24hJyk7ICAgIAogICAgfSwgMjAwMCk7Cn0pOwoKY29uc29sZS5sb2coIkhpISIpOwoKc2V0VGltZW91dChmdW5jdGlvbiB0aW1lb3V0KCkgewogICAgY29uc29sZS5sb2coIkNsaWNrIHRoZSBidXR0b24hIik7Cn0sIDUwMDApOwoKY29uc29sZS5sb2coIldlbGNvbWUgdG8gbG91cGUuIik7!!!PGJ1dHRvbj5DbGljayBtZSE8L2J1dHRvbj4%3D"
+        target="_blank"
+      >
+        Tool</a
+      >
+    </p>
+
+    <p class="text">left at min 20-22</p>
   </body>
 </html>
