@@ -62,3 +62,31 @@ body {
 .bold {
   font-weight: 700;
 }
+
+.link {
+  text-align: center;
+  background: #000;
+  max-width: 1300px;
+  display: block;
+  margin: auto;
+}
+
+.link p {
+  font-size: 3rem;
+  color: #00e000;
+  margin-bottom: 0;
+}
+
+.link > a {
+  text-decoration: none;
+  color: #00e000;
+  display: block;
+  padding: 0.7rem;
+  font-size: 2rem;
+}
+
+.link > a:hover {
+  font-size: 2.2rem;
+  text-decoration: underline;
+  transition: 0.5s;
+}
