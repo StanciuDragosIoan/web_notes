@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+    <title>Node_JS</title>
+  </head>
+  <body>
+    <h1 class="header">Create a Server in NodeJS</h1>
+
+    <p class="text">
+      NodeJS has a bunch of core modules (http, https, fs, path, os). We can
+      also install 3rd party modules.
+    </p>
+    <p class="text">
+      For creating a server we use the http module (which allows us to launch a
+      server, or send a request). Https is used for launching an SSL encoded
+      serve.
+    </p>
+    <p class="text">
+      For creating a server, we need to import the http module:
+    </p>
+    <pre class="code">
+      //import http module
+      const http = require("http");
+    </pre>
+    <p class="text">
+      In order to create the server we use the
+      <span class="snippet">createServer()</span> method. It takes a request
+      listener as an argument. A request listener is a callback function that
+      will execute for every request. The request listener takes in a request
+      and a response object, so we can read data from the request or send back a
+      response to the request.
+    </p>
+    <pre class="code">
+      //request listener
+        function rqListener(req, res) {
+           console.log(req); 
+           console.log(res);
+          }
+
+      //create server 
+      const server = http.createServer(rqListener);
+    </pre>
+
+    <p class="text">
+      We can also pass the request listener as an anonymous function:
+    </p>
+    <pre class="code">
+      const server = http.createServer((req, res) => {
+        console.log(req); 
+        console.log(res);
+      });
+    </pre>
+    <p class="text">
+      Start the server with the <span class="snippet">listen()</span> method
+      (which takes in a port and a host as an argument). Since we are on our
+      local machine, we do not need to specify a host, it will use localhost by
+      default.
+    </p>
+    <pre class="code">
+      //start the server
+      server.listen(3000);
+    </pre>
+    <p class="text">Run the file with:</p>
+    <pre class="code">
+     node server
+   </pre
+    >
+    <p class="text">
+      Go to http://localhost:3000 and you will see nothing (because the server
+      is not configured to send back any response), but if you go back in the
+      terminal where you ran the file, you will see the request and response
+      objects logged, so the server is running.
+    </p>
+  </body>
+</html>
