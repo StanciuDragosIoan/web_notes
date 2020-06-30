@@ -12,7 +12,6 @@
   </head>
   <body>
     <h1 class="header">The Linux Desktop Environment</h1>
-
     <p class="text">
       A Desktop environment is a graphical tool that displays icons and menus on
       the screen. It controls the appearance and provides programs/utilities
@@ -40,79 +39,45 @@
     <div class="devPic">
       <img src="./img/otherlocations.png" alt="v8 engine pic" />
     </div>
-    <h1 class="header">SSH</h1>
+    <h1 class="header">Getting familiar with the command line</h1>
     <p class="text">
-      SSH (Secure Shell) is a communication protocol (like http, https, ftp). We
-      can use SSH for anything (create files/folders, install/run programs,
-      deploying applications, setting up web servers). SSH is secure (all the
-      traffic will be encripted)
-    </p>
-    <p class="text bold center">SSH Client/Server Communication</p>
-    <p class="text">
-      In order for us to log onto a machine with SSH the credentials are not
-      enough, the machine must also have the SSHD (Open SSH Daemon) installed
-      and running. The daemon listens for SSH connections.
+      A lot of functionality in linux can be done through the GUI, but power
+      users preffer the command line to perform the tasks more quickly and more
+      efficiently. Everything in the GUI can be done through the command line.
     </p>
     <p class="text">
-      The server must have SSHD installed and running or we will not be able to
-      connect to it using SSH.
+      The command line will offer more options/ways to execute a program.
     </p>
     <p class="text">
-      On the server we have an sshd configuration file (where we can change
-      configuration such as disabling password login for the root user).
-    </p>
-    <p class="text bold center">SSH Authentication Methods</p>
-    <p class="text">
-      Password (default way of authentication). In order to authenticate we use
-      the following command:
-    </p>
-    <pre class="code">
-      ssh user@192.168.1.29 //can use domain or IP address
-    </pre>
-    <p class="text">
-      Once we do that, it will prompt us for a password (if we do not have SSH
-      keys set up).
-    </p>
-    <p class="text bold center">Public/Private Key Pair (recommended way)</p>
-    <p class="text">
-      Same command as above to log in and the program will let us in without
-      asking for a password.
-    </p>
-    <p class="center text bold">Host Based</p>
-    <p class="text">
-      Via a known hosts file which allows certain hosts to connect to a machine.
-    </p>
-    <p class="center bold text">Generating Keys</p>
-    <p class="text">The command for generating keys is:</p>
-    <pre class="code">
-      ssh-keygen
-    </pre>
-    <p class="text">This command will create a public key and a private one.</p>
-    <p class="text">
-      The keys will be created by default in the home directory in a hidden
-      folder (.ssh). The command will prompt you to choose a different name
-      other than id_rsa for the keys, but this is the default.
-    </p>
-    <p class="text"><span class="snippet">~/.ssh/id_rsa</span> (Private Key)</p>
-    <p class="text">
-      <span class="snippet">~/.ssh/id_rsa.pub</span> (Public Key)
+      We can put multiple programs in a shell script (a file containing multiple
+      intructions that get executed 1 after another), and this is a good way to
+      automate tasks.
     </p>
     <p class="text">
-      The public key goes on the server. On the server we will also have a
-      <span class="snippet"> .ssh</span> folder (or will create one if it does
-      not exist), and in that directory we'll have a file called
-      <span class="snippet">authorized_keys</span> (this is where the public key
-      will be put).This is how the server knows if the machine we are using to
-      log onto it is authorized to do so.
+      We can open a terminal from the system or connect remotely with a client
+      like Putty.
+    </p>
+    <p class="text">some basic commands:</p>
+    <p class="text">
+      <span class="snippet">ls</span> (displays the contents of the current
+      directory)
     </p>
     <p class="text">
-      Windows did not support unix ssh until recently. Now it does. In older
-      versions of windows we can use a program called Putty.
+      <span class="snippet">ls /var</span> (displays the contents of the
+      <span class="snippet">var</span>
+      directory)
     </p>
     <p class="text">
-      Git Bash and other unix-like wrappers for the terminal include the ssh
-      command & other Unix tools.
+      <span class="snippet">pwd</span> (print working directory-prints the path
+      to the current directory)
     </p>
-    <p class="bold">left at min 10....</p>
+    <p class="text">
+      <span class="snippet">cd ..</span> (move to parent directory)
+    </p>
+    <p class="text">
+      <span class="snippet">cd ../.. </span> (move 2 directories up)
+    </p>
+
+    <p class="text bold">left at line 25 in the original file......</p>
   </body>
 </html>
