@@ -37,7 +37,7 @@
       the 'network' button to connect to networks
     </p>
     <div class="devPic">
-      <img src="./img/otherlocations.png" alt="v8 engine pic" />
+      <img src="./img/otherlocations.png" alt="other locations linux" />
     </div>
     <h1 class="header">Getting familiar with the command line</h1>
     <p class="text">
@@ -77,7 +77,107 @@
     <p class="text">
       <span class="snippet">cd ../.. </span> (move 2 directories up)
     </p>
-
-    <p class="text bold">left at line 25 in the original file......</p>
+    <p class="text">
+      If we want to launch a program such as the firefox browser, we can do:
+    </p>
+    <pre class="code">
+      /usr/bin/firefox
+    </pre>
+    <p class="text">
+      We can also simply type <span class="snippet">firefox</span> in the
+      terminal.
+    </p>
+    <p class="text bold center">
+      the $PATH variable in Linux
+    </p>
+    <p class="text">
+      The <span class="snippet">firefox</span> command above works because of
+      the path variable. The path variable contains the locations in which the
+      system will look when we type a command that is not in its full path.
+    </p>
+    <p class="text">
+      When we type <span class="snippet">firefox</span> the browser starts up
+      because the location where firefox is installed is in the $PATH variable
+      (in <span class="snippet">/usr/bin </span>).
+    </p>
+    <p class="text">In order to see the full path variable type:</p>
+    <pre class="code">
+      echo $PATH
+    </pre>
+    <p class="text">This will display the full $PATH variable:</p>
+    <pre class="code">
+      /home/amaimon/.deno/bin:/home/amaimon/.cargo/bin:/usr/local/sbin:
+      /usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:
+      /snap/bin
+    </pre>
+    <p class="text">
+      The directories in the $PATH variable are separated by semicolons. Note
+      that in the variable above, the
+      <span class="snippet">/usr/bin </span> directory is included (that's where
+      firefox is installed and that's how the system knows to start up the
+      browser when we use only the
+      <span class="snippet">firefox</span> command).
+    </p>
+    <p class="text">
+      The system will look for the directories in the $PATH variable in the
+      following order:
+    </p>
+    <p class="text">
+      first will look in <span class="snippet">usr/local/sbin</span>, next in
+      <span class="snippet">usr/local/bin</span>, next
+      <span class="snippet">usr/sbin</span>, then in
+      <span class="snippet">usr/bin</span> , etc... so for instance having 2
+      programs installed with the same name in 2 different locations in the
+      $PATH, the first one will run first.
+    </p>
+    <p class="title text center">Bash Scripting</p>
+    <p class="text">
+      In a linux distribution we can create scripts that can automate tasks for
+      us (can run programs and perform various cations). We will create a simple
+      one for testing purposes.
+    </p>
+    <p class="text">
+      Create a test.sh file in the current directory. Open the file in a text
+      editor and type in it:
+    </p>
+    <pre class="code">
+      echo 'Hello from Ubuntu =)!';
+    </pre>
+    <p class="text">Save the file, and run it by typing in the terminal:</p>
+    <pre class="code">
+      ./test.sh
+    </pre>
+    <p class="text">
+      the <span class="snippet">./</span> makes it so that the terminal instance
+      runs the program from the current directory (where the test.sh script is
+      located). If <span class="snippet">test.sh</span> were in a different
+      folder, we would have to type the full path to it. The output of the
+      command above will be:
+    </p>
+    <pre class="code">
+      Hello from Ubuntu =)!
+    </pre>
+    <p class="text center bold">The filesystem tree in Linux</p>
+    <p class="text">
+      The base directory is called root <span class="snippet">/</span>
+    </p>
+    <p class="text">
+      Under the root <span class="snippet">/</span> directory there are
+      directories like: home <span class="snippet">/home</span>, var
+      <span class="snippet">/var</span>, media
+      <span class="snippet">/media</span>, etc...
+    </p>
+    <p class="text">
+      Under these there are the users directories home/dragos
+      <span class="snippet">home/dragos</span>, the logs
+      <span class="snippet">home/log</span>, etc...
+    </p>
+    <p class="text">
+      A typical linux filesystem tree looks like this (not all directories
+      included):
+    </p>
+    <div class="devPic">
+      <img src="./img/tree.png" alt="filesystem tree linux" />
+    </div>
   </body>
 </html>
