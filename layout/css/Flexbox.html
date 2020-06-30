@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+    <title>FlexBox</title>
+  </head>
+  <body>
+    <h1 class="header center">FlexBox (Flexible Box Module)</h1>
+    <p class="text">
+      Flexbox is a CSS3 layout model that provides an easy way to arrange
+      <span class="snippet">flex</span> items (child elements) within a
+      container (parent element).It is responsive and mobile friendly, it has no
+      floats, positioning child elements is much easier.
+    </p>
+    <p class="text">
+      Flex container's margins do not collapse with the margins of its contents.
+      The order of elements can easely be changed without editing the source
+      HTML.
+    </p>
+    <p class="text center bold">
+      Flexible Box Model Concepts
+    </p>
+    <p class="text">
+      Flexbox gives us the ability to alter an item width and height to best fit
+      its container's available free space. It is direction agnostic and it is
+      built for small-scale layouts while the "Grid" specification is for large
+      scale layouts.
+    </p>
+    <p class="text center bold">
+      FlexBox layout model
+    </p>
+    <div class="devPic">
+      <img src="./img/flexbox.png" alt="flexbox" />
+    </div>
+    <p class="text">
+      We have a main axis (the horizontal one) and a cross axis (the vertical
+      axis).The layout is divided between a container and its child elements.
+      The display property is set on the container.
+    </p>
+    <p class="text center bold">
+      Some flexbox properties
+    </p>
+    <pre class="code">
+      /*on container*/
+      display: flex|inline flex
+      flex-direction: row|column
+      flex-wrap: wrap|nowrap|wrapreverse
+      flex-basis: /*this property is like the width*/
+
+
+      /*align items horizontally to the left/right or center*/
+      justify-content: fkex-start|flex-end|center 
+
+      /*change alignment for individual flex-items*/
+      align-self: flex-start|flex-end|center; 
+
+
+      /*how the flex items are laid out on the cross axis*/
+      align-items: flex-start|flex-end|center; 
+                      
+      /*aligns content on the cross axis*/ 
+      align-content: flex-start|flex-end|center;                                       
+      
+      flex-grow: /*number for how much an element grows*/
+      flex-shrink: /*number for how much an element shrinks*/
+      
+      /*integer value change the order of elements without changing html*/
+      order: 
+      </pre
+    >
+    <p class="text center bold">Sample snippets</p>
+    <p class="text">In an html file type:</p>
+    <pre class="code">
+      &lt;!DOCTYPE html&gt;
+      &lt;html lang="en"&gt;
+        &lt;head&gt;
+        &lt;meta charset="UTF-8" /&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+        &lt;title&gt;FlexBox Sample&lt;/title&gt;
+        &lt;style&gt;
+          .container-1 {
+          }
+
+          .container-1 div {
+            border: 1px #ccc solid;
+            padding: 10px;
+          }
+
+          .box-1 {
+          }
+
+          .box-2 {
+          }
+
+          .box-3 {
+          }
+        &lt;/style&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+          &lt;div class="container-1"&gt;
+            &lt;div class="box-1"&gt;
+              &lt;h1&gt;Box One&lt;/h1&gt;
+              &lt;p&gt;
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
+                Veniam,
+                obcaecati?
+              &lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;div class="box-2"&gt;
+              &lt;h1&gt;Box Two&lt;/h1&gt;
+              &lt;p&gt;
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
+                Veniam,
+                obcaecati?
+              &lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;div class="box-3"&gt;
+              &lt;h1&gt;Box Three&lt;/h1&gt;
+              &lt;p&gt;
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
+                Veniam,
+                obcaecati?
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/body&gt;
+      &lt;/html&gt;
+    </pre>
+    <p class="text">
+      Open the html and it will look like this (the 3 boxes are alligned
+      horizontally and take up all the space):
+    </p>
+    <div class="devPic">
+      <img src="./img/initial.png" alt="initial layout" />
+    </div>
+    <p class="text">
+      If we want to align them horizontally, on one row, we only have to add 1
+      rule to the parent <span class="snippet">.container</span> class:
+    </p>
+    <pre class="code">
+      .container {
+        display:flex;
+      }
+    </pre>
+    <p class="text">Now the boxes are aligned horizontally:</p>
+    <div class="devPic">
+      <img src="./img/align-horizontal.png" alt="align-horizontal" />
+    </div>
+  </body>
+</html>
