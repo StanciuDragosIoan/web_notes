@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+    <title>Rust</title>
+  </head>
+  <body>
+    <h1 class="header">Rust Programming Language</h1>
+
+    <p class="text">
+      Rust is a multi-paradigm programming language focused on performance and
+      safety, especially safe concurrency. Rust is syntactically similar to C++,
+      but provides memory safety without using garbage collection.
+    </p>
+    <p class="text center bold">Hello World program in Rust</p>
+    <p class="text">We start by creating a project directory:</p>
+    <pre class="code">
+      mkdir ~/projects
+      cd ~/projects
+      mkdir hello_world
+      cd hello_world
+    </pre>
+    <p class="text">
+      Next, in the <span class="snippet">hello_world</span> directory create a
+      file and name it <span class="snippet">main.rs</span>
+    </p>
+    <p class="text">in the <span class="snippet">main.rs</span> file type:</p>
+    <pre class="code">
+      fn main() {
+        println!("Hello, world!");
+      }
+    </pre>
+    <p class="text">Next go back to the terminal and run:</p>
+    <pre class="code">
+      $ rustc main.rs //compiles the rust code
+      $ ./main     //runs it
+    </pre>
+    <p class="text">The output for that will be:</p>
+    <pre class="code">
+      Hello, world!
+    </pre>
+
+    <!-- cmds -->
+    <p class="center bold">Rust cmds</p>
+    <pre class="code">
+      //rust cmds
+      rustup docs --book //opens up documentation
+    </pre>
+  </body>
+</html>
