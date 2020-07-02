@@ -85,12 +85,17 @@ body {
   display: block;
   padding: 0.7rem;
   font-size: 2rem;
+  height: 2rem;
 }
 
 .link > a:hover {
   font-size: 2.2rem;
   text-decoration: underline;
   transition: 0.5s;
+}
+
+.letter {
+  color: #fff !important;
 }
 
 /* Media queries < 333 */
