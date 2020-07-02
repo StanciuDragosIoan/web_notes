@@ -86,7 +86,12 @@
       following command:
     </p>
     <pre class="code">
-      php -S localhost:5000
+      php -S localhost:5000 index.php
+      /*
+        you can ommit the name if file is 
+        called index.php (if the name is
+        different, you'd have to specify it
+      */
     </pre>
     <p class="text">
       Open <span class="snippet">http://localhost:5000/</span> and you will see
@@ -99,6 +104,60 @@
       engine like twig.
     </p>
     <h1 class="header">Template engine with PHP</h1>
-    <p class="text bold">Continue from here.....</p>
+    <p class="text">
+      Say we have a bunch of variables:
+    </p>
+    <pre class="code">
+      $title = "The Title";
+      $desc  = "Some information";
+      $img   = "/images/header.jpg";
+    </pre>
+    <p class="text">
+      As their name implies, variables change often and we will want to be able
+      to pass the data to a function that outputs HTML code(instead of embedding
+      small php snippets in the HTML code itself). So we might do something
+      like:
+    </p>
+    <pre class="code">
+      function echo_card(
+        $title = "Default Title",
+        $desc = "Default Description",
+        $img = "./images/fallback.jpg"
+      ) {
+          echo "
+          &lt;div&gt;
+              &lt;h1&gt;$title&lt;/h1&gt;   
+              &lt;p&gt;$desc&lt;/p&gt;    
+              &lt;img src='$img' &gt; 
+          &lt;/div&gt;";
+      }
+
+      echo_card();
+    </pre>
+    <p class="text">
+      This is a good starting point, but we can go 1 step further and use the
+      PHP HEREDOC syntax (similar to JS tempalte literals).
+    </p>
+    <pre class="code">
+      function echo_card($title = "Default Title", $desc = "Default Description", $img = "/images/fallback.jpg") {
+        $html = &lt;&lt;&lt;"EOT"
+           &lt;div class="card"&gt;
+              &lt;img src="$img" alt=""&gt;
+              &lt;h2&gt;$title&lt;/h2&gt;
+              &lt;p&gt;$desc&lt;/p&gt;
+           &lt;/div&gt;
+     EOT;
+     
+        echo $html;
+     }
+    </pre>
+    <p class="text">
+      Now we can call the echo_card() function and pass it any arguments. This
+      is a good starting point for a fairly complex templating language, without
+      the need for additional dependencies.
+    </p>
+    <p class="bold text">
+      keep from : https://andy-carter.com/blog/what-are-php-heredoc-nowdoc
+    </p>
   </body>
 </html>
