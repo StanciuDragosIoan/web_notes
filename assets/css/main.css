@@ -65,6 +65,11 @@ body {
   font-weight: 700;
 }
 
+.thumbnail {
+  max-width: 20rem !important;
+  padding-top: 2rem;
+}
+
 .link {
   text-align: center;
   background: #000;

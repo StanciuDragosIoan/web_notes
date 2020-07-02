@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="../../../assets/css/main.css"
+      type="text/css"
+    />
+    <title>PHP</title>
+  </head>
+  <body>
+    <div class="devPic">
+      <img class="thumbnail" src="../img/php.png" alt="" />
+    </div>
+    <h1 class="header">Separating Logic From Presentation</h1>
+    <p class="text">
+      PHP is a popular general-purpose scripting language that is especially
+      suited to web development. Fast, flexible and pragmatic, PHP powers
+      everything from your blog to the most popular websites in the world.
+    </p>
+    <p class="text">
+      In programming in general it is recommended to follow the separation of
+      concerns principle. On this note, in PHP we also must separate logic from
+      presentation. In order to do that, we should have the logic (usually
+      business logic that processed data, etc...) and the visual (presentation)
+      bit of our application in separate files.
+    </p>
+    <p class="text">
+      A simple example would be the following, in a new folder create an
+      index.view.php file and type in it:
+    </p>
+    <pre class="code">
+      &lt;!DOCTYPE html&gt;
+        &lt;html lang="en"&gt;
+
+          &lt;head&gt;
+          &lt;meta charset="UTF-8"&gt;
+          &lt;meta name="viewport" 
+          content="width=device-width, 
+          initial-scale=1.0"&gt;
+
+          &lt;meta http-equiv="X-UA-Compatible" 
+          content="ie=edge"&gt;
+          
+          &lt;title&gt;Document&lt;/title&gt;
+
+          &lt;style&gt;
+              header {
+                  background: #e3e3e3;
+                  padding: 2rem;
+                  text-align: center;
+              }
+          &lt;/style&gt;
+        &lt;/head&gt;
+
+        &lt;body&gt;
+
+        &lt;header&gt;
+            &lt;h1&gt;
+                &lt;?= $greeting; ?&gt;
+            &lt;/h1&gt;
+        &lt;/header&gt;
+
+      &lt;/body&gt;
+
+      &lt;/html&gt;
+    </pre>
+    <p class="text">
+      This is a simple html template with a php snippet (<span class="snippet"
+        >&lt;?= $greeting; ?></span
+      >) embedded in it. Next, create a file called index.php and type in it:
+    </p>
+    <pre class="code">
+      &lt;?
+        php $greeting = "test"; 
+        require 'index.view.php';
+    </pre>
+    <p class="text">
+      Next in a terminal (in the same folder as the 2 files above) run the
+      following command:
+    </p>
+    <pre class="code">
+      php -S localhost:5000
+    </pre>
+    <p class="text">
+      Open <span class="snippet">http://localhost:5000/</span> and you will see
+      the view displayed with the php variable embedded in it. This example
+      should give you an idea, imagine the variable
+      <span class="snippet">$greeting</span> comes from some database service or
+      is further processed before being displayed, the index.php file is the one
+      performing this logic (the business logic) while the index.view.php
+      performs does the presentation. A step further would be to use a template
+      engine like twig.
+    </p>
+    <h1 class="header">Template engine with PHP</h1>
+    <p class="text bold">Continue from here.....</p>
+  </body>
+</html>
