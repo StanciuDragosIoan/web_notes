@@ -139,7 +139,11 @@
       PHP HEREDOC syntax (similar to JS tempalte literals).
     </p>
     <pre class="code">
-      function echo_card($title = "Default Title", $desc = "Default Description", $img = "/images/fallback.jpg") {
+      function echo_card(
+        $title = "Default Title",
+        $desc = "Default Description", 
+        $img = "/images/fallback.jpg") 
+      {
         $html = &lt;&lt;&lt;"EOT"
            &lt;div class="card"&gt;
               &lt;img src="$img" alt=""&gt;
