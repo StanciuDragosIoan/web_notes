@@ -114,5 +114,51 @@
       until we make a request to it. Once we make the request, it will log the
       output and stop.
     </p>
+    <p class="center text bold">The NodeJS Request</p>
+    <p class="text">
+      The request object is the object that NodeJS created when we hit the
+      <span class="snippet">http://localhost:3000</span> endpoint with our GET
+      request.The object has many properties like the headers:
+    </p>
+    <div class="devPic">
+      <img src="./img/headers.png" alt="" />
+    </div>
+    <p class="text">
+      In the request we can see the host, the caching of the response (we have
+      no response configured so far), the browser, the http version used, etc..
+    </p>
+    <p class="text">
+      We can even check specific data from the request object via its
+      properties:
+    </p>
+    <pre class="code">
+      //import http module
+      const http = require("http");
+
+      //create server
+      const server = http.createServer((req, res) => {
+        //grab specific data
+        console.log(req.url, req.method, req.headers);
+        process.exit;
+      });
+
+      //start the server
+      server.listen(3000);
+    </pre>
+    <p class="text">The output for the above is:</p>
+    <div class="devPic">
+      <img src="./img/properties.png" alt="" />
+    </div>
+    <p class="text">
+      Note the url is <span class="snippet">/</span>, because we have nothing
+      after <span class="snippet">http://localhost:3000</span>. If instead of
+      that we type: <span class="snippet">http://localhost:3000/test123</span>,
+      we get output as url <span class="snippet">/test123</span>. After the URL
+      we have the request (<span class="snippet">GET</span>), followed by the
+      headers:
+    </p>
+    <div class="devPic">
+      <img src="./img/properties2.png" alt="" />
+    </div>
   </body>
 </html>
