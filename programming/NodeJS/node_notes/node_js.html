@@ -15,8 +15,8 @@
     <title>Node_JS</title>
   </head>
   <body>
-    <h1 class="header">Create a Server in NodeJS</h1>
-
+    <h1 class="header">NodeJS (basic)</h1>
+    <p class="text center bold">Create a Server in NodeJS</p>
     <p class="text">
       NodeJS has a bunch of core modules (http, https, fs, path, os). We can
       also install 3rd party modules.
@@ -81,6 +81,38 @@
       is not configured to send back any response), but if you go back in the
       terminal where you ran the file, you will see the request and response
       objects logged, so the server is running.
+    </p>
+    <p class="text center bold">NodeJS Program Lifecycle</p>
+    <p class="text">
+      When starting the script, node read it, executed it and it never stopped.
+      This happened because of the event loop which is a loop process that keeps
+      running as long as there are event listeners listed. One event we
+      registered was the request listener callback function. (and we never
+      unregistered it because the server should be up and running). NodeJS uses
+      this event driven approach because it is single threaded but it must also
+      handle many connections at once (which it does).
+    </p>
+    <p class="text">
+      In order to unregister an event listener, we need to use the
+      <span class="snippet">process.exit()</span> function:
+    </p>
+    <pre class="code">
+      //import http module
+      const http = require("http");
+
+      //create server
+      const server = http.createServer((req, res) => {
+        console.log(req);
+        process.exit;//exit on request
+      });
+
+      //start the server
+      server.listen(3000);
+    </pre>
+    <p class="text">
+      If we run the server.js script now, it will start and it will not stop
+      until we make a request to it. Once we make the request, it will log the
+      output and stop.
     </p>
   </body>
 </html>

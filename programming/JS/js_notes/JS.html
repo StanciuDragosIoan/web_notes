@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="../../../assets/css/main.css"
+      type="text/css"
+    />
+    <title>JS</title>
+  </head>
+  <body>
+    <h1 class="header">JS Basic</h1>
+    <p class="text center bold">JS Engine</p>
+    <p class="text">
+      The V8 Engine is probably the most well known JS engine. It was built by
+      Google Chrome in C++. It was first released in 2008 (Google needed a
+      better JS engine for their Google Maps Application). The engine takes JS
+      code and converts it to machine code.
+    </p>
+    <p class="text">
+      Besides the V8 Engine, there are multiple other JavaScript Engines. The
+      SpiderMonkey engine was the first engine ever. It was built by Brendan
+      Eich (the creator of the JS language). Other examples of JS engines
+      include: Chakra.
+    </p>
+    <p class="text center bold">How does the egnine work?</p>
+    <p class="text">
+      The engine instructs the computer to execute the JS code. The code is
+      initially broken into tokens by the parser, next it is converted into AST
+      (Abstract Syntax Tree). See the fllowing
+      <a href="https://astexplorer.net/" target="_blank"> Link</a> for more info
+      on AST. Once it became an AST, the code runs through an interpreter
+      (compiler/profiler) which turns it int bytecode - code that CPU can
+      understand and run.
+    </p>
+    <p class="text">
+      At a very simple level, a JS engine can work like the below function:
+    </p>
+    <pre class="code">
+      //logs an array of the code body 
+      function jsengine(code) {
+        return code.split(/\s+/);
+      }
+      
+      //[ 'var', 'a', '=', '5' ]
+      console.log(jsengine("var a = 5")); 
+    </pre>
+    <p class="text">
+      However do not forget that although anyone can write a JS engine, they all
+      must adhere to the ECMAScript standard.
+    </p>
+    <p class="text center bold">Interpreters and Compilers</p>
+    <p class="text">
+      In programming there are 2 ways to translate code into
+      machine-understandable language (machine code): the interpreter and the
+      compiler.
+    </p>
+    <p class="text">
+      The interpreter translates and reads the code files (line by line at
+      runtime 'on the fly').
+    </p>
+    <p class="text">
+      The compiler does not read/translate the code at runtime. It works ahead
+      of time, reads all the code and translates it into a language that can be
+      understood by the CPU.
+    </p>
+    <p class="text bold">Left at document 10 old notes.....</p>
+  </body>
+</html>
