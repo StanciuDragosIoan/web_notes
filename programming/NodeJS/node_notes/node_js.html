@@ -56,10 +56,12 @@
       We can also pass the request listener as an anonymous function:
     </p>
     <pre class="code">
-      const server = http.createServer((req, res) => {
-        console.log(req); 
-        console.log(res);
-      });
+      const server = http.createServer(
+        (req, res) => {
+          console.log(req); 
+          console.log(res);
+        }
+      );
     </pre>
     <p class="text">
       Start the server with the <span class="snippet">listen()</span> method
@@ -136,7 +138,8 @@
       const http = require("http");
 
       //create server
-      const server = http.createServer((req, res) => {
+      const server = http.createServer(
+        (req, res) => {
         //grab specific data
         console.log(req.url, req.method, req.headers);
         process.exit;
@@ -160,5 +163,359 @@
     <div class="devPic">
       <img src="./img/properties2.png" alt="" />
     </div>
-  </body>
-</html>
+    <p class="text center bold">Sending back a response</p>
+    <p class="text">
+      A basic way to send a node response from the server is using the methods:
+      of the response object ( <span class="snippet">res.setHeader()</span> ),
+      <span class="snippet">res.write()</span> and
+      <span class="snippet">res.send().</span>
+    </p>
+    <pre class="code">
+//import http module
+const http = require("http");
+
+//create server
+const server = http.createServer(
+  (req, res) => {
+    //set content type header
+    res.setHeader("Content-Type", "text/html");
+    //send actual html as response
+    res.write("&lt;html&gt;");
+    res.write("&lt;head&gt;&lt;title&gt;Basic Page&lt;/title&gt;&lt;/head&gt;");
+    res.write("&lt;body&gt;&lt;h1&gt;Hello Node JS&lt;/h1&gt;&lt;/body&gt;");
+    res.write("&lt;/html&gt;");
+    //end response and send it to client
+    res.end(); //can't call write() anymore after end()
+});
+
+//start the server
+server.listen(3000);
+
+    </pre>
+    <p class="text">
+      If we open the browser and we go to developer tools, the network tab and
+      reload, we can click on the localhost request and if we select the
+      <span class="snippet">localhost</span> request, we can see that we have
+      the <span class="snippet">Headers</span> tab open by default. We can see
+      our <span class="snippet">Content-Type:text/html</span> header set
+      together with other default headers set by the browser:
+    </p>
+    <div class="devPic">
+      <img src="./img/chrome_tools.png" alt="" />
+    </div>
+    <p class="text">
+      If we click on the <span class="snippet">Response</span> tab, we can see
+      the html response raw (remember, we set it with
+      <span class="snippet">res.send():</span>
+      <div class="devPic">
+        <img src="./img/chrome_tools2.png" alt="" />
+      </div>
+    </p>  
+    <p class="text center bold">How to route a reuqest</p>
+    <p class="text">In order to route a request, we need to parse the url:</p>
+    <pre class="code">
+//import http module
+const http = require("http");
+
+//create server
+const server = http.createServer((req, res) => {
+  //parse url
+  const url = req.url;
+  if (url === "/") {
+    //redirect
+    res.write("&lt;html&gt;");
+    res.write(`&lt;head&gt;
+                &lt;title&gt;Enter Msg&lt;/title&gt;
+              &lt;/head&gt;`);
+    res.write(
+      `&lt;body&gt;
+        &lt;form action='/message' method='POST'&gt;
+          &lt;input type='text' name='message'&gt;
+          &lt;button type='submit'&gt;Send&lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/body&gt;`,
+    );
+    res.write("&lt;/html&gt;");
+    //return so we break execution
+    return res.end();
+  }
+  //set content type header
+  res.setHeader("Content-Type", "text/html");
+  //send actual html as response
+  res.write("&lt;html&gt;");
+  res.write(`&lt;head&gt;
+              &lt;title&gt;Basic Node Page&lt;/title&gt;
+            &lt;/head&gt;`);
+  res.write(`&lt;body&gt;
+              &lt;h1&gt;Hello from Node JS&lt;/h1&gt;
+             &lt;/body&gt;
+            `);
+  res.write("&lt;/html&gt;");
+  //end response and send it to client
+});
+
+//start the server
+server.listen(3000);
+
+    </pre>
+      <p class="text">
+        The routing of the request is done when the request hits the
+        <span class="snippet">/</span> url. Also, note how we return
+        after the <span class="snippet">if (url === "/")</span> statement, in order to prevent further execution
+        of the function.
+      </p>
+    <p class="text">If we now go to <span class="snippet">http://localhost:3000</span> we can see:</p>
+    <div class="devPic">
+      <img src="./img/basic_form.png" alt="">
+    </div>
+    <p class="text">
+      Note that on the form we have an <span class="snippet">action</span> attribute which indicates the URL we'll be
+      redirected to once we submit (<span class="snippet">/message</span>).
+      We also have a <span class="snippet">method='POST'</span> attribute which indicates the method. The text input field has also a <span
+        class="snippet">name</span> attribute. If we submit the form, we will get redirected to <span
+        class="snippet">/message</span> route and we will see the default view, as the code will skip the <span
+        class="snippet">if (url === "/")</span> statement.
+    </p>
+    <div class="devPic">
+      <img src="./img/message_route.png" alt="">
+    </div>
+
+    <p class="text center bold">Redirecting requests</p>
+    <p class="text">We will redirect the request. When the user submits the form and makes a post to <span class="snippet">/message</span>, we
+      will write a file (using the <span class="snippet">fs module</span>) and redirect them back to <span
+        class="snippet">/</span>.</p>
+    <pre class="code">
+//import http module
+const http = require("http");
+//import file system module
+const fs = require("fs");
+
+//create server
+const server = http.createServer((req, res) => {
+  //parse url
+  const url = req.url;
+  if (url === "/") {
+    //redirect
+    res.write("&lt;html&gt;");
+    res.write(`&lt;head&gt;
+                &lt;title&gt;Enter Msg&lt;/title&gt;
+              &lt;/head&gt;`);
+    res.write(
+      `&lt;body&gt;
+        &lt;form action='/message' method='POST'&gt;
+          &lt;input type='text' name='message'&gt;
+          &lt;button type='submit'&gt;Send&lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/body&gt;`,
+    );
+    res.write("&lt;/html&gt;");
+    //return so we break execution
+    return res.end();
+  }
+  //check url and request type
+  if (url === "/message" && req.method === "POST") {
+    //write new file
+    fs.writeFileSync("message.txt", "DUMMY TEXT");
+    res.statusCode = 302; //redirect
+    res.setHeader("Location", "/");
+    //return so we break execution
+    return res.end();
+  }
+  //set content type header
+  res.setHeader("Content-Type", "text/html");
+  //send actual html as response
+  res.write("&lt;html&gt;");
+  res.write(`&lt;head&gt;
+              &lt;title&gt;Basic Node Page&lt;/title&gt;
+            &lt;/head&gt;`);
+  res.write(`&lt;body&gt;
+              &lt;h1&gt;Hello Node JS&lt;/h1&gt;
+             &lt;/body&gt;
+            `);
+  res.write("&lt;/html&gt;");
+  //end response and send it to client
+});
+
+//start the server
+server.listen(3000);
+
+    </pre> 
+    
+    <p class="text center bold">
+      Parsing request bodies
+    </p>
+    <p class="text">
+      Instead of writing hardcoded text in the message.txt file, we will write the data the user sends. In order to do that,
+      we will use the <span class="snippet">req.body</span>.
+    </p>
+    <p class="text center">Streams and buffers</p>
+    <p class="text">The stream of data is like a process that sends the data continously.Node JS reads the request in
+      chunks. At some point, node finishes reading the chunks. The good point here is that we can start working on the data in chunks 
+      without having to parse all of it.</p>
+    <p class="text">In order to actually work with the data, we need to use a buffer. A buffer is like some temporary memory
+      into which data is being stored until it gets consumed.</p>
+    <p class="text">In order to start parsing the data, we need to register an event listener function (that will wait for
+      when the POST request to be made). We do that by using <span class="snippet">req.on("data", callBack)</span>.
+      The event listener listens for the <span class="snippet">"data"</span> event. The data event will be fired 
+      whenever a new chunk is ready to be read. Once the event is fired, the callback function will be executed.
+    </p>
+    <p class="text">Next we will register an <span class="snippet">req.on("end", callBack)</span> event listener, which will
+      be triggered when the data parsing is finished. The callback function will use the <span class="snippet">Buffer</span>
+      to read the data:</p>
+      <pre class="code">
+//import http module
+const http = require("http");
+//import file system module
+const fs = require("fs");
+
+//create server
+const server = http.createServer((req, res) => {
+  //parse url
+  const url = req.url;
+  if (url === "/") {
+    //redirect
+    res.write("&lt;html&gt;");
+    res.write(`&lt;head&gt;
+                &lt;title&gt;Enter Msg&lt;/title&gt;
+              &lt;/head&gt;`);
+    res.write(
+      `&lt;body&gt;
+        &lt;form action='/message' method='POST'&gt;
+          &lt;input type='text' name='message'&gt;
+          &lt;button type='submit'&gt;Send&lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/body&gt;`,
+    );
+    res.write("&lt;/html&gt;");
+    //return so we break execution
+    return res.end();
+  }
+  //check url and request type
+  if (url === "/message" && req.method === "POST") {
+    //register event listener for data
+    const body = [];
+    req.on("data", (chunk) => {
+      console.log(chunk);
+      body.push(chunk);
+    });
+    //register event listener for end of data
+    req.on("end", () => {
+      //all chunks are in body now
+      const parsedBody = Buffer
+        .concat(body) //concat chunks
+        .toString(); //parse as text
+
+      console.log(parsedBody);
+    });
+    //write new file
+    fs.writeFileSync("message.txt", "DUMMY TEXT");
+    res.statusCode = 302; //redirect
+    res.setHeader("Location", "/");
+    //return so we break execution
+    return res.end();
+  }
+  //set content type header
+  res.setHeader("Content-Type", "text/html");
+  //send actual html as response
+  res.write("&lt;html&gt;");
+  res.write(`&lt;head&gt;
+              &lt;title&gt;Basic Node Page&lt;/title&gt;
+            &lt;/head&gt;`);
+  res.write(`&lt;body&gt;
+              &lt;h1&gt;Hello Node JS&lt;/h1&gt;
+             &lt;/body&gt;
+            `);
+  res.write("&lt;/html&gt;");
+  //end response and send it to client
+});
+
+//start the server
+server.listen(3000);
+
+      </pre>
+      <p class="text">If we run the server now and make a <span class="snippet">POST</span> rerquest to <span
+          class="snippet">/message</span>, we get the following output in the terminal:</p>
+      <div class="devPic">
+        <img src="./img/buffer.png" alt="">
+      </div>
+      <p class="text">Note the <span class="snippet">Buffer</span>chunk above and the parsedBody below as text. The parsedBody
+        is formed of <span class="snippet">message=test</span> because of the <span class="snippet">name</span> attribute on
+        the form.</p>
+        <p class="text">Next we can grab the input value and put it in a variable to be written in the text file instead of the dummy text:</p>
+        <pre class="code">
+//import http module
+const http = require("http");
+//import file system module
+const fs = require("fs");
+
+//create server
+const server = http.createServer((req, res) => {
+  //parse url
+  const url = req.url;
+  if (url === "/") {
+    //redirect
+    res.write("&lt;html&gt;");
+    res.write(`&lt;head&gt;
+                &lt;title&gt;Enter Msg&lt;/title&gt;
+              &lt;/head&gt;`);
+    res.write(
+      `&lt;body&gt;
+        &lt;form action='/message' method='POST'&gt;
+          &lt;input type='text' name='message'&gt;
+          &lt;button type='submit'&gt;Send&lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/body&gt;`,
+    );
+    res.write("&lt;/html&gt;");
+    //return so we break execution
+    return res.end();
+  }
+  //check url and request type
+  if (url === "/message" && req.method === "POST") {
+    //register event listener for data
+    const body = [];
+    req.on("data", (chunk) => {
+      console.log(chunk);
+      body.push(chunk);
+    });
+    //register event listener for end
+    req.on("end", () => {
+      //all chunks are in body now
+      const parsedBody = Buffer
+        .concat(body) //concat chunks
+        .toString(); //parse as text
+
+      const message = parsedBody.split("=")[1];
+      //write message to file
+      fs.writeFileSync("message.txt", message);
+    });
+
+    res.statusCode = 302; //redirect
+    res.setHeader("Location", "/");
+    //return so we break execution
+    return res.end();
+  }
+  //set content type header
+  res.setHeader("Content-Type", "text/html");
+  //send actual html as response
+  res.write("&lt;html&gt;");
+  res.write(`&lt;head&gt;
+              &lt;title&gt;Basic Node Page&lt;/title&gt;
+            &lt;/head&gt;`);
+  res.write(`&lt;body&gt;
+              &lt;h1&gt;Hello Node JS&lt;/h1&gt;
+             &lt;/body&gt;
+            `);
+  res.write("&lt;/html&gt;");
+  //end response and send it to client
+});
+
+//start the server
+server.listen(3000);
+        </pre>
+      </body>
+</html> 
+
+   
+
+   
