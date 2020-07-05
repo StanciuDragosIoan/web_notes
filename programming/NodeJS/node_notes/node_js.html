@@ -550,5 +550,327 @@ server.listen(3000);
         </pre
     >
     <p class="text center bold">Event Driven Code execution</p>
+    <p class="text">
+      The order of execution of the code, is not always the order in which the
+      code is written in the file (this is a quirk of asynchronous programming).
+    </p>
+    <p class="text">
+      For instance in the snippet below, the callback function will execute
+      after we set the <span class="snippet">statusCode()</span>,
+      <span class="snippet">setHeader()</span> and even send the response
+      <span class="snippet">res.end()</span> :
+    </p>
+    <pre class="code">
+      //register event listener for end
+      req.on("end", () => {
+        //callback function executes last
+        const parsedBody = Buffer
+          .concat(body) //concat chunks
+          .toString(); //parse as text
+        const message = parsedBody.split("=")[1];
+        fs.writeFileSync("message.txt", message);
+      });
+      //this runs first
+      res.statusCode = 302; //redirect
+      res.setHeader("Location", "/");
+      return res.end();
+    </pre>
+    <p class="text">
+      This has 2 implications:
+    </p>
+    <p class="text">
+      1. The event listener will keep executing even after the response from the
+      server is sent.
+    </p>
+    <p class="text">
+      2 . If we want to modify the response in the event listener, the snippet
+      above is a bad way to do it, we need to also send the response in the
+      event listener (so we need to move the 3 lines that configure the response
+      in the callback event listener function):
+    </p>
+    <pre class="code">
+      //register event listener for end
+      req.on("end", () => {
+        //callback function executes last
+        const parsedBody = Buffer
+          .concat(body) //concat chunks
+          .toString(); //parse as text
+        const message = parsedBody.split("=")[1];
+        fs.writeFileSync("message.txt", message);
+        res.statusCode = 302; //redirect
+        res.setHeader("Location", "/");
+        return res.end();
+      });
+    </pre>
+    <p class="text">
+      NodeJS uses this pattern (of passing a callback event listener function)
+      to functions like
+      <span class="snippet">http.createServer((req,res) => {});</span> or
+      <span class="snippet">req.on("end", cb()=>{})</span>. The request listener
+      (callback function) will execute at a later time, asynchronously. When it
+      encounters these event listeners, node will register them and will execute
+      them only when the event (in this case the request data parsing) finishes.
+      When that happens, node triggers the
+      <span class="snipept">"end"</span> event and executes the event listener
+      registered for it.
+    </p>
+    <p class="text">
+      The good thing about asynchronous programming is that the code execution
+      is never paused, for instance in the snippet below, NodeJS will register
+      the 2 event listeners and then execute the rest of the code and wait for
+      the events that trigger the event listeners to be sent:
+    </p>
+    <pre class="code">
+//check url and request type
+if (url === "/message" && req.method === "POST") {
+  //register event listener for data
+  const body = [];
+  req.on("data", (chunk) => {
+    console.log(chunk);
+    body.push(chunk);
+  });
+  //register event listener for end
+  req.on("end", () => {
+    //all chunks are in body now
+    const parsedBody = Buffer
+      .concat(body) //concat chunks
+      .toString(); //parse as text
+    const message = parsedBody.split("=")[1];
+    fs.writeFileSync("message.txt", message);
+    res.statusCode = 302; //redirect
+    res.setHeader("Location", "/");
+    return res.end();
+  });   
+}
+//the lines below run synchronously (immediately)
+//set content type header
+res.setHeader("Content-Type", "text/html");
+//send actual html as response
+res.write("&lt;html&gt;");
+res.write(`&lt;head&gt;
+            &lt;title&gt;Basic Node Page&lt;/title&gt;
+          &lt;/head&gt;`);
+res.write(`&lt;body&gt;
+            &lt;h1&gt;Hello Node JS&lt;/h1&gt;
+            &lt;/body&gt;
+          `);
+res.write("&lt;/html&gt;");
+//end response and send it to client
+res.end();
+    </pre>
+    <p class="text">
+      Once the data is submitted
+      <span class="snippet">req.on("data", cb)</span> the first event listener
+      is executed, and once the data is done being parsed
+      <span class="snippet">req.on("end", cb)</span>, the second event listener
+      is executed.
+    </p>
+    <p class="text">
+      So if we modify the whole code so far as in the 2 snippets above we get:
+    </p>
+    <pre class="code">
+//import http module
+const http = require("http");
+//import file system module
+const fs = require("fs");
+
+//create server
+const server = http.createServer((req, res) => {
+  //parse url
+  const url = req.url;
+  if (url === "/") {
+    //redirect
+    res.write("&lt;html&gt;");
+    res.write(`&lt;head&gt;
+                &lt;title&gt;Enter Msg&lt;/title&gt;
+              &lt;/head&gt;`);
+    res.write(
+      `&lt;body&gt;
+        &lt;form action='/message' method='POST'&gt;
+          &lt;input type='text' name='message'&gt;
+          &lt;button type='submit'&gt;Send&lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/body&gt;`,
+    );
+    res.write("&lt;/html&gt;");
+    //return so we break execution
+    return res.end();
+  }
+  //check url and request type
+  if (url === "/message" && req.method === "POST") {
+    //register event listener for data
+    const body = [];
+    req.on("data", (chunk) =&gt; {
+      console.log(chunk);
+      body.push(chunk);
+    });
+    //register event listener for end
+    req.on("end", () =&gt; {
+      //all chunks are in body now
+      const parsedBody = Buffer
+        .concat(body) //concat chunks
+        .toString(); //parse as text
+      const message = parsedBody.split("=")[1];
+      fs.writeFileSync("message.txt", message);
+      res.statusCode = 302; //redirect
+      res.setHeader("Location", "/");
+      return res.end();
+    });
+  }
+  //set content type header
+  res.setHeader("Content-Type", "text/html");
+  //send actual html as response
+  res.write("&lt;html&gt;");
+  res.write(`&lt;head&gt;
+              &lt;title&gt;Basic Node Page&lt;/title&gt;
+            &lt;/head&gt;`);
+  res.write(`&lt;body&gt;
+              &lt;h1&gt;Hello Node JS&lt;/h1&gt;
+             &lt;/body&gt;
+            `);
+  res.write("&lt;/html&gt;");
+  //end response and send it to client
+  res.end();
+});
+
+//start the server
+server.listen(3000);
+
+    </pre>
+
+    <p class="text">
+      If we run now the server, it seems to work properly, it registers the 2
+      event listeners<span class="snippet">on("data")</span> and
+      <span class="snippet">on.("end")</span> and then it moves on, sets the
+      <span class="snippet">Content-Type</span> header, and returns the form and
+      the submit button:
+    </p>
+    <div class="devPic">
+      <img src="./img/event.png" alt="" />
+    </div>
+    <p class="text">
+      Hoewever, because of the way we set the code up (so that it sets the
+      <span class="snippet">Content-Type</span> header first, when we do submit,
+      NodeJS will try to set again the headers in the
+      <span class="snippet">on("end")</span> event listener, the server will
+      stop and we will get the following error:
+    </p>
+    <div class="devPic">
+      <img src="./img/error.png" alt="" />
+    </div>
+    <p class="text">
+      A fix for this issue would be to return from the
+      <span class="snippet">req.on("end")</span> event listener so that the code
+      below is not executed anymore and Node will not try to set the
+      <span class="snippet">Content-Type</span>header again after having set the
+      location one before, and that way we get no error:
+    </p>
+    <pre class="code">
+    //register event listener and return
+    return req.on("end", () => {
+      //all chunks are in body now
+      const parsedBody = Buffer
+        .concat(body) //concat chunks
+        .toString(); //parse as text
+      const message = parsedBody.split("=")[1];
+      fs.writeFileSync("message.txt", message);
+      res.statusCode = 302; //redirect
+      res.setHeader("Location", "/");
+      return res.end();
+    });
+    //code from here on won't run anymore
+    </pre>
+    <p class="text">
+      This event driven architecture (with callback event listener functions)
+      allows Node to keep running without executing some specific code until
+      it's the time to do so but also without blocking the execution of the
+      whole program.
+    </p>
+    <p class="text bold center">Blocking and non-blocking code</p>
+    <p class="text">
+      <span class="snippet">writeFileSync()</span> is a synchronous method which
+      makes it to block the other code until it finishes running. For our basic
+      usecase, there is no need to worry about that because the writing is done
+      very fast. But if we were to have to write a much bigger file, everything
+      would get blocked until the writing is done.
+    </p>
+    <p class="text">
+      A better approach would be to use
+      <span class="snippet">writeFile()</span> which works asynchronously and
+      takes a callback function as an argument (so it has another event listener
+      registered by default and we can use it to perform the writing operation
+      asynchronously):
+    </p>
+    <pre class="code">
+//import http module
+const http = require("http");
+//import file system module
+const fs = require("fs");
+
+//create server
+const server = http.createServer((req, res) => {
+//parse url
+const url = req.url;
+if (url === "/") {
+  //redirect
+  res.write("&lt;html&lt;");
+  res.write(`&lt;head&lt;
+              &lt;title&lt;Enter Msg&lt;/title&lt;
+            &lt;/head&lt;`);
+  res.write(
+    `&lt;body&lt;
+      &lt;form action='/message' method='POST'&lt;
+        &lt;input type='text' name='message'&lt;
+        &lt;button type='submit'&lt;Send&lt;/button&lt;
+      &lt;/form&lt;
+    &lt;/body&lt;`,
+  );
+  res.write("&lt;/html&lt;");
+  //return so we break execution
+  return res.end();
+}
+//check url and request type
+if (url === "/message" && req.method === "POST") {
+  //register event listener for data
+  const body = [];
+  req.on("data", (chunk) => {
+    console.log(chunk);
+    body.push(chunk);
+  });
+  //register event listener for end
+  return req.on("end", () => {
+    //all chunks are in body now
+    const parsedBody = Buffer
+      .concat(body) //concat chunks
+      .toString(); //parse as text
+    const message = parsedBody.split("=")[1];
+    //register new event listener here
+  fs.writeFile("message.txt", message, (err) => {
+      res.statusCode = 302; //redirect
+      res.setHeader("Location", "/");
+      return res.end();
+    });
+  });
+}
+//set content type header
+res.setHeader("Content-Type", "text/html");
+//send actual html as response
+res.write("&lt;html&lt;");
+res.write(`&lt;head&lt;
+            &lt;title&lt;Basic Node Page&lt;/title&lt;
+          &lt;/head&lt;`);
+res.write(`&lt;body&lt;
+            &lt;h1&lt;Hello Node JS&lt;/h1&lt;
+            &lt;/body&lt;
+          `);
+res.write("&lt;/html&lt;");
+//end response and send it to client
+res.end();
+});
+
+//start the server
+server.listen(3000);
+
+    </pre>
   </body>
 </html>
