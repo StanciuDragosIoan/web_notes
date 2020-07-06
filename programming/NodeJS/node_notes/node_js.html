@@ -797,9 +797,9 @@ server.listen(3000);
     <p class="text">
       A better approach would be to use
       <span class="snippet">writeFile()</span> which works asynchronously and
-      takes a callback function as an argument (so it has another event listener
-      registered by default and we can use it to perform the writing operation
-      asynchronously):
+      takes a callback function as an argument (so node has another event
+      listener registered by default with this method and we can use it to
+      perform the writing operation asynchronously):
     </p>
     <pre class="code">
 //import http module
@@ -813,19 +813,19 @@ const server = http.createServer((req, res) => {
 const url = req.url;
 if (url === "/") {
   //redirect
-  res.write("&lt;html&lt;");
-  res.write(`&lt;head&lt;
-              &lt;title&lt;Enter Msg&lt;/title&lt;
-            &lt;/head&lt;`);
+  res.write("&lt;html&gt;");
+  res.write(`&lt;head&gt;
+              &lt;title&gt;Enter Msg&gt;/title&gt;
+            &lt;/head&gt;`);
   res.write(
-    `&lt;body&lt;
-      &lt;form action='/message' method='POST'&lt;
-        &lt;input type='text' name='message'&lt;
-        &lt;button type='submit'&lt;Send&lt;/button&lt;
-      &lt;/form&lt;
-    &lt;/body&lt;`,
+    `&lt;body&gt;
+      &lt;form action='/message' method='POST'&gt;
+        &lt;input type='text' name='message'&gt;
+        &lt;button type='submit'&gt;Send&lt;/button&gt;
+      &lt;/form&gt;
+    &lt;/body&gt;`,
   );
-  res.write("&lt;/html&lt;");
+  res.write("&lt;/html&gt;");
   //return so we break execution
   return res.end();
 }
@@ -855,15 +855,15 @@ if (url === "/message" && req.method === "POST") {
 //set content type header
 res.setHeader("Content-Type", "text/html");
 //send actual html as response
-res.write("&lt;html&lt;");
-res.write(`&lt;head&lt;
-            &lt;title&lt;Basic Node Page&lt;/title&lt;
-          &lt;/head&lt;`);
-res.write(`&lt;body&lt;
-            &lt;h1&lt;Hello Node JS&lt;/h1&lt;
-            &lt;/body&lt;
+res.write("&lt;html&gt;");
+res.write(`&lt;head&gt;
+            &lt;title&lt;Basic Node Page&lt;/title&gt;
+          &lt;/head&gt;`);
+res.write(`&lt;body&gt;
+            &lt;h1&gt;Hello Node JS&lt;/h1&gt;
+            &lt;/body&gt;
           `);
-res.write("&lt;/html&lt;");
+res.write("&lt;/html&gt;");
 //end response and send it to client
 res.end();
 });
@@ -872,5 +872,48 @@ res.end();
 server.listen(3000);
 
     </pre>
+    <p class="text bold center">
+      Single Thread, Event Loop and Blocking Code
+    </p>
+    <p class="text">
+      NodeJS uses a single JS thread.Code which needs to do some more complex
+      operations (like working with files) is handled by the worker threads (in
+      the Worker Pool). The Event Loop handles the callback function to be
+      executed after the file writing operation has finished. However for
+      complex operations (such as working with the file system, the worker pool
+      does the work, and the it is closely intervened with the OS so it can
+      allocate more threads in the system).
+    </p>
+    <p class="text center bold">
+      The event loop
+    </p>
+    <p class="text">
+      It is a loop that is started by node and that handles all the callbacks.It
+      checks if there are timer callbacks we have set like
+      <span class="snippet">setTimeout()</span> or
+      <span class="snippet">setInterval()</span>. Next it checks I/O related
+      callbacks (like file operations or network operations).
+    </p>
+    <p class="text">
+      After that it checks the Poll operations (new I/O events) and tries to
+      execute their callbacks or register them as pending callbacks.
+    </p>
+    <p class="text">
+      Next it checks the <span class="snippet">setImmediate()</span> callbacks
+      and execute them.
+    </p>
+    <p class="text">Next it checks the Close event Callbacks.</p>
+    <p class="text">
+      Finally the loop might stope with
+      <span class="snippet">process.exit</span> or it might continue if there
+      still are event listeners registered like when using
+      <span class="snippet">createServer()</span>.
+    </p>
+    <p class="text">
+      Regarding the potential security implications of handling multiple server
+      requests in a single thread, we should know that each request has its own
+      event listener callback function listed, and this way the data of each
+      request is handled and scoped separately.
+    </p>
   </body>
 </html>
