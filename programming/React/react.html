@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+    <title>React</title>
+  </head>
+  <body>
+    <h1 class="header">React</h1>
+    <p class="text">
+      React is a JS library for building User Interfaces. React runs in the
+      browser (so it is very fast/does not need to wait for a server
+      response).It uses components to build a UI.Components are re-usable and
+      modular.
+    </p>
+    <p class="text">
+      At a basic level, a React component is simply a function that receives
+      some props and returns some JSX. See below how we pass the
+      <span class="snippet">age</span> and
+      <span class="snipept">name</span> props and how we use them to configure
+      the component.
+    </p>
+    <p class="text center bold">
+      Simple Card Component
+    </p>
+    <pre class="code">
+      function Person(props){
+        //jsx in the return()
+        return(
+          &lt;div&gt;
+            &lt;h1&gt{props.name}&lt;/h1&gt
+            &lt;p&gtYour Age: {props.age}&lt;/p&gt
+          &lt;/div&gt
+        );
+      }
+      
+//select #p1 and render the Person component in it
+ReactDOM.render(&lt;Person name="Max" age="28" /&gt;, 
+  document.querySelector('#p1')
+);
+//select #p2 and render 2nd Person
+ReactDOM.render(&lt;Person name="Manu" age="29" /&gt;, 
+  document.querySelector('#p2')
+);
+    </pre>
+    <p class="text">
+      In order to render the card component above in the DOM, we have to target
+      a DOM element and render the component there with React:
+    </p>
+    <pre class="code">
+      //Max rendered here
+      &lt;div id="p1"&gt;&lt;div&gt;
+      //Manu rendered here
+      &lt;div id="p1"&gt;&lt;div&gt;
+    </pre>
+    <p class="text">
+      Further more, we can move the 2 ReactDOM.render calls inside a single one
+      which outputs the parent <span class="snippet">app</span> component as
+      below:
+    </p>
+    <pre class="code">
+      function Person(props){
+        //jsx in the return()
+        return(
+          &lt;div&gt;
+            &lt;h1&gt{props.name}&lt;/h1&gt
+            &lt;p&gtYour Age: {props.age}&lt;/p&gt
+          &lt;/div&gt
+        );
+      }
+
+var app = (
+  &lt;div&gt;
+    &lt;Person name="Max", age="28" &gt;
+    &lt;Person name="Manu", age="29" &gt;
+  &lt;/div&gt;
+);
+      
+//select #p1 and render the app component + children
+ReactDOM.render(app, 
+  document.querySelector('#app')
+);
+    </pre>
+  </body>
+</html>
