@@ -86,5 +86,65 @@ ReactDOM.render(app,
   document.querySelector('#app')
 );
     </pre>
+    <p class="text center bold">
+      Using a Build Workflow
+    </p>
+    <p class="text">A build workflow enables us to ship optimized and small code (for performance reasons). We also want to
+      be able to use ES6 + JS features. We need a workflow that supports these features and enables
+      us to be more productive.</p>
+      <p class="text">For this build workflow we need a <span class="snippet">dependency manager</span>  (line npm or yarn).</p>
+      <p class="text">We also need a <span class="snippet">module bundler</span>  like Webpack.</p>
+      <p class="text">We also need a compiler like <span class="snippet">Babel</span> (with presets). Babel presets are config 
+        details to the babel-transpiler telling it to transpile it in the specified mode (e.g. ES2015, Env, React).</p>
+      <p class="text">We also need a development server.</p>
+      <p class="text center bold">
+        Component Basics
+      </p>
+      <p class="text">
+        In a React application we render a root component and then inside of it we nest all the other 
+        components. 
+      </p>
+      <p class="text">The most basic way to create a React component is to create a class:</p>
+      <pre class="code">
+import React, { Component } from 'react';
+import './App.css';
+
+class App extends Component {
+  render(){
+    return (
+      &lt;div className="App"&gt;
+        &lt;h1&gt;Sample React App&lt;/h1&gt;
+      &lt;/div&gt;
+    );
+  }
+  
+}
+
+export default App;
+
+      </pre>
+      <p class="text">
+        The class must have a <span class="snippet">render()</span> method. This method will be ran to render 
+        the component in the DOM. In a component we can do other things too (like manipulate state) but 
+        the most basic thing a component can do is render something on the screen. Finally, after defining
+        the component, we <span class="snippet">export</span> it as a default export - so
+        as the whole file not as a module of a file.
+      </p>
+      <p class="text">
+        We then import it in the parent component (in this case we import App the parent component in the
+        index.js file:
+      </p>
+      <pre class="code">
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+ 
+
+ReactDOM.render(
+    <App />, document.getElementById('root')
+  );
+ 
+      </pre>
   </body>
 </html>
