@@ -35,6 +35,7 @@ body {
   max-width: 1265px;
   display: block;
   margin: auto;
+  margin-bottom: -1rem;
   line-height: 3rem;
 }
 

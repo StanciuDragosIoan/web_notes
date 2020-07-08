@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="../../../assets/css/main.css"
+      type="text/css"
+    />
+    <title>Docker</title>
+  </head>
+  <body>
+    <h1 class="header">Docker</h1>
+    <p class="text">
+      Docker is a set of platform as a service products that uses OS-level
+      virtualization to deliver software in packages called containers.
+      Containers are isolated from one another and bundle their own software,
+      libraries and configuration files. They can communicate with each other
+      through well-defined channels.
+    </p>
+    <p class="text">
+      Docker simplifies and accelerates your workflow, while giving developers
+      the freedom to innovate with their choice of tools, application stacks,
+      and deployment environments for each project.
+    </p>
+    <p class="text center bold">How to install docker on Ubuntu</p>
+    <p class="text">
+      In order to install docker on Ubuntu, run the below command:
+    </p>
+    <pre class="code">
+        sudo apt install docker.io
+    </pre>
+    <p class="text">
+      In order to start Docker and enable it to start after the system reboot
+      run:
+    </p>
+    <pre class="code">
+      sudo systemctl enable --now docker
+    </pre>
+    <p class="text">Also, in order to check the Docker version run:</p>
+    <pre class="code">
+      docker --version
+    </pre>
+    <p class="text">
+      In order to test docker run:
+    </p>
+    <pre class="code">
+      docker run hello-world
+    </pre>
+    <p class="text">
+      Unfortunately if not ran as <span class="snippet">sudo</span> the command
+      will throw the following error:
+      <br />
+      "Got permission denied while trying to connect to the Docker daemon
+      socket.."
+    </p>
+    <div class="devPic">
+      <img src="./img/docker_root.png" alt="docker root" />
+    </div>
+    <p class="text">
+      This basically mean that since Docker runs by default on a Unix socket
+      owned by the <span class="snippet">root</span>, so in order for the
+      command to run without running it as <span class="snippet">sudo</span>, we
+      need to create a Unix group (we'll call it docker) and add users to
+      it.When the Docker daemon starts, it creates a Unix socket accessible by
+      members of the docker group.
+    </p>
+    <p class="text">
+      First create the docker group:
+    </p>
+    <pre class="code">
+      sudo groupadd docker
+    </pre>
+    <p class="text">
+      Even if you get prompted that the group already exists, next run the below
+      command to add your user to the group:
+    </p>
+    <pre class="code">
+      sudo usermod -aG docker $USER
+    </pre>
+    <p class="text">In order to activate the changes to groups run:</p>
+    <pre class="code">
+      newgrp docker 
+    </pre>
+    <p class="text">
+      Next if you run the
+      <span class="snippet">docker run hello-world</span> command again, the
+      docker image will run and you will get the below output:
+    </p>
+    <div class="devPic">
+      <img src="./img/hello_docker.png" alt="" />
+    </div>
+  </body>
+</html>
