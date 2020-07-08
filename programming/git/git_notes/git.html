@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="../../../assets/css/main.css"
+      type="text/css"
+    />
+    <title>Git basic</title>
+  </head>
+  <body>
+    <h1 class="header">Git basic</h1>
+    <p class="text">
+      Git is a distributed version-control system for tracking changes in source
+      code during software development. It is designed for coordinating work
+      among programmers, but it can be used to track changes in any set of
+      files.
+    </p>
+    <p class="center text bold">How to perform a squahs of multiple commits</p>
+    <p class="text">
+      If we have multiple commits on a branch, it is a good idea to squash them
+      all before merging the branch into another branch or even pushing it onto
+      the remote repository.
+    </p>
+    <p class="text">
+      Let's say we are on our development branch and we have 3 commits, we can
+      confirm that by running:
+    </p>
+    <pre class="code">
+      git log
+    </pre>
+    <p class="text">
+      The output to that command will be:
+    </p>
+    <div class="devPic">
+      <img src="./img/git_squash.png" alt="" />
+    </div>
+    <p class="text">
+      So on the <span class="snippet">squash_branch</span> we have 3 commits.
+      Let's say we want to keep only 1 and squash the changes from the other 2
+      into it.
+    </p>
+    <p class="text">
+      In order to do that we have to run the below command:
+    </p>
+    <pre class="code">
+      git rebase -i --root
+    </pre>
+    <p class="text">
+      We can replace <span class="snippet">--root</span> with the hash of the
+      commit we want to squash into (so the one up until which we will squash).
+      By default <span class="snippet">--root</span> will take our latest
+      commit.The command above will open the vim mode for us:
+    </p>
+    <div class="devPic">
+      <img src="./img/vim.png" alt="" />
+    </div>
+    <p class="text">
+      At the top of the window we have the 3 commits in our history:
+    </p>
+    <p class="text">
+      <span class="snippet">pick 5e7ce76 created file</span>
+      <br />
+      <span class="snippet">pick 301999c started writing to file</span>
+      <br />
+      <span class="snippet">pick fb2d352 3rd commit</span>
+    </p>
+    <p class="text">
+      This will enter in <span class="snippet">nano</span> mode (similar to
+      vim). Now in the terminal input (replace the last 2
+      <span class="snippet">pick</span> commands with
+      <span class="snippet">s</span> from squash and leave the first
+      <span class="snippet">pick</span> command there).
+    </p>
+    <p class="text">Your window will look like this:</p>
+    <div class="devPic">
+      <img src="./img/squash.png" alt="" />
+    </div>
+    <p class="text">
+      Then press <span class="snippet">ctr + x</span> and you will be prompted
+      to confirm as below:
+    </p>
+    <div class="devPic">
+      <img src="./img/confirm_1st.png" alt="" />
+    </div>
+    <p class="text">
+      Confirm by typing
+      <span class="snippet">y</span> and then press
+      <span class="snippet">enter</span> .
+    </p>
+    <p class="text">
+      Next the window will prompt you to edit the commit message:
+    </p>
+    <div class="devPic">
+      <img src="./img/edit.png" alt="" />
+    </div>
+    <p class="text">Edit the message:</p>
+    <div class="devPic">
+      <img src="./img/edited.png" alt="" />
+    </div>
+    <p class="text">Press <span class="snippet">ctrl + x</span>:</p>
+    <div class="devPic">
+      <img src="./img/saved.png" alt="" />
+    </div>
+    <p class="text">
+      Next type in <span class="snippet">y</span> and hit
+      <span class="snippet">enter</span> to confirm
+    </p>
+    <p class="text">
+      Next in the terminal if you type <span class="snippet">git log</span> you
+      will see only 1 commit hash instead of 3 with the latest message (the one
+      you edited):
+    </p>
+    <div class="devPic">
+      <img src="./img/final_log.png" alt="" />
+    </div>
+  </body>
+</html>
