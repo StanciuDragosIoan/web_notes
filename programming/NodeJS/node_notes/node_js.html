@@ -918,7 +918,177 @@ server.listen(3000);
     <p class="text center bold">Using the node module system</p>
     <p class="text">
       We can split the <span class="snippet">server.js</span>file in multiple
-      files
+      files which we will use as node modules.
     </p>
+    <p class="text">
+      For instance the bit that checks the url and performs the routing will be
+      moved to a <span class="snippet">routes.js</span> file.
+    </p>
+    <p class="text">
+      Create a file <span class="snippet">routes.js</span> and paste the routing
+      logic in it:
+    </p>
+    <pre class="code">
+//import file system module
+const fs = require("fs");
+
+const requestHandler = (req, res) => {
+  //parse url
+  const url = req.url;
+  const method = req.method;
+
+  if (url === "/") {
+    //redirect
+    res.write("&lt;html&gt;");
+    res.write(`&lt;head&gt;
+                      &lt;title&gt;Enter Msg&lt;/title&gt;
+                    &lt;/head&gt;`);
+    res.write(
+      `&lt;body&gt;
+              &lt;form action='/message' method='POST'&gt;
+                &lt;input type='text' name='message'&gt;
+                &lt;button type='submit'&gt;Send&lt;/button&gt;
+              &lt;/form&gt;
+            &lt;/body&gt;`,
+    );
+    res.write("&lt;/html&gt;");
+    //return so we break execution
+    return res.end();
+  }
+  //check url and request type
+  if (url === "/message" && method === "POST") {
+    //register event listener for data
+    const body = [];
+    req.on("data", (chunk) => {
+      console.log(chunk);
+      body.push(chunk);
+    });
+    //register event listener for end
+    return req.on("end", () => {
+      //all chunks are in body now
+      const parsedBody = Buffer
+        .concat(body) //concat chunks
+        .toString(); //parse as text
+      const message = parsedBody.split("=")[1];
+      //register new event listener here
+      fs.writeFile("message.txt", message, (err) => {
+        res.statusCode = 302; //redirect
+        res.setHeader("Location", "/");
+        return res.end();
+      });
+    });
+  }
+  //set content type header
+  res.setHeader("Content-Type", "text/html");
+  //send actual html as response
+  res.write("&lt;html>");
+  res.write(`&lt;head>
+                    &lt;title>Basic Node Page&lt;/title&gt;
+                  &lt;/head&gt;`);
+  res.write(`&lt;body&gt;
+                    &lt;h1&gt;Hello Node JS&lt;/h1&gt;
+                   &lt;/body&gt;
+                  `);
+  res.write("&lt;/html&gt;");
+  //end response and send it to client
+  res.end();
+};
+
+//export as a global module
+module.exports = requestHandler;
+
+    </pre>
+
+    <p class="text">
+      Now we can import the <span class="snippet">requestHandler</span> method
+      into <span class="snippet">server.js:</span>
+    </p>
+    <pre class="code">
+//import http module
+const http = require("http");
+const routes = require("./routes");
+
+//create server
+const server = http.createServer((req, res) => {
+});
+
+//start the server
+server.listen(3000);
+
+    </pre>
+    <p class="text">
+      Next replace the callback event listener from the
+      <span class="snippet">server.js</span> with
+      <span class="snippet">routes</span> (which holds our custom requestHandler
+      function registered into <span class="snippet">module.exports</span>).
+    </p>
+    <pre class="code">
+//import http module
+const http = require("http");
+const routes = require("./routes");
+
+//create server (use routes here)
+const server = http.createServer(routes);
+
+//start the server
+server.listen(3000);
+
+    </pre>
+    <p class="text">
+      Now the code works just as before. Also note that we cannot edit the
+      <span class="snippet">routes</span> object inside
+      <span class="snippet">server.js</span> by using:
+    </p>
+    <pre class="code">
+  routes.prop = () => {
+    console.log("stuff can't change externally");
+  }
+    </pre>
+    <p class="text">This approach would not work.</p>
+    <p class="text">
+      We can also export the <span class="snippet">routes.js</span> file as an
+      object too:
+    </p>
+    <pre class="code">
+      module.exports = {
+        handler: requestHandler,
+        someText: "Hard coded text.."
+      }
+    </pre>
+    <p class="text">
+      And inside <span class="snippet">server.js</span> the handler is now a
+      property of <span class="snippet">routes</span> so we would use it as:
+    </p>
+    <pre class="code">
+//import http module
+const http = require("http");
+const routes = require("./routes");
+
+console.log(routes.text);
+
+//create server
+const server = http.createServer(routes.handler);
+
+//start the server
+server.listen(3000);
+
+    </pre>
+    <p class="text">
+      We can also export a single object with multiple properties by setting
+      them manually onto the <span class="snippet">module.exports</span> global
+      object:
+    </p>
+    <pre class="code">
+      module.exports.handler = requestHandler;
+      module.exports.text = "Hard coded text..";
+    </pre>
+    <p class="text">
+      We can also shorten the export even more by removing the
+      <span class="snippet">module</span> keyword:
+    </p>
+    <pre class="code">
+      exports.handler = requestHandler;
+      exports.text = "Hard coded text..";
+    </pre>
   </body>
 </html>
