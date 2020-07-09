@@ -1090,5 +1090,65 @@ server.listen(3000);
       exports.handler = requestHandler;
       exports.text = "Hard coded text..";
     </pre>
+    <p class="text bold center">How NPM scripts run</p>
+    <p class="text">
+      A <span class="snippet">node</span> project can have scripts configured
+      via npm (node package manager).
+    </p>
+    <p class="text">In order to start an npm project run:</p>
+    <pre class="code">
+      npm init
+    </pre>
+    <p class="text">
+      Answer the questions or type the command with the
+      <span class="snippet">-y</span> and npm will put some defaults in the
+      questions answers or leave them blank.
+    </p>
+    <p class="text">
+      The command will generate a configuration file that loks like:
+    </p>
+    <pre class="code">
+      {
+        "name": "42",
+        "version": "1.0.0",
+        "description": "sample project",
+        "main": "server.js",
+        "scripts": {
+          "test": "echo \"Testing..\" && exit 1",
+          "start": "node server.js",
+          "start2": "node server.js"
+        },
+        "author": "",
+        "license": "ISC"
+      }
+      
+    </pre>
+    <p class="text">
+      This configuration file has many elements in it but the most important one
+      is the <span class="snippet">scripts</span> object. Not it has a
+      <span class="snippet">start</span> script which we can run with:
+    </p>
+    <pre class="code">
+      npm start
+    </pre>
+    <p class="text">
+      We use npm start instead of <span class="snippet">node server.js</span>
+    </p>
+    <p class="text">
+      Note that the <span class="snippet">start</span>keyword allows us to start
+      the script by simply running <span class="snippet">npm start</span>.
+      However, this happens because <span class="snippet">start</span> is a
+      reserved keyword but if we try to run the
+      <span class="snippet">start2</span> script the same way (so with
+      <span class="snippet">npm start2</span> ), we will get an error of an
+      unknown command.
+    </p>
+    <p class="text">
+      In order to run the <span class="snippet">start2</span> script (or any
+      other custom script), we have to use the command:
+    </p>
+    <pre class="code">
+      npm run start2 //script name here
+    </pre>
   </body>
 </html>
