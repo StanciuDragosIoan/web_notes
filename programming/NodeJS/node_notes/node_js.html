@@ -66,8 +66,8 @@
     <p class="text">
       Start the server with the <span class="snippet">listen()</span> method
       (which takes in a port and a host as an argument). Since we are on our
-      local machine, we do not need to specify a host, it will use localhost by
-      default.
+      local machine, we do not need to specify a host, it will use
+      <span class="snippet">localhost</span> by default.
     </p>
     <pre class="code">
       //start the server
@@ -105,7 +105,7 @@
       //create server
       const server = http.createServer((req, res) => {
         console.log(req);
-        process.exit;//exit on request
+        process.exit();//exit on request
       });
 
       //start the server
@@ -195,25 +195,28 @@ server.listen(3000);
     </pre>
     <p class="text">
       If we open the browser and we go to developer tools, the network tab and
-      reload, we can click on the localhost request and if we select the
-      <span class="snippet">localhost</span> request, we can see that we have
-      the <span class="snippet">Headers</span> tab open by default. We can see
-      our <span class="snippet">Content-Type:text/html</span> header set
-      together with other default headers set by the browser:
+      reload, we can click on the <span class="snippet">localhost</span> request
+      and if we do that, we can see that we have the
+      <span class="snippet">Headers</span> tab open by default. We can see our
+      <span class="snippet">Content-Type:text/html</span> header set together
+      with other default headers set by the browser:
     </p>
     <div class="devPic">
       <img src="./img/chrome_tools.png" alt="" />
     </div>
     <p class="text">
       If we click on the <span class="snippet">Response</span> tab, we can see
-      the html response raw (remember, we set it with
+      the raw html response which remember, we sent with
       <span class="snippet">res.end():</span>
     </p>
     <div class="devPic">
       <img src="./img/chrome_tools2.png" alt="" />
     </div>
     <p class="text center bold">How to route a reuqest</p>
-    <p class="text">In order to route a request, we need to parse the url:</p>
+    <p class="text">
+      In order to route a request, we need to parse the url and based on it, to
+      decide what response to return:
+    </p>
     <pre class="code">
 //import http module
 const http = require("http");
@@ -223,7 +226,7 @@ const server = http.createServer((req, res) => {
   //parse url
   const url = req.url;
   if (url === "/") {
-    //redirect
+    //send html response
     res.write("&lt;html&gt;");
     res.write(`&lt;head&gt;
                 &lt;title&gt;Enter Msg&lt;/title&gt;
@@ -260,8 +263,9 @@ server.listen(3000);
 
     </pre>
     <p class="text">
-      The routing of the request is done when the request hits the
-      <span class="snippet">/</span> url. Also, note how we return after the
+      When the request hits the
+      <span class="snippet">/</span> url, we simply return an html response with
+      a form. Also, note how we return after the
       <span class="snippet">if (url === "/")</span> statement, in order to
       prevent further execution of the function.
     </p>
@@ -291,9 +295,9 @@ server.listen(3000);
     <p class="text center bold">Redirecting requests</p>
     <p class="text">
       We will redirect the request. When the user submits the form and makes a
-      post to <span class="snippet">/message</span>, we will write a file (using
-      the <span class="snippet">fs module</span>) and redirect them back to
-      <span class="snippet">/</span>.
+      post request to <span class="snippet">/message</span>, we will write a
+      file (using the <span class="snippet">fs module</span>) and redirect them
+      back to <span class="snippet">/</span>.
     </p>
     <pre class="code">
 //import http module
@@ -306,7 +310,7 @@ const server = http.createServer((req, res) => {
   //parse url
   const url = req.url;
   if (url === "/") {
-    //redirect
+    //return form in response
     res.write("&lt;html&gt;");
     res.write(`&lt;head&gt;
                 &lt;title&gt;Enter Msg&lt;/title&gt;
@@ -327,6 +331,7 @@ const server = http.createServer((req, res) => {
   if (url === "/message" && req.method === "POST") {
     //write new file
     fs.writeFileSync("message.txt", "DUMMY TEXT");
+    //redirect to "/"
     res.statusCode = 302; //redirect
     res.setHeader("Location", "/");
     //return so we break execution
@@ -334,7 +339,7 @@ const server = http.createServer((req, res) => {
   }
   //set content type header
   res.setHeader("Content-Type", "text/html");
-  //send actual html as response
+  //send default html response
   res.write("&lt;html&gt;");
   res.write(`&lt;head&gt;
               &lt;title&gt;Basic Node Page&lt;/title&gt;
@@ -360,7 +365,7 @@ server.listen(3000);
       the data the user sends. In order to do that, we will use the
       <span class="snippet">req.body</span>.
     </p>
-    <p class="text center">Streams and buffers</p>
+    <p class="text center bold">Streams and buffers</p>
     <p class="text">
       The stream of data is like a process that sends the data continously.Node
       JS reads the request in chunks. At some point, node finishes reading the
@@ -397,7 +402,7 @@ const server = http.createServer((req, res) => {
   //parse url
   const url = req.url;
   if (url === "/") {
-    //redirect
+    //send form html response
     res.write("&lt;html&gt;");
     res.write(`&lt;head&gt;
                 &lt;title&gt;Enter Msg&lt;/title&gt;
@@ -433,6 +438,7 @@ const server = http.createServer((req, res) => {
     });
     //write new file
     fs.writeFileSync("message.txt", "DUMMY TEXT");
+    //redirect to "/"
     res.statusCode = 302; //redirect
     res.setHeader("Location", "/");
     //return so we break execution
@@ -440,7 +446,7 @@ const server = http.createServer((req, res) => {
   }
   //set content type header
   res.setHeader("Content-Type", "text/html");
-  //send actual html as response
+  //send default html response
   res.write("&lt;html&gt;");
   res.write(`&lt;head&gt;
               &lt;title&gt;Basic Node Page&lt;/title&gt;
@@ -460,7 +466,7 @@ server.listen(3000);
     >
     <p class="text">
       If we run the server now and make a
-      <span class="snippet">POST</span> rerquest to
+      <span class="snippet">POST</span> request to
       <span class="snippet">/message</span>, we get the following output in the
       terminal:
     </p>
@@ -609,7 +615,7 @@ server.listen(3000);
       <span class="snippet">req.on("end", cb()=>{})</span>. The request listener
       (callback function) will execute at a later time, asynchronously. When it
       encounters these event listeners, node will register them and will execute
-      them only when the event (in this case the request data parsing) finishes.
+      them only when the event fires(in this case the request data is parsed).
       When that happens, node triggers the
       <span class="snipept">"end"</span> event and executes the event listener
       registered for it.
@@ -719,7 +725,7 @@ const server = http.createServer((req, res) => {
   }
   //set content type header
   res.setHeader("Content-Type", "text/html");
-  //send actual html as response
+  //send default html response
   res.write("&lt;html&gt;");
   res.write(`&lt;head&gt;
               &lt;title&gt;Basic Node Page&lt;/title&gt;
@@ -759,7 +765,7 @@ server.listen(3000);
       <img src="./img/error.png" alt="" />
     </div>
     <p class="text">
-      A fix for this issue would be to return from the
+      A fix for this issue would be to return the
       <span class="snippet">req.on("end")</span> event listener so that the code
       below is not executed anymore and Node will not try to set the
       <span class="snippet">Content-Type</span>header again after having set the
@@ -789,7 +795,7 @@ server.listen(3000);
     <p class="text bold center">Blocking and non-blocking code</p>
     <p class="text">
       <span class="snippet">writeFileSync()</span> is a synchronous method which
-      makes it to block the other code until it finishes running. For our basic
+      makes it block the other code until it finishes running. For our basic
       usecase, there is no need to worry about that because the writing is done
       very fast. But if we were to have to write a much bigger file, everything
       would get blocked until the writing is done.
@@ -854,7 +860,7 @@ if (url === "/message" && req.method === "POST") {
 }
 //set content type header
 res.setHeader("Content-Type", "text/html");
-//send actual html as response
+//send default html response
 res.write("&lt;html&gt;");
 res.write(`&lt;head&gt;
             &lt;title&lt;Basic Node Page&lt;/title&gt;
@@ -881,8 +887,8 @@ server.listen(3000);
       the Worker Pool). The Event Loop handles the callback function to be
       executed after the file writing operation has finished. However for
       complex operations (such as working with the file system, the worker pool
-      does the work, and the it is closely intervened with the OS so it can
-      allocate more threads in the system).
+      does the work, and it can do so because it is closely intervened with the
+      OS so it can allocate more threads in the system).
     </p>
     <p class="text center bold">
       The event loop
@@ -904,7 +910,7 @@ server.listen(3000);
     </p>
     <p class="text">Next it checks the Close event Callbacks.</p>
     <p class="text">
-      Finally the loop might stope with
+      Finally the loop might stop with
       <span class="snippet">process.exit</span> or it might continue if there
       still are event listeners registered like when using
       <span class="snippet">createServer()</span>.
@@ -1150,5 +1156,73 @@ server.listen(3000);
     <pre class="code">
       npm run start2 //script name here
     </pre>
+    <p class="text center bold">
+      3rd party packages in node
+    </p>
+    <p class="text">
+      A NodeJS project is made up of the following:
+      <br />
+      our base code, core node modules (like the
+      <span class="snippet">fs</span> or the
+      <span class="snippet">http</span> packages ) and 3rd party packages.
+    </p>
+    <p class="text">
+      3rd party packages (more specialised) are modules that we install with
+      <span class="snippet">npm</span> in our project. Express or body-parser
+      are packages that we can use. These packages are available through the npm
+      repository and we can install and manage them with npm.
+    </p>
+    <p class="text">
+      In order to install a package we can use the
+      <span class="snippet">install</span> or shorter
+      <span class="snippet">i</span> command with npm. The package we will
+      install is called nodemon (it will give hot reloading for our server).
+      Install it by running:
+    </p>
+    <pre class="code">
+      npm i nodemon --save-dev //as dev dependency
+    </pre>
+    <p class="text">
+      After installing nodemon we see some things changed in the project. First
+      we can see that a <span class="snippet">package.lock.json</span> file
+      (used for specific versioning) was added, next we see the
+      <span class="snippet">node_modules</span> folder and we see that the
+      <span class="snippet">package.json</span> file was updated with a
+      <span class="snippet">devDependencies</span> section:
+    </p>
+    <pre class="code">
+      {
+        "name": "42",
+        "version": "1.0.0",
+        "description": "course sample",
+        "main": "server.js",
+        "scripts": {
+          "test": "echo \"Testing..",
+          "start": "node server.js",
+          "start2": "node server.js"
+        },
+        "author": "",
+        "license": "ISC",
+        "devDependencies": {
+          "nodemon": "^2.0.4"
+        }
+      }
+    </pre>
+    <p class="text">
+      In order to use nodemon, just replace the
+      <span class="snippet">start</span> script from
+      <span class="snippet">node server.js</span> to
+      <span class="snippet">nodemon server.js</span>. Note that running
+      <span class="snippet">nodemon server.js</span> in the terminal would not
+      work, as nodemon has not been installed globally on the system. If we want
+      to do that, we need to install it with the
+      <span class="snippet">-g</span> flag.
+    </p>
+    <p class="text">
+      There are 3 types of available "features" in NodeJS: global features
+      (const, function, process) available anywhere without import or install,
+      core Node modules (like fs, path, http) which we can use but we have to
+      import, and 3rd party modules which we install and import.
+    </p>
   </body>
 </html>
