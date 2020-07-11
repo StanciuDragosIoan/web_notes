@@ -90,6 +90,25 @@ ReactDOM.render(app,
   document.querySelector('#app')
 );
     </pre>
+    <p class="text bold center">
+      Single page apps vs multi-page apps
+    </p>
+    <p class="text">
+      With React we can build a single page app or a multi-page one. In a single
+      page app, we get back from the server only one single html file. The first
+      time the user visits the page we get that html file and all the other
+      content is rendered dynamically with JS.
+    </p>
+    <p class="text">
+      In a multi-page app we get back multiple pages and each of them has some
+      content inside (and a route assigned). We can also use React in these apps
+      but only for little widgets (not the entire page).
+    </p>
+    <p class="text">
+      The more popular approach is building a single page app, and rendering
+      content dynamically, so that we don't have to call the server again, the
+      UX is much better.
+    </p>
     <p class="text center bold">
       Using a Build Workflow
     </p>
@@ -108,10 +127,93 @@ ReactDOM.render(app,
     </p>
     <p class="text">
       We also need a compiler like <span class="snippet">Babel</span> (with
-      presets). Babel presets are config details to the babel-transpiler telling
-      it to transpile it in the specified mode (e.g. ES2015, Env, React).
+      presets). Babel presets are config details sent to the babel-transpiler
+      telling it to transpile it in the specified mode (e.g. ES2015, Env,
+      React).
     </p>
     <p class="text">We also need a development server.</p>
+    <p class="text center bold">create-react-app</p>
+    <p class="text">
+      <span class="snippet">create-react-app</span> is the standard tool for
+      building react applications. We can install it globally with npm by
+      running:
+    </p>
+    <pre class="code">
+      npm i -g create-react-app
+    </pre>
+    <p class="text">
+      After installing it on our system we can create react apps with the
+      command:
+    </p>
+    <pre class="code">
+      create-react-app app_name
+    </pre>
+    <p class="text">
+      We can also create react apps without installing
+      <span class="snippet">create-react-app</span> by using
+      <span class="snippet">npx</span> with the below command:
+    </p>
+    <pre class="code">
+      npx create-react-app app_name
+    </pre>
+    <p class="text">
+      Once the app is created, you need to <span class="snippet">cd</span> into
+      the project folder and the run <span class="snippet">npm start</span>.
+      This will start the development server.
+    </p>
+    <p class="text center">
+      App file structure
+    </p>
+    <p class="text">
+      The default app structure of a react application is the following:
+    </p>
+    <div class="devPic">
+      <img src="./img/folder_structure.png" alt="" />
+    </div>
+    <p class="text">
+      We have the 2 base configuration files
+      <span class="snippet">package.json</span> for dependencies management and
+      <span class="snippet">package-lock.json</span> for dependencies verions
+      management, a <span class="snippet">README</span> and a
+      <span class="snippet">.gitignore</span> file.
+    </p>
+    <p class="text">
+      We also have the <span class="snippet">node_modules</span> folder which
+      holds all the dependencies of the app.
+    </p>
+    <p class="text">
+      The <span class="snippet">public</span> folder is the root folder that the
+      webserver will serve, by default it has an index.html file (this is the
+      file that will be served to the client by the web server, and everything
+      will be rendered in the div with the id
+      <span class="snippet">root</span> ), a manifest.json (containing some
+      meta-data about the app) and some icons:
+    </p>
+    <div class="devPic">
+      <img src="./img/public.png" alt="" />
+    </div>
+    <p class="text">
+      The <span class="snippet">src</span> folder holds our source code:
+    </p>
+    <div class="devPic">
+      <img src="./img/src.png" alt="" />
+    </div>
+    <p class="text">
+      The <span class="snippet">index.js</span> file can access the div with the
+      id <span class="snippet">root</span> in the index.html file and it renders
+      the app component inside of it:
+    </p>
+    <pre class="code">
+      ReactDOM.render(
+  &lt;React.StrictMode&gt;
+    &lt;App /&gt;
+  &lt;/React.StrictMode&gt;,
+  document.getElementById("root"),
+);
+    </pre>
+    <p class="text">
+      The app component is imported in index.js and displayed from it.
+    </p>
     <p class="text center bold">
       Component Basics
     </p>
@@ -151,7 +253,7 @@ export default App;
     </p>
     <p class="text">
       We then import it in the parent component (in this case we import App the
-      parent component in the index.js file:
+      parent component in the index.js file):
     </p>
     <pre class="code">
 import React from 'react';
@@ -161,9 +263,51 @@ import App from './App';
  
 
 ReactDOM.render(
-    <App />, document.getElementById('root')
+    app, document.getElementById('root')
   );
  
-      </pre>
+      </pre
+    >
+    <p class="text center bold">
+      JSX
+    </p>
+    <p class="text">
+      A component takes in props and returns JSX. JSX is similar to html but
+      slightly different and it can have logic inside.The JSX is returned from
+      the <span class="snippet">return</span> method of the class, and it
+      compiles to <span class="snippet">React.createElement()</span>.
+    </p>
+    <p class="text">
+      JSX also involves that we sometimes use slightly different attributes
+      (like <span class="snippet">className</span> instead of
+      <span class="snippet">class</span>
+    </p>
+    <p class="text">
+      Another specificity of JSX is that it requires that everything in a
+      component has a single root element:
+    </p>
+    <pre class="code">
+function App() {
+  return (
+    &lt;div className="App"&gt;
+      &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+    &lt;/div&gt;
+  );
+}
+    </pre>
+    <p class="text">
+      This means that we cannot have something like:
+    </p>
+    <pre class="code">
+      function App() {
+        return (
+          &lt;div className="App"&gt;
+            &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+          &lt;/div&gt;
+          &lt;h1&gt;Another header&lt;/h1&gt;
+        );
+      }
+          </pre
+    >
   </body>
 </html>
