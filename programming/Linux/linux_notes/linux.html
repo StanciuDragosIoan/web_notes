@@ -41,8 +41,78 @@
       the 'network' button to connect to networks
     </p>
     <div class="devPic">
-      <img src="../img/otherlocations.png" alt="other locations linux" />
+      <img src="./img/otherlocations.png" alt="other locations linux" />
     </div>
+    <p class="text bold center">
+      Linux as a server
+    </p>
+    <p class="text">
+      The real power of a linux distribution comes from running a server. All
+      servers run a linux/unix distribution.
+    </p>
+    <p class="text">
+      A server may refer to 2 things:
+    </p>
+    <p class="text">
+      1. A program that runs in the background and serves some service or
+      function to a number of users.
+    </p>
+    <p class="text">
+      2. A machine that does the same thing.
+    </p>
+    <p class="text">
+      For instance a web server can refer to both a program and a machine.
+    </p>
+    <p class="text">
+      Apache HTTPD is one such webserver, and one of the most popular ones (it
+      is used with the LAMP stack).
+    </p>
+    <p class="text">
+      Nginx is a newer webserver than Apache (1995) as it was released in 2002.
+    </p>
+    <p class="text">
+      System administrators usually preffer to use both Apache and Nginx. Apache
+      is powerful when serving dynamic content (the page is build on the fly,
+      while the user visits it), whereas Nginx is powerful when serving static
+      content (the page is already on the server and when the client visits it,
+      it gets 'served').
+    </p>
+    <p class="text center bold">
+      Software management in Linux
+    </p>
+    <p class="text">
+      Ubuntu Software Center is the software hub for the Linux distributions. It
+      has many programs that we might need. Under the hood, the software center
+      has access to all the programs in the ubuntu repos.
+    </p>
+    <p class="center bold text">
+      apt-get
+    </p>
+    <p class="text">
+      The <span class="snippet">apt-get</span> command is used to download and
+      install programs and packages from repositories. A repository is like a
+      website used to download packages. Repositories are made and maintained by
+      the vendor. For instance the Ubuntu repository is made and maintained by
+      Ubuntu and the software can be downloaded either through the Software
+      Center or with the <span class="snippet">apt-get</span> command.
+    </p>
+    <p class="text">
+      The <span class="snippet">apt-get</span> command takes care of
+      dependencies (it will download and install them too before installing a
+      specific program).
+    </p>
+    <p class="text center bold">dpkg</p>
+    <p class="text">
+      <span class="snippet">dpkg</span> stands for "Debian Package Manager" and
+      it is basically a program used to install the software. It is a low level
+      program, thus it can install a program once we give it to it, but it will
+      not manage dependencies too, so it will not search/download these.
+    </p>
+    <p class="text">
+      The <span class="snippet">dpkg</span> program is used behind the scenes
+      either when we use the <span class="snippet">apt-get</span> command or the
+      Ubuntu Software Center to install software through the GUI.
+    </p>
     <h1 class="header">Getting familiar with the command line</h1>
     <p class="text">
       A lot of functionality in linux can be done through the GUI, but power
@@ -134,7 +204,7 @@
       programs installed with the same name in 2 different locations in the
       $PATH, the first one will run first.
     </p>
-    <p class="title text center">Bash Scripting</p>
+    <p class="bold text center">Bash Scripting</p>
     <p class="text">
       In a linux distribution we can create scripts that can automate tasks for
       us (can run programs and perform various actions). We will create a simple
@@ -181,7 +251,42 @@
       included):
     </p>
     <div class="devPic">
-      <img src="../img/tree.png" alt="filesystem tree linux" />
+      <img src="./img/tree.png" alt="filesystem tree linux" />
     </div>
+    <p class="text center bold">Running in the background</p>
+    <p class="text">
+      If we open the terminal and run <span class="snippet">firefox</span>, the
+      browser starts up but the terminal console remains blocked (we cannot
+      input commands anymore):
+    </p>
+    <div class="devPic">
+      <img src="./img/firefox.png" alt="firefox" />
+    </div>
+    <p class="text">
+      In order to be able to run commands after executing the
+      <span class="snippet">firefox</span>one, we need to run it as:
+    </p>
+    <pre class="code">
+      firefox &
+    </pre>
+    <p class="text">
+      If we do that, the terminal remains available for more commands to be
+      used:
+    </p>
+    <div class="devPic">
+      <img src="./img/firefox&.png" alt="firefox &" />
+    </div>
+    <p class="text center bold">
+      The Bash Shell
+    </p>
+    <p class="text">
+      The Bash shell is the defautl shell in Linux. There are other shells too.
+      It is a GNU alternative to the Bourne Shell which is the default Unix
+      shell. It offers command completion and it remembers the history of
+      executed commands.
+    </p>
+    <p class="text center bold">
+      The 'man' pages
+    </p>
   </body>
 </html>
