@@ -20,7 +20,7 @@ Electron/React app        1
 
 ### Task In Progress      
 
-React Course
+NodeJS Course
 
 
 

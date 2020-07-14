@@ -755,9 +755,9 @@ server.listen(3000);
       <img src="./img/event.png" alt="" />
     </div>
     <p class="text">
-      Hoewever, because of the way we set the code up (so that it sets the
-      <span class="snippet">Content-Type</span> header first, when we do submit,
-      NodeJS will try to set again the headers in the
+      Howewever, because of the way we set the code up (so that it calls
+      <span class="snippet">res.end()</span> and sets the http headers first,
+      when we do submit, NodeJS will try to set again the headers in the
       <span class="snippet">on("end")</span> event listener, the server will
       stop and we will get the following error:
     </p>
@@ -1223,6 +1223,161 @@ server.listen(3000);
       (const, function, process) available anywhere without import or install,
       core Node modules (like fs, path, http) which we can use but we have to
       import, and 3rd party modules which we install and import.
+    </p>
+    <p class="text center bold">
+      Errors
+    </p>
+    <p class="text">
+      There are different types of errors in a program like syntax errors
+      (missing a character), Runtime errors (errors where we try to execute some
+      code which breaks at runtime), logical errors (the most difficult to spot-
+      app just works bad but no specific error).
+    </p>
+    <p class="text center bold">
+      Runtime errors
+    </p>
+    <p class="text">
+      Runtime errors occur when all the code lines are correct but the code
+      overall does not work as expected:
+    </p>
+    <pre class="code">
+      //check url and request type
+if (url === "/message" && req.method === "POST") {
+  //register event listener for data
+  const body = [];
+  req.on("data", (chunk) => {
+    console.log(chunk);
+    body.push(chunk);
+  });
+  //register event listener for end
+  req.on("end", () => {
+    //all chunks are in body now
+    const parsedBody = Buffer
+      .concat(body) //concat chunks
+      .toString(); //parse as text
+    const message = parsedBody.split("=")[1];
+    fs.writeFileSync("message.txt", message);
+    res.statusCode = 302; //redirect
+    res.setHeader("Location", "/");
+    return res.end();
+  });   
+}
+//the lines below run synchronously (immediately)
+//set content type header
+res.setHeader("Content-Type", "text/html");
+//send actual html as response
+res.write("&lt;html&gt;");
+res.write(`&lt;head&gt;
+            &lt;title&gt;Basic Node Page&lt;/title&gt;
+          &lt;/head&gt;`);
+res.write(`&lt;body&gt;
+            &lt;h1&gt;Hello Node JS&lt;/h1&gt;
+            &lt;/body&gt;
+          `);
+res.write("&lt;/html&gt;");
+//end response and send it to client
+res.end();
+    </pre>
+    <p class="text">
+      Once the data is submitted
+      <span class="snippet">req.on("data", cb)</span> the first event listener
+      is executed, and once the data is done being parsed
+      <span class="snippet">req.on("end", cb)</span>, the second event listener
+      is executed.
+    </p>
+    <p class="text">
+      So if we modify the whole code so far as in the 2 snippets above we get:
+    </p>
+    <pre class="code">
+//import http module
+const http = require("http");
+//import file system module
+const fs = require("fs");
+
+//create server
+const server = http.createServer((req, res) => {
+  //parse url
+  const url = req.url;
+  if (url === "/") {
+    //redirect
+    res.write("&lt;html&gt;");
+    res.write(`&lt;head&gt;
+                &lt;title&gt;Enter Msg&lt;/title&gt;
+              &lt;/head&gt;`);
+    res.write(
+      `&lt;body&gt;
+        &lt;form action='/message' method='POST'&gt;
+          &lt;input type='text' name='message'&gt;
+          &lt;button type='submit'&gt;Send&lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/body&gt;`,
+    );
+    res.write("&lt;/html&gt;");
+    //return so we break execution
+    return res.end();
+  }
+  //check url and request type
+  if (url === "/message" && req.method === "POST") {
+    //register event listener for data
+    const body = [];
+    req.on("data", (chunk) =&gt; {
+      console.log(chunk);
+      body.push(chunk);
+    });
+    //register event listener for end
+    req.on("end", () =&gt; {
+      //all chunks are in body now
+      const parsedBody = Buffer
+        .concat(body) //concat chunks
+        .toString(); //parse as text
+      const message = parsedBody.split("=")[1];
+      fs.writeFileSync("message.txt", message);
+      res.statusCode = 302; //redirect
+      res.setHeader("Location", "/");
+      return res.end();
+    });
+  }
+  //set content type header
+  res.setHeader("Content-Type", "text/html");
+  //send default html response
+  res.write("&lt;html&gt;");
+  res.write(`&lt;head&gt;
+              &lt;title&gt;Basic Node Page&lt;/title&gt;
+            &lt;/head&gt;`);
+  res.write(`&lt;body&gt;
+              &lt;h1&gt;Hello Node JS&lt;/h1&gt;
+             &lt;/body&gt;
+            `);
+  res.write("&lt;/html&gt;");
+  //end response and send it to client
+  res.end();
+});
+
+//start the server
+server.listen(3000);
+    </pre>
+    <p class="text">
+      In the snippet above, if we do not
+      <span class="snippet">return</span> before
+      <span class="snippet">res.end()</span> in the callback functions, we get
+      an http headers error because we had already set the http headers and
+      configured the response when we called
+      <span class="snippet">res.end()</span> and we try to do the same thing
+      again when we call <span class="snippet">setHeader()</span> .
+    </p>
+    <p class="text bold center">
+      Logical Errors
+    </p>
+    <p class="text">
+      These are the hardest to spot, and we will use the debugger to work
+      through them:
+    </p>
+    <div class="devPic">
+      <img src="./img/debug.png" alt="" />
+    </div>
+    <p class="text">
+      With the debugger we can run slowly through the code, watch variables
+      change at runtime, notice how functions are executed, and much more..
     </p>
   </body>
 </html>
