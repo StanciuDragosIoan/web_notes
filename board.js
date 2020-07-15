@@ -20,8 +20,8 @@ Electron/React app        1
 
 ### Task In Progress      
 
-NodeJS Course
-
+NodeJS Course              2
+React Course               1.3        (left video 38)
 
 
 ### Tasks Done   ### Points burned  ### Actual coursetime      ### efficiency

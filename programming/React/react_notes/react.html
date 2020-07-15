@@ -275,7 +275,10 @@ ReactDOM.render(
       A component takes in props and returns JSX. JSX is similar to html but
       slightly different and it can have logic inside.The JSX is returned from
       the <span class="snippet">return</span> method of the class, and it
-      compiles to <span class="snippet">React.createElement()</span>.
+      compiles to <span class="snippet">React.createElement()</span>. JSX is
+      just syntactic sugar for JavaScript, allowing you to write HTMLish code
+      instead of nested
+      <span class="snippet">React.createElement(...)</span> calls.
     </p>
     <p class="text">
       JSX also involves that we sometimes use slightly different attributes
@@ -309,5 +312,190 @@ function App() {
       }
           </pre
     >
+    <p class="text">
+      Instead we must use either a higher order component to nest everything
+      inside of it, or a div or simply a React fragment. In the snippet above
+      note also the <span class="snippet">( )</span> which allow us to put the
+      JSX on multiple lines (useful especially if we have logic in the JSX).
+    </p>
+    <p class="text center bold">Creating and working with components</p>
+    <p class="text">
+      Usually a component is either a class or a function that returns some JSX.
+      We will start with functions. Components' file name usually comes with a
+      capital first letter, and the structure of the components in our
+      application can be however we want, for instance:
+    </p>
+    <p class="text">
+      A super basic functional component would look like this:
+    </p>
+    <pre class="code">
+      import React from "react";
+
+      const person = () => {
+        return &lt;p&gt;Person component&lt;/p&gt;;
+      };
+
+      export default person;
+    </pre>
+    <p class="text">
+      Next we can import and use the
+      <span class="snippet">Person</span> component in the
+      <span class="snippet">App</span> component:
+    </p>
+    <pre class="code">
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import Person from "./Person/Person";
+
+function App() {
+  return (
+    &lt;div className="App"&gt;
+      &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+      &lt;Person /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;
+
+    </pre>
+    <p class="text">
+      Components are good for encapsulating functionality, they are re-usable
+      and configurable, for instance we can copy the
+      <span class="snippet">Person</span> component multiple time anywhere in
+      our application. They are like custom html elements.
+    </p>
+    <p class="text">
+      Regarding our <span class="snippet">Person</span> component, we can see
+      that it is static (it has just some hard coded text), it does not have
+      dynamic content. We will modify the component so that it outputs some
+      dynamic age:
+    </p>
+    <pre class="code">
+      import React from "react";
+
+    const person = () => {
+      return (
+          &lt;p&gt;
+            I am a person and I am 
+            {Math.floor(Math.random() * 30)}!
+          &lt;/p&gt;
+      
+      );
+    };
+
+    export default person;
+
+    </pre>
+    <p class="text">
+      Note how we put the dynamic logic inside <span class="snippet">{}</span>
+      and remember that JSX can have logic in it (usually one line expressions).
+    </p>
+    <p class="text center bold">
+      Props
+    </p>
+    <p class="text">
+      Props are html-like attributes that we use to configure our components at
+      runtime like so:
+    </p>
+    <pre class="code">
+      import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import Person from "./Person/Person";
+
+function App() {
+  return (
+    &lt;div className="App">
+      &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+      &lt;Person name="Ted" age="28" /&gt;
+      &lt;Person name="Rosy" age="27"&gt;
+        My hobbies: Racing
+      &lt;/Person&gt;
+      &lt;Person name="Kathy" age="25" /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;
+
+    </pre>
+    <p class="text">
+      Back in the <span class="snippet">Person</span> component we need to use
+      the <span class="snippet">props</span> that we passed in the
+      <span class="snippet">App</span> component. The
+      <span class="snippet">props</span>
+      object is what we receive as argument in the component function and it
+      holds all the properties of the object (including the attributes we
+      defined).
+    </p>
+    <pre class="code">
+import React from "react";
+
+const person = (props) => {
+  return (
+    &lt;p&gt;
+      I am {props.name} 
+      and I am {props.age} years old.
+    &lt;/p&gt;);
+};
+
+export default person;
+
+    </pre>
+    <p class="text center bold">props.children</p>
+    <p class="text">
+      If we run the code above, we get the following output:
+    </p>
+    <div class="devPic">
+      <img src="./img/props.png" alt="" />
+    </div>
+    <p class="text">
+      Note that in the code above, the hobbies element was defined in the
+      <span class="snippet">App</span> component for Rosy but it is not
+      rendered.
+    </p>
+    <p class="text">
+      The hobbies element (the element or elements) between the opening and
+      closing tags of a component are refered too as
+      <span class="snippet">props.children</span>. We can also nest complex html
+      elements here. We can output the
+      <span class="snippet">props.children</span> as below:
+    </p>
+    <pre class="code">
+      import React from "react";
+
+const person = (props) => {
+  return (
+    &lt;div&gt;
+      &lt;p&gt;
+        I am {props.name} and I am 
+        {props.age} years old.
+      &lt;/p&gt;
+      &lt;p&gt;
+        {props.children}
+      &lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default person;
+
+    </pre>
+    <p class="text">
+      So we can also pass information to the component via the children prop and
+      not only through regular props. If we save the
+      <span class="snippet">Person</span>
+      component now we can see the hobbies of Rosy too:
+    </p>
+    <div class="devPic">
+      <img src="./img/props_children.png" alt="" />
+    </div>
+    <p class="text">
+      The <span class="snippet">props.children</span> argument can also be used
+      to create a higher oder component in which to nest adjacent elements in
+      the same component.
+    </p>
   </body>
 </html>
