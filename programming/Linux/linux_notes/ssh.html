@@ -17,12 +17,171 @@
   <body>
     <h1 class="header">SSH</h1>
     <p class="text">
-      SSH (Secure Shell) is a communication protocol (like http, https, ftp). We
-      can use SSH for anything (create files/folders, install/run programs,
-      deploying applications, setting up web servers). SSH is secure (all the
-      traffic will be encripted)
+      SSH (Secure Shell) is a secure communication protocol (like http, https,
+      ftp) used as the primary means of connecting to Linux servers remotely. It
+      provides a text-based interface by spawning a remote shell. After
+      connecting, all commands you type in your local terminal are sent to the
+      remote server and executed there.We can use SSH for anything (create
+      files/folders, install/run programs, deploying applications, setting up
+      web servers).When you connect through SSH, you log in using an account
+      that exists on the remote server.
     </p>
-    <p class="text bold center">SSH Client/Server Communication</p>
+    <p class="text center bold">
+      How SSH Works
+    </p>
+    <p class="text">
+      When you connect through SSH, you will be dropped into a shell session,
+      which is a text-based interface where you can interact with your server.
+      For the duration of your SSH session, any commands that you type into your
+      local terminal are sent through an encrypted SSH tunnel and executed on
+      your server.
+    </p>
+    <p class="text">
+      The SSH connection is implemented using a client-server model. This means
+      that for an SSH connection to be established, the remote machine must be
+      running a piece of software called an SSH daemon. This software listens
+      for connections on a specific network port, authenticates connection
+      requests, and spawns the appropriate environment if the user provides the
+      correct credentials.
+    </p>
+    <p class="text">
+      The user’s computer must have an SSH client. This is a piece of software
+      that knows how to communicate using the SSH protocol and can be given
+      information about the remote host to connect to, the username to use, and
+      the credentials that should be passed to authenticate. The client can also
+      specify certain details about the connection type they would like to
+      establish.
+    </p>
+    <p class="text center bold">
+      How SSH Authenticates Users
+    </p>
+    <p class="text">
+      Clients generally authenticate either using passwords (less secure and not
+      recommended) or SSH keys, which are very secure.
+    </p>
+    <p class="text">
+      Password logins are encrypted and are easy to understand for new users.
+      However, automated bots and malicious users will often repeatedly try to
+      authenticate to accounts that allow password-based logins, which can lead
+      to security compromises. For this reason, it is recommended to always set
+      up SSH key-based authentication for most configurations.
+    </p>
+    <p class="text">
+      SSH keys are a matching set of cryptographic keys which can be used for
+      authentication. Each set contains a public and a private key. The public
+      key can be shared freely without concern, while the private key must be
+      vigilantly guarded and never exposed to anyone.
+    </p>
+    <p class="text">
+      To authenticate using SSH keys, a user must have an
+      <span class="snippet">SSH key pair</span> on their local computer. On the
+      remote server, the <span class="snippet">public key</span> must be copied
+      to a file within the user’s home directory at
+      <span class="snippet">~/.ssh/authorized_keys</span> . This file contains a
+      list of public keys, one-per-line, that are authorized to log into this
+      account.
+    </p>
+    <p class="text">
+      When a client connects to the host, wishing to use SSH key authentication,
+      it will inform the server of this intent and will tell the server which
+      <span class="snippet">public key</span> to use. The server then checks its
+      <span class="snippet">authorized_keys</span> file for the
+      <span class="snippet">public key</span> , generates a random string and
+      encrypts it using the <span class="snippet">public key</span> . This
+      encrypted message can only be decrypted with the associated
+      <span class="snippet">private key</span> . The server will send this
+      encrypted message to the client to test whether they actually have the
+      associated <span class="snippet">private key</span>.
+    </p>
+    <p class="text">
+      Upon receipt of this message, the client will decrypt it using the
+      <span class="snippet">private key</span> and combine the random string
+      that is revealed with a previously negotiated
+      <span class="snippet">session ID</span>. It then generates an
+      <span class="snippet">MD5</span> hash of this value and transmits it back
+      to the server. The server already had the original message and the session
+      ID, so it can compare an <span class="snippet">MD5</span> hash generated
+      by those values and determine that the client must have the
+      <span class="snippet">private key</span>.
+    </p>
+    <p class="text center bold">
+      Generating SSH Key pair
+    </p>
+    <p class="text">
+      Generating a new SSH public and private key pair on your local computer is
+      the first step towards authenticating with a remote server without a
+      password.
+    </p>
+    <p class="text">
+      A number of cryptographic algorithms can be used to generate SSH keys,
+      including <span class="snippet">RSA</span>,
+      <span class="snippet">DSA</span>, and <span class="snippet">ECDSSA</span>.
+      <span class="snippet">RSA</span>keys are generally preferred and are the
+      default key type.
+    </p>
+    <p class="text">
+      To generate an RSA key pair on your local computer, type:
+    </p>
+    <pre class="code">
+      ssh-keygen
+    </pre>
+    <p class="text">
+      After running the command, you will get prompted to choose the path for
+      the key to be stored:
+    </p>
+    <div class="devPic">
+      <img src="./img/ssh_path.png" alt="" />
+    </div>
+    <p class="text">
+      This prompt allows you to choose the location to store your RSA private
+      key. Press ENTER to leave this as the default, which will store them in
+      the <span class="snippet">/home/username/.ssh/id_rsa</span>.
+    </p>
+    <p class="text">
+      Leaving the default location selected will allow your SSH client to find
+      the keys automatically.
+    </p>
+    <p class="text">
+      The next prompt allows you to enter a
+      <span class="snippet">passphrase</span> of an arbitrary length to secure
+      your <span class="snippet">private key</span>. By default, you will have
+      to enter any <span class="snippet">passphrase</span> you set here every
+      time you use the <span class="snippet">private key</span> , as an
+      additional security measure. Feel free to press ENTER to leave this blank
+      if you do not want a <span class="snippet">passphrase</span>. Keep in mind
+      though that this will allow anyone who gains control of your
+      <span class="snippet">private key</span>
+      to login to your servers:
+    </p>
+    <div class="devPic">
+      <img src="./img/ssh_passphrase.png" alt="" />
+    </div>
+    <p class="text">
+      If you choose to enter a <span class="snippet">passphrase</span>, nothing
+      will be displayed as you type. This is a security precaution.
+    </p>
+    <p class="text">
+      Once finished with the passphrase, the
+      <span class="snippet">RSA SSH Key Pair</span> will be generated in the
+      <span class="snippet">.ssh</span> directory:
+    </p>
+    <div class="devPic">
+      <img src="./img/ssh_keypair.png" alt="" />
+    </div>
+    <p class="text">
+      The <span class="snippet">private key</span> is located in
+      <span class="snippet">~/username/.ssh</span> and it is called
+      <span class="snippet">id_rsa</span>. This key must never be shared with
+      anyone.
+    </p>
+    <p class="text">
+      The associated <span class="snippet">public key</span> is called
+      <span class="snippet">id_rsa.pub</span> and it is also located in
+      <span class="snippet">~/username/.ssh</span>. This key can be shared
+      freely and it is the one that we copy onto the remote server on which we
+      want to authenticate with SSH.
+    </p>
+    <!-- <p class="text bold center">SSH Client/Server Communication</p>
     <p class="text">
       In order for us to log onto a machine with SSH the credentials are not
       enough, the machine must also have the SSHD (Open SSH Daemon) installed
@@ -88,6 +247,6 @@
       Git Bash and other unix-like wrappers for the terminal include the ssh
       command & other Unix tools.
     </p>
-    <p class="bold">left at min 10....</p>
+    <p class="bold">left at min 10....</p> -->
   </body>
 </html>

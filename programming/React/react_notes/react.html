@@ -497,5 +497,116 @@ export default person;
       to create a higher oder component in which to nest adjacent elements in
       the same component.
     </p>
+    <p class="text center">
+      State
+    </p>
+    <p class="text">
+      State is data inside a component. In order to explore it, we will convert
+      the <span class="snippet">App.js</span> component from a functional to a
+      class-based one. The state is an object inside the class (it works
+      similarly for functional components):
+    </p>
+    <pre class="code">
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import Person from "./Person/Person";
+
+class App extends Component {
+  state = {
+    persons: [
+      {
+        name: "Ted",
+        age: 28,
+      },
+
+      {
+        name: "Rosy",
+        age: 27,
+      },
+
+      {
+        name: "Kathy",
+        age: 25,
+      },
+    ],
+  };
+
+  render() {
+    return (
+      &lt;div className="App"&gt;
+        &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+        &lt;button&gt;Switch Names&lt;/button&gt;
+        &lt;Person name="Ted" age="28" /&gt;
+        &lt;Person name="Rosy" age="27"&gt;
+          My hobbies: Racing
+        &lt;/Person&gt;
+        &lt;Person name="Kathy" age="25" /&gt;
+      &lt;/div&gt;
+    );
+  }
+}
+
+export default App;
+
+    </pre>
+    <p class="text">
+      In order to use the <span class="snippet">state</span> inside a class
+      based component we use <span class="snippet">this.state.property</span>:
+    </p>
+    <pre class="code">
+      import React, { Component } from "react";
+      import logo from "./logo.svg";
+      import "./App.css";
+      import Person from "./Person/Person";
+      
+      class App extends Component {
+        state = {
+          persons: [
+            {
+              name: "Ted",
+              age: 28,
+            },
+      
+            {
+              name: "Rosy",
+              age: 27,
+            },
+      
+            {
+              name: "Kathy",
+              age: 25,
+            },
+          ],
+        };
+      
+        render() {
+          return (
+            &lt;div className="App"&gt;
+              &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+              &lt;button&gt;Switch Names&lt;/button&gt;
+             &lt;Person
+          name={this.state.persons[0].name}
+          age={this.state.persons[0].age}
+        /&gt;
+       &lt;Person
+          name={this.state.persons[1].name}
+          age={this.state.persons[1].age}
+        &gt;
+          My hobbies: Racing
+       &lt;/Person&gt;
+       &lt;Person
+          name={this.state.persons[2].name}
+          age={this.state.persons[2].age}
+        /&gt;
+            &lt;/div&gt;
+          );
+        }
+      }
+      
+      export default App;
+      
+          </pre
+    >
   </body>
 </html>

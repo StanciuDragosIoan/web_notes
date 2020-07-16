@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+    <title>Open SSL</title>
+  </head>
+  <body>
+    <h1 class="header">Open SSL</h1>
+    <p class="text">
+      OpenSSL is a versatile command line tool that can be used for a large
+      variety of tasks related to Public Key Infrastructure (PKI) and HTTPS
+      (HTTP over TLS).
+    </p>
+    <p class="text">
+      Public Key Infrastructure (PKI) is a technology for authenticating users
+      and devices in the digital world. The basic idea is to have one or more
+      trusted parties digitally sign documents certifying that a particular
+      cryptographic key belongs to a particular user or device. The key can then
+      be used as an identity for the user in digital networks.
+    </p>
+    <p class="text center bold">
+      Certificate Signing Requests (CSRs)
+    </p>
+    <p class="text">
+      If you would like to obtain an SSL certificate from a certificate
+      authority (CA), you must generate a certificate signing request (CSR). A
+      CSR consists mainly of the public key of a key pair, and some additional
+      information. Both of these components are inserted into the certificate
+      when it is signed.
+    </p>
+    <p class="text">
+      Whenever you generate a CSR, you will be prompted to provide information
+      regarding the certificate. This information is known as a Distinguised
+      Name (DN). An important field in the DN is the Common Name (CN), which
+      should be the exact Fully Qualified Domain Name (FQDN) of the host that
+      you intend to use the certificate with. It is also possible to skip the
+      interactive prompts when creating a CSR by passing the information via
+      command line or from a file.
+    </p>
+    <p class="text">
+      The other items in a DN provide additional information about your business
+      or organization. If you are purchasing an SSL certificate from a
+      certificate authority, it is often required that these additional fields,
+      such as “Organization”, accurately reflect your organization’s details.
+    </p>
+    <p class="text">
+      A CSR information prompt would look like this:
+    </p>
+    <div class="devPic">
+      <img src="./img/csr.png" alt="" />
+    </div>
+    <p class="text">
+      If you want to non-interactively answer the CSR information prompt, you
+      can do so by adding the -subj option to any OpenSSL commands that request
+      CSR information. Here is an example of the option, using the same
+      information displayed in the code block above:
+    </p>
+    <div class="devPic">
+      <img src="./img/open_ssl_cli.png" alt="" />
+    </div>
+    <p class="text center bold">
+      Generating a CSR
+    </p>
+    <p class="text">
+      CSRs can be used to request SSL certificates from a certificate authority.
+      We may add the CSR information non-interactively with the -subj option.
+    </p>
+    <p class="text center bold">
+      Generate a Private Key and a CSR
+    </p>
+    <p class="text">
+      Use this method if you want to use HTTPS (HTTP over TLS) to secure your
+      Apache HTTP or Nginx web server, and you want to use a Certificate
+      Authority (CA) to issue the SSL certificate. The CSR that is generated can
+      be sent to a CA to request the issuance of a CA-signed SSL certificate. If
+      your CA supports SHA-2, add the -sha256 option to sign the CSR with SHA-2.
+    </p>
+    <p class="text">
+      This command creates a 2048-bit private key (domain.key) and a CSR
+      (domain.csr) from scratch:
+    </p>
+    <!-- 
+      sudo openssl req \
+       -key ~/.ssh/id_rsa
+       -new -out test.csr
+
+       openssl req -new -key ~/.ssh/id_rsa -out request.csr
+     -->
+  </body>
+</html>
