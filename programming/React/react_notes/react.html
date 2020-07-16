@@ -608,5 +608,159 @@ export default App;
       
           </pre
     >
+    <p class="text">
+      <span class="snippet">Props</span> and
+      <span class="snippet">state</span> are core concepts of React. Only
+      changes in <span class="snippet">props</span> or in
+      <span class="snippet">state</span> trigger React to re-render the
+      components and potentially update the DOM.
+    </p>
+    <p class="text">
+      <span class="snippet">Props</span> allow us to pass data from parent
+      (wrapper) to child (embedded) component:
+    </p>
+    <pre class="code">
+      //post component
+      const post = (props) => {
+        return (
+            &lt;div&gt;
+                &lt;Post title={props.title} /&gt;
+            &lt;/div&gt;
+        );
+    }
+    </pre>
+    <p class="text">
+      <span class="snippet">React</span> will pass to the Post component a
+      single argument (called generically <span class="snippet">props</span> )
+      which is an object with all the properties we set up on
+      <span class="snippet">&lt;PostComponent/&gt;</span>.
+    </p>
+    <p class="text">
+      In the parent component we'd do something like:
+    </p>
+    <pre class="code">
+      function App() {
+        return (
+          &lt;div className="App"&gt;
+            &lt;PostComponent
+              title="title from parent"
+            /&gt;
+          &lt;/div&gt;
+        );
+      }
+    </pre>
+    <p class="text">
+      While <span class="snippet">props</span> allow us to pass data down the
+      component tree (from parent to child) and thus trigger UI updates,
+      <span class="snippet">state</span> is used to change the component 'state'
+      from within. Changes to <span class="snippet">state</span> also trigger UI
+      updates. Unlike the <span class="snippet">props</span> argument which we
+      can call however we want when defining a component,
+      <span class="snippet">state</span>
+      can only be called 'state'. Initially only class based components could
+      use it, but with React 16 + functional components can have state too with
+      React Hooks.
+    </p>
+    <pre class="code">
+
+//state in functional component
+class NewPost extends Component { 
+  state = {
+      counter: 1
+  };  
+
+  render () { 
+      return (
+          &lt;div&gt;{this.state.counter}&lt;/div&gt;
+      );
+  }
+}
+    </pre>
+    <p class="text center bold">
+      Handling events with methods
+    </p>
+    <p class="text">
+      In order to trigger an event we need to add an attribute. For the button
+      we will use <span class="snippet">onClick</span>. Note how it's different
+      from the regular html 'onclick'. On the
+      <span class="snippet">onClick</span> event we will trigger a method call:
+    </p>
+    <pre class="code">
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import Person from "./Person/Person";
+
+class App extends Component {
+  state = {
+    persons: [
+      {
+        name: "Ted",
+        age: 28,
+      },
+
+      {
+        name: "Rosy",
+        age: 27,
+      },
+
+      {
+        name: "Kathy",
+        age: 25,
+      },
+    ],
+    name: "Some name..",
+  };
+
+  switchNameHandler = () => {
+    console.log("Btn clicked and event triggered");
+  };
+
+  render() {
+    return (
+      &gt;div className="App"&gt;
+        &gt;h1&gt;Hi, I am a react app&gt;/h1&gt;
+        &gt;button 
+          onClick={this.switchNameHandler}
+        &gt;
+          Switch Names
+        &gt;/button&gt;
+
+        &gt;Person
+          name={this.state.persons[0].name}
+          age={this.state.persons[0].age}
+        /&gt;
+        &gt;Person
+          name={this.state.persons[1].name}
+          age={this.state.persons[1].age}
+        &gt;
+          My hobbies: Racing
+        &gt;/Person&gt;
+        &gt;Person
+          name={this.state.persons[2].name}
+          age={this.state.persons[2].age}
+        /&gt;
+      &gt;/div&gt;
+    );
+  }
+}
+
+export default App;
+
+    </pre>
+    <p class="text">
+      Note how we bind the method call to <span class="snippet">onClick</span>:
+    </p>
+    <pre class="code">
+      &gt;button 
+      onClick={this.switchNameHandler}
+      &gt;
+    </pre>
+    <p class="text">
+      If instead of that we'd use:
+      <span class="snippet">onClick={this.switchNameHandler()}</span>
+      the method would execute immediately and not upon a click event. We do not
+      want that but instead we want to pass a reference.
+    </p>
   </body>
 </html>
