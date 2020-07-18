@@ -1,1 +1,1 @@
-left at video 39 (keep from 40)
+left at video 43 (keep from 44 minute 8:00 diff between setState and useState)

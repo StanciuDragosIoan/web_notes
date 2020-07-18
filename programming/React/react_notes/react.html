@@ -120,7 +120,7 @@ ReactDOM.render(app,
     </p>
     <p class="text">
       For this build workflow we need a
-      <span class="snippet">dependency manager</span> (line npm or yarn).
+      <span class="snippet">dependency manager</span> (like npm or yarn).
     </p>
     <p class="text">
       We also need a <span class="snippet">module bundler</span> like Webpack.
@@ -658,8 +658,8 @@ export default App;
       can call however we want when defining a component,
       <span class="snippet">state</span>
       can only be called 'state'. Initially only class based components could
-      use it, but with React 16 + functional components can have state too with
-      React Hooks.
+      use it, but with React 16.8 + functional components can have state too
+      with React Hooks.
     </p>
     <pre class="code">
 
@@ -761,6 +761,291 @@ export default App;
       <span class="snippet">onClick={this.switchNameHandler()}</span>
       the method would execute immediately and not upon a click event. We do not
       want that but instead we want to pass a reference.
+    </p>
+    <p class="text">
+      A bunch of other events we can listen to in a React app are:
+    </p>
+    <pre class="code">
+      onCopy onCut onPaste 
+      onCompositionStart 
+      onCompositionEnd
+      OnCompositionUpdate 
+      onKeyDown onKeyUp 
+      onKeyPress 
+      onFocus onBlur
+    </pre>
+    <p class="text center bold">
+      Manipulate state upon click
+    </p>
+    <p class="text">
+      We can manipulate the state directly with
+      <span class="snippet">this.state</span> (not recommended):
+    </p>
+    <pre class="code">
+      this.state.persons[0].name = 'TEST_NAME';
+    </pre>
+    <p class="text">
+      We get a warning in the console from this approach:
+    </p>
+    <div class="devPic">
+      <img src="./img/error_state.png" alt="" />
+    </div>
+    <p class="text">
+      Note that if we click the button, the name does not change so mutating
+      state directly is bad (never do this). Instead use
+      <span class="snippet">setState()</span>:
+    </p>
+    <pre class="code">
+      this.setState({
+        persons: [
+          {
+            name: "TEST_NAME",
+            age: 28,
+          },
+  
+          {
+            name: "Rosy",
+            age: 27,
+          },
+  
+          {
+            name: "Kathy",
+            age: 25,
+          },
+        ],
+      });
+    </pre>
+    <p class="text">
+      <span class="snippet">setState({...state})</span> takes in an object with
+      the modified state and it will merge it into the original state, thus
+      changing it. Note it will not change the rest of the state (the
+      <span class="snippet">name</span> string ).
+    </p>
+    <p class="text">
+      Now if we click the button, the DOM changes, because React recognized the
+      change in our state. React re-renders a component only if it detects
+      changes in the state or in the props. It compares the current DOM with the
+      current state and if it detects changes, it re-renders only what changed.
+    </p>
+    <p class="text center bold">
+      State in functional components
+      <span class="snippet">useState()</span>
+    </p>
+    <p class="text">
+      Until <span class="snippet">React 16.8</span> we could only use state in
+      class based components.
+    </p>
+    <p class="text">
+      We can use state inside a functional component using the React Hooks.
+      These are built in functions that allow us to have state in functional
+      components, which were previously (stateless).
+    </p>
+    <p class="text">
+      First we'll convert App.js in a functional component and we will use the
+      <span class="snippet">useState</span> hook which does just that (allows us
+      to use state in a functional component):
+    </p>
+    <pre class="code">
+      const App = (props) => {
+        const stateArr = useState(
+          {
+            persons: [
+              {
+                name: "Ted",
+                age: 28,
+              },
+      
+              {
+                name: "Rosy",
+                age: 27,
+              },
+      
+              {
+                name: "Kathy",
+                age: 25,
+              },
+            ],
+            name: "Some name..",
+          },
+        );
+      
+        return (
+          &lt;div className="App"&gt;
+            &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+            &lt;button 
+              onClick={this.switchNameHandler}
+            &gt;
+              Switch Names
+            &lt;/button&gt;
+            &lt;Person
+              name={stateArr.persons.persons[0].name}
+              age={stateArr.persons.persons[0].age}
+            /&gt;
+            &lt;Person
+              name={stateArr.persons.persons[1].name}
+              age={stateArr.persons.persons[1].age}
+            &gt;
+              My hobbies: Racing
+            &lt;/Person&gt;
+            &lt;Person
+              name={stateArr.persons.persons[2].name}
+              age={stateArr.persons.persons[2].age}
+            /&gt;
+          &lt;/div&gt;
+        );
+      };
+    </pre>
+    <p class="text">
+      <span class="snippet">useState()</span>
+      takes in as argument an object with the initial state:
+    </p>
+    <pre class="code">
+      useState(
+    {
+      persons: [
+        {
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+      name: "Some name..",
+    },
+  );
+    </pre>
+    <p class="text">
+      <span class="snippet">useState</span> returns an array with 2 elements:
+      <span class="snippet">the first</span> element is our current state (so
+      the initial state or the same state updated if we update it), and
+      <span class="snippet">the second</span> one is a function that allows us
+      to update the state such that React is aware of changes and re-renders the
+      component (similar to how <span class="snippet">setState()</span> works in
+      class based components ):
+    </p>
+    <pre class="code">
+      const stateArr = useState(
+    {
+      persons: [
+        {
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+      name: "Some name..",
+    },
+  );
+    </pre>
+    <p class="text">
+      We can further de-structure the
+      <span class="snippet">stateArr</span> array in order to access the 2 (the
+      state object and the function to modify it) and note how we add the
+      <span class="snippet">switchNameHandler()</span> method defined as a
+      <span class="snippet">const</span> inside the App function:
+    </p>
+    <pre class="code">
+import React, { useState } from "react";
+import "./App.css";
+import Person from "./Person/Person";
+
+const App = (props) => {
+  //destructure state
+  const [personsState, setPersonsState] = useState(
+    {
+      persons: [
+        {
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+      name: "Some name..",
+    },
+  );
+
+  const switchNameHandler = () => {
+    console.log("Btn clicked and event triggered");
+    //call setPersonsState instead of useState
+    setPersonsState({
+      persons: [
+        {
+          name: "TEST_NAME",
+          age: 28,
+        },
+  
+        {
+          name: "Rosy",
+          age: 27,
+        },
+  
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  return (
+    &lt;div className="App">
+      &lt;h1>Hi, I am a react app&lt;/h1&gt;
+      &lt;button 
+        onClick={switchNameHandler}
+      &gt;
+        Switch Names
+      &lt;/button&gt;
+      &lt;Person
+        name={personsState.persons[0].name}
+        age={personsState.persons[0].age}
+      /&gt;
+      &lt;Person
+        name={personsState.persons[1].name}
+        age={personsState.persons[1].age}
+      &gt;
+        My hobbies: Racing
+      &lt;/Person&gt;
+      &lt;Person
+        name={personsState.persons[2].name}
+        age={personsState.persons[2].age}
+      /&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+    </pre>
+    <p class="text">
+      Now the code works just as before however, there is a difference between
+      this and <span class="snippet">setState()</span>. If we log the state
+      before and after the update with <span class="snippet">setState</span> we
+      get:
     </p>
   </body>
 </html>
