@@ -1043,9 +1043,306 @@ export default App;
     </pre>
     <p class="text">
       Now the code works just as before however, there is a difference between
-      this and <span class="snippet">setState()</span>. If we log the state
-      before and after the update with <span class="snippet">setState</span> we
-      get:
+      this and <span class="snippet">setState()</span>. If we look at our state
+      we can see that the <span class="snippet">useState()</span> hook works
+      differently compared to <span class="snippet">setState()</span>.
+    </p>
+    <p class="text">
+      If we inspect our state with the React dev tools before clicking the
+      button and activating <span class="snippet">useState()</span>, we can see
+      that if has the array of persons and the string in it:
+    </p>
+    <div class="devPic">
+      <img src="./img/state_1.png" alt="" />
+    </div>
+    <p class="text">
+      However if we look at it after clicking the button, we can see that the
+      state contains now only the Persons array:
+    </p>
+    <div class="devPic">
+      <img src="./img/state_2.png" alt="" />
+    </div>
+    <p class="text">
+      The 'name' string has disappeared from our state, this happened because in
+      our code we used the <span class="snippet">useState</span> hook and
+      manually set up the state as per below:
+    </p>
+    <pre class="code">
+      const switchNameHandler = () => {
+        console.log("Btn clicked and event triggered");
+        setPersonsState({
+          //set persons
+          persons: [
+            {
+              name: "TEST_NAME",
+              age: 28,
+            },
+    
+            {
+              name: "Rosy",
+              age: 27,
+            },
+    
+            {
+              name: "Kathy",
+              age: 25,
+            },
+          ],
+          //never set the string again
+        });
+      };
+    </pre>
+    <p class="text">
+      The difference between <span class="snippet">setState()</span> and the
+      <span class="snippet">
+        useState
+      </span>
+      hook is that the latter overwrites the state with our new object (so since
+      we did not re-add the 'name' string, it overwrote and removed it from the
+      state). In contrast the <span class="snippet">setState</span> method would
+      merge our object into the state and we'd still get the string there.
+    </p>
+    <p class="text">
+      In order to obtain the same behaviour from
+      <span class="snippet">useState</span> we can set the other state manually
+      too:
+    </p>
+    <pre class="code">
+      const switchNameHandler = () => {
+        console.log("Btn clicked and event triggered");
+        setPersonsState({
+          persons: [
+            {
+              name: "TEST_NAME",
+              age: 28,
+            },
+    
+            {
+              name: "Rosy",
+              age: 27,
+            },
+    
+            {
+              name: "Kathy",
+              age: 25,
+            },
+          ],
+          //re set name string too
+          name: personsState.name,
+        });
+      };
+    </pre>
+    <p class="text">
+      We can also call <span class="snippet">useState</span> multiple times.
+    </p>
+    <pre class="code">
+import React, { useState } from "react";
+import "./App.css";
+import Person from "./Person/Person";
+
+const App = (props) => {
+  const [personsState, setPersonsState] = useState(
+    {
+      persons: [
+        {
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    },
+  );
+
+  const [otherState, setOtherState] = useState(
+    "Some name..");
+
+  const switchNameHandler = () => {
+    console.log("Btn clicked and event triggered");
+    setPersonsState({
+      persons: [
+        {
+          name: "TEST_NAME",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  return (
+    &lt;div className="App"&gt;
+      &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+      &lt;button 
+        onClick={switchNameHandler}
+      &gt;
+        Switch Names
+      &lt;/button&gt;
+      &lt;Person
+        name={personsState.persons[0].name}
+        age={personsState.persons[0].age}
+      /&gt;
+      &lt;Person
+        name={personsState.persons[1].name}
+        age={personsState.persons[1].age}
+      &gt;
+        My hobbies: Racing
+      &lt;/Person&gt;
+      &lt;Person
+        name={personsState.persons[2].name}
+        age={personsState.persons[2].age}
+      /&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+
+    </pre>
+    <p class="text">
+      So with react hooks we can have either one single state object which we
+      manually update or multiple smaller objects, each with its own
+      <span class="snippet">useState</span>
+      call, updated separately when needed.
+    </p>
+    <p class="text center bold">
+      Stateless vs Stateful components
+    </p>
+    <p class="text">
+      A component that does not manage state internally (so it only receives
+      props/state so external data and outputs it) just like the Person
+      component, is called a stateless component:
+    </p>
+    <pre class="code">
+      //no state here
+import React from "react";
+
+const person = (props) => {
+  return (
+    &lt;div&gt;
+      &lt;p&gt;
+        I am {props.name} and 
+        I am {props.age} years old.
+      &lt;/p&gt;
+      &lt;p&gt;
+        {props.children}
+      &lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default person;
+
+    </pre>
+    <p class="text">
+      A component which manages state internally (like the App component) is
+      called a Stateful component:
+    </p>
+    <pre class="code">
+import React, { useState } from "react";
+import "./App.css";
+import Person from "./Person/Person";
+
+const App = (props) => {
+  //state managed inside a component
+  const [personsState, setPersonsState] = useState(
+    {
+      persons: [
+        {
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    },
+  );
+
+  const [otherState, setOtherState] = useState(
+    "Some name..");
+
+  const switchNameHandler = () => {
+    console.log("Btn clicked and event triggered");
+    setPersonsState({
+      persons: [
+        {
+          name: "TEST_NAME",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  return (
+    &lt;div className="App"&gt;
+      &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+      &lt;button
+         onClick={switchNameHandler}
+      &gt;
+        Switch Names
+      &lt;/button&gt;
+      &lt;Person
+        name={personsState.persons[0].name}
+        age={personsState.persons[0].age}
+      /&gt;
+      &lt;Person
+        name={personsState.persons[1].name}
+        age={personsState.persons[1].age}
+      &gt;
+        My hobbies: Racing
+      &lt;/Person&gt;
+      &lt;Person
+        name={personsState.persons[2].name}
+        age={personsState.persons[2].age}
+      /&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+
+    </pre>
+    <p class="text">
+      It is good practice to have many stateless components (also called 'dumb'
+      or presentational components). The stateful components are also called
+      smart components or container components (because they contain the state
+      of the app). We only want a couple of them because this makes the app easy
+      to maintain and manage.
     </p>
   </body>
 </html>
