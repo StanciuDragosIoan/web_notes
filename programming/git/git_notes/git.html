@@ -121,5 +121,96 @@
     <div class="devPic">
       <img src="./img/final_log.png" alt="" />
     </div>
+    <pre class="text center bold">
+      Basic git workflow
+    </pre>
+    <p class="text">
+      In order to clone a repository locally with all its branches we can simply
+      clone it with:
+    </p>
+    <pre class="code">
+      git clone &lt;link to repo&gt;
+    </pre>
+    <p class="text">
+      Say we have the following repo:
+    </p>
+    <div class="devPic">
+      <img src="./img/playground.png" alt="" />
+    </div>
+    <p class="text">
+      As we can see, we have 3 branches in our remote repo:
+    </p>
+    <div class="devPic">
+      <img src="./img/branches.png" alt="" />
+    </div>
+    <p class="text">
+      If we want the repo locally, we can simply clone it by running:
+    </p>
+    <pre class="code">
+      git clone https://github.com/StanciuDragosIoan/git_playground.git
+    </pre>
+    <p class="text">
+      Next if we <span class="snippet">cd</span> into the project and we check
+      the branches by running <span class="snippet">git branch</span>, we can
+      see that we are on the <span class="snippet">master</span> branch and we
+      do not have the other two:
+    </p>
+    <div class="devPic">
+      <img src="./img/master.png" alt="" />
+    </div>
+    <p class="text">
+      Also, we can see in both the terminal (by running
+      <span class="snippet">git log</span> ) or in the web interface, on the
+      master branch we only have 1 commit:
+    </p>
+    <div class="devPic">
+      <img src="./img/master_commit.png" alt="" />
+    </div>
+    <p class="text">
+      If we want to grab only the <span class="snippet">Feature-2</span> branch,
+      we can do so by running <span class="snippet">git checkout &lt;branch name &gt;</branch></span>
+    </p>
+    <pre class="code">
+      git checkout Feature-2
+    </pre>
+    <p class="text">
+      In the terminal we will see that we have now the <span class="snippet">Feature-2</span> branch.
+    </p>
+    <div class="devPic">
+      <img src="./img/feature_2.png" alt="">
+    </div>
+    <p class="text">
+      We are also checked out on it so if we run <span class="snippet">git branch</span>:
+    </p>
+    <div class="devPic">
+      <img src="./img/feature_2_checked.png" alt="">
+    </div>
+    <p class="text">
+      Also if we run <span class="snippet">git log</span> we can see that on <span class="snippet">Feature-2</span>  branch we have 3 commits instead of 1:
+    </p>
+    <div class="devPic">
+      <img src="./img/feature_2_commits.png" alt="">
+    </div>
+    <p class="text">
+      If we want to delete a branch we need to be on a different one and then we can proceed with the delete.
+      Delete Feature-2 branch locally by running:
+    </p>
+    <pre class="code">
+      git checkout master
+      git branch -D Feature-2
+    </pre>
+    <p class="text">
+      Now the Feature-2 branch is deleted:
+    </p>
+    <div class="devPic">
+      <img src="./img/delete.png" alt="">
+    </div>
+    <p class="text">
+      If we run <span class="snippet">git branch</span> again, we can see that we are
+      on master and we have none of the other branches:
+    </p>
+    <div class="devPic">
+      <img src="./img/back_master.png" alt="">
+    </div>
   </body>
 </html>
