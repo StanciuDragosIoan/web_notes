@@ -1344,5 +1344,441 @@ export default App;
       of the app). We only want a couple of them because this makes the app easy
       to maintain and manage.
     </p>
+    <p class="text center bold">Passing method references between components</p>
+    <p class="text">
+      Let's say we want to call the
+      <span class="snippet">switchNameHandler</span> method which is defined in
+      the App <span class="snippet">parent</span> component from the child
+      <span class="snippet">child</span> component.
+    </p>
+    <p class="text">
+      We can do that by passing a reference to the method as a
+      <span class="snippet">prop</span> to the person component:
+    </p>
+    <pre class="code">
+      import React, { useState } from "react";
+      import "./App.css";
+      import Person from "./Person/Person";
+      
+      const App = (props) => {
+        const [personsState, setPersonsState] = useState(
+          {
+            persons: [
+              {
+                name: "Ted",
+                age: 28,
+              },
+      
+              {
+                name: "Rosy",
+                age: 27,
+              },
+      
+              {
+                name: "Kathy",
+                age: 25,
+              },
+            ],
+          },
+        );
+      
+        const [otherState, setOtherState] = useState("Some name..");
+      
+        const switchNameHandler = () => {
+          console.log("Btn clicked and event triggered");
+          setPersonsState({
+            persons: [
+              {
+                name: "TEST_NAME",
+                age: 28,
+              },
+      
+              {
+                name: "Rosy",
+                age: 27,
+              },
+      
+              {
+                name: "Kathy",
+                age: 25,
+              },
+            ],
+          });
+        };
+      
+        return (
+          &lt;div className="App"&gt;
+            &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+            &lt;button 
+              onClick={switchNameHandler}
+            &gt;
+              Switch Names
+            &lt;/button&gt;
+            &lt;Person
+              name={personsState.persons[0].name}
+              age={personsState.persons[0].age}
+            /&gt;
+            &lt;Person
+              name={personsState.persons[1].name}
+              age={personsState.persons[1].age}
+              click={switchNameHandler}
+            &gt;
+              My hobbies: Racing
+            &lt;/Person&gt;
+            &lt;Person
+              name={personsState.persons[2].name}
+              age={personsState.persons[2].age}
+            /&gt;
+          &lt;/div&gt;
+        );
+      };
+      
+      export default App;
+      
+    </pre>
+    <p class="text">
+      In the component itself, we simply access the prop and pass it to the
+      <span class="snippet">onClick</span> handler:
+    </p>
+    <pre class="code">
+import React from "react";
+
+const person = (props) => {
+  return (
+    &lt;div&gt;
+      &lt;p onClick={props.click}&gt;
+        I am {props.name} and I am {props.age} years old.
+      &lt;/p&gt;
+      &lt;p&gt;
+        {props.children}
+      &lt;/p&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default person;
+
+    </pre>
+    <p class="text">
+      So we can call methods through props and thus change the state in a parent
+      component from a child component that does not have state of its own.
+    </p>
+    <p class="text">
+      Let's say the handler should receive the new name so we can change it
+      ourselves:
+    </p>
+    <pre class="code">
+      const switchNameHandler = (newName) => {
+        console.log("Btn clicked and event triggered");
+        setPersonsState({
+          persons: [
+            {
+              name: newName,
+              age: 28,
+            },
+    
+            {
+              name: "Rosy",
+              age: 27,
+            },
+    
+            {
+              name: "Kathy",
+              age: 25,
+            },
+          ],
+        });
+    </pre>
+    <p class="text">
+      In order to pass the data to the prop into the handler we have 2 ways. The
+      first is to call <span class="snippet">bind()</span>:
+    </p>
+    <pre class="code">
+      &lt;Person
+      name={personsState.persons[1].name}
+      age={personsState.persons[1].age}
+      click={switchNameHandler.bind(this, 'newValue string')}
+    &gt;
+    </pre>
+    <p class="text">
+      So the full <span class="snippet">App.js</span> looks like this now:
+    </p>
+    <pre class="code">
+import React, { useState } from "react";
+import "./App.css";
+import Person from "./Person/Person";
+
+const App = (props) => {
+  const [personsState, setPersonsState] = useState(
+    {
+      persons: [
+        {
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    },
+  );
+
+  const [otherState, setOtherState] = useState("Some name..");
+
+  const switchNameHandler = (newName) => {
+    console.log("Btn clicked and event triggered");
+    setPersonsState({
+      persons: [
+        {
+          name: newName,
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  return (
+    &lt;div className="App"&gt;
+      &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+      &lt;button 
+        onClick={switchNameHandler.bind(this, "TEST_NAME2")}
+      &gt;
+        Switch Names
+      &lt;/button&gt;
+      &lt;Person
+        name={personsState.persons[0].name}
+        age={personsState.persons[0].age}
+      /&gt;
+      &lt;Person
+        name={personsState.persons[1].name}
+        age={personsState.persons[1].age}
+        click={switchNameHandler.bind(this, "TEST_NAME")}
+      &gt;
+        My hobbies: Racing
+      &lt;/Person&gt;
+      &lt;Person
+        name={personsState.persons[2].name}
+        age={personsState.persons[2].age}
+      /&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+
+    </pre>
+    <p class="text">
+      The second way to bind the new value by executing an arrow function which
+      returns a call to the <span class="snippet">switchNameHandler</span>
+    </p>
+    <pre class="code">
+      //implicit return here
+      &lt;button onClick={() => switchNameHandler('TEST_NAME2')}&gt;
+        Switch Names
+      &lt;/button&gt;
+    </pre>
+    <p class="text">
+      The <span class="snippet">bind</span> syntax is more recommended, but the
+      arrow function call is also acceptable.
+    </p>
+    <p class="text center bold">Two way data binding</p>
+    <p class="text">
+      Let's say we want an input field that updates the name of the person
+      component dynamically. We will use the
+      <span class="snippet">onChange</span> event and trigger another method in
+      the App component:
+    </p>
+    <pre class="code">
+      //method:
+      const nameChangedHandler = (e) => {
+        //changes the name of 1st person
+        setPersonsState({
+          persons: [
+            {
+              name: e.target.value,
+              age: 28,
+            },
+    
+            {
+              name: "Rosy",
+              age: 27,
+            },
+    
+            {
+              name: "Kathy",
+              age: 25,
+            },
+          ],
+        });
+      };
+    </pre>
+    <p class="text">
+      Next we need to pass a prop to the child (<span class="snippet"
+        >Person</span
+      >) component. (will pass the prop only to the 1st Person)
+    </p>
+    <pre class="code">
+//App.js
+import React, { useState } from "react";
+import "./App.css";
+import Person from "./Person/Person";
+
+const App = (props) => {
+  const [personsState, setPersonsState] = useState(
+    {
+      persons: [
+        {
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    },
+  );
+
+  const [otherState, setOtherState] = useState("Some name..");
+
+  const switchNameHandler = (newName) => {
+    console.log("Btn clicked and event triggered");
+    setPersonsState({
+      persons: [
+        {
+          name: newName,
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  const nameChangedHandler = (e) => {
+    setPersonsState({
+      persons: [
+        {
+          name: e.target.value,
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  return (
+    &lt;div className="App"&gt;
+      &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+      &lt;button 
+        onClick={() =&gt; switchNameHandler("TEST_NAME2")}
+      &gt;
+        Switch Names
+      &lt;/button&gt;
+      &lt;Person
+        name={personsState.persons[0].name}
+        age={personsState.persons[0].age}
+        changed={nameChangedHandler}
+      /&gt;
+      &lt;Person
+        name={personsState.persons[1].name}
+        age={personsState.persons[1].age}
+        click={switchNameHandler.bind(this, "TEST_NAME")}
+      &gt;
+        My hobbies: Racing
+      &lt;/Person&gt;
+      &lt;Person
+        name={personsState.persons[2].name}
+        age={personsState.persons[2].age}
+      /&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+
+    </pre>
+    <p class="text">
+      In the Person component we pass the reference to the
+      <span class="snippet">nameChangedHandler</span> via the
+      <span class="snippet">click</span> prop.
+    </p>
+    <pre class="code">
+      import React from "react";
+
+const person = (props) => {
+  return (
+    &lt;div&gt;
+      &lt;p onClick={props.click}&gt;
+        I am {props.name} and I am {props.age} years old.
+      &lt;/p&gt;
+      &lt;p&gt;
+        {props.children}
+      &lt;/p&gt;
+      &lt;input type="text" onChange={props.changed}&gt;&lt;/input&gt;
+    &lt;/div>
+  );
+};
+
+export default person;
+
+    </pre>
+    <p class="text">
+      Now if we type in the input field, we get the new name set to the value we
+      type.The implementation would be identical if we used class based
+      components and <span class="snippet">setState</span> instead of
+      <span class="snippet">useState</span>.
+    </p>
+    <p class="text">
+      In order to set up <span class="snippet">two way binding</span> we need to
+      set the component so that it displays the name value of the component in
+      the start. To do this we need to set the
+      <span class="snippet">value</span> attribute of the input field:
+    </p>
+    <p class="text">
+      We thus set up two way binding and our input reacts to it. Ignore the
+      warning in the console as it comes for now from the other inputs onto
+      which we have not set up two way binding.
+    </p>
   </body>
 </html>
