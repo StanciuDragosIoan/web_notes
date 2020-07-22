@@ -1382,7 +1382,10 @@ export default App;
           },
         );
       
-        const [otherState, setOtherState] = useState("Some name..");
+        const [
+          otherState, 
+          setOtherState
+        ] = useState("Some name..");
       
         const switchNameHandler = () => {
           console.log("Btn clicked and event triggered");
@@ -1780,5 +1783,96 @@ export default person;
       warning in the console as it comes for now from the other inputs onto
       which we have not set up two way binding.
     </p>
+    <p class="text center bold">
+      Adding styling with stylesheets
+    </p>
+    <p class="text">
+      There are two ways to add stylign to a component. The first one is with a
+      simple css file and the second one is via inline styling. In such
+      stylesheets the styles defined are not scoped to a single component, they
+      are global styles. However we do need to import the css file in the Person
+      component:
+    </p>
+    <pre class="code">
+import React from "react";
+import Person from "./Person.css";
+
+const person = (props) => {
+  return (
+    &lt;div className="Person"&gt;
+      &lt;p onClick={props.click}&gt;
+        I am {props.name} and I am {props.age} years old.
+      &lt;/p&gt;
+      &lt;p&gt;
+        {props.children}
+      &lt;/p&gt;
+      &lt;input 
+        type="text" 
+        value={props.name} 
+        onChange={props.changed}
+      &gt;
+      &lt;/input&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default person;
+
+    </pre>
+    <p class="text">
+      This styles the component and it is managed by webpack, if we look into
+      the index.html file in the public directory, we can see that it has no
+      style tag or link. However if we inspect in the browser we can see some
+      default styling and our own custom styling injected dynamically:
+    </p>
+    <div class="devPic">
+      <img src="./img/styling.png" alt="" />
+    </div>
+    <p class="text center bold">Inline styling</p>
+    <p class="text">
+      We will style the button with inline styles. In order to apply inline
+      styles, we need to define them inside the component (inside the
+      <span class="snippet">render()</span> method for class based components
+      and anywhere inside the function for functional ones ), next we can apply
+      the css:
+    </p>
+    <pre class="code">
+      const style = {
+        backgroundColor: "red",
+        font: "inherit",
+        border: "1px solid blue",
+        padding: "8px",
+      };
+    
+return (
+  &lt;div className="App"&gt;
+    &lt;h1 &gt; Hi, I am a react app&lt;/h1&gt;
+    &lt;button 
+      style={style} 
+      onClick={
+        () => switchNameHandler("TEST_NAME2")
+      }
+    &gt;
+        Switch Names
+    &lt;/button&gt;
+    &lt;Person
+      name={personsState.persons[0].name}
+      age={personsState.persons[0].age}
+      changed={nameChangedHandler}
+    /&gt;
+    &lt;Person
+      name={personsState.persons[1].name}
+      age={personsState.persons[1].age}
+      click={switchNameHandler.bind(this, "TEST_NAME")}
+    &gt;
+      My hobbies: Racing
+    &lt;/Person&gt;
+    &lt;Person
+      name={personsState.persons[2].name}
+      age={personsState.persons[2].age}
+    /&gt;
+  &lt;/div&gt;
+);
+    </pre>
   </body>
 </html>
