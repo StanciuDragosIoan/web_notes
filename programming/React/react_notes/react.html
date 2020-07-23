@@ -1874,5 +1874,572 @@ return (
   &lt;/div&gt;
 );
     </pre>
+    <p class="text center bold">Output content conditionally</p>
+    <p class="text">
+      We can have logic in our <span class="snippet">JSX</span> provided we wrap
+      it in <span class="snippet">{}</span>. In our functional App component we
+      define a piece of state <span class="snippet">showState</span>. This piece
+      of state decides whether or not to display the div with the Person
+      components. Onto the button we implement a new method (<span
+        class="snippet"
+        >togglePersonsHandler</span
+      >
+      ) to toggle the value of the piece of state and thus display or hide the
+      persons. We also attach a new useState call to the newly defined piece of
+      state:
+    </p>
+    <pre class="code">
+import React, { useState } from "react";
+import "./App.css";
+import Person from "./Person/Person";
+
+const App = (props) => {
+  const [personsState, setPersonsState] = useState(
+    {
+      persons: [
+        {
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    },
+  );
+
+  const [otherState, setOtherState] = useState("Some name..");
+  const [showState, setShowState] = useState(false);
+
+  const switchNameHandler = (newName) => {
+    console.log("Btn clicked and event triggered");
+    setPersonsState({
+      persons: [
+        {
+          name: newName,
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  const nameChangedHandler = (e) => {
+    setPersonsState({
+      persons: [
+        {
+          name: e.target.value,
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  const togglePersonsHandler = () => {
+    showState === false ? 
+    setShowState(true) : 
+    setShowState(false);
+  };
+
+  const style = {
+    backgroundColor: "red",
+    font: "inherit",
+    border: "1px solid blue",
+    padding: "8px",
+    cursor: "pointer",
+  };
+
+  return (
+    &lt;div className="App"&gt;
+      &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+      &lt;button 
+        style={style} 
+        onClick={togglePersonsHandler}
+      &gt;
+        Switch Names
+      &lt;/button&gt;
+      {showState === true
+        ? &lt;div&gt;
+          &lt;Person
+            name={personsState.persons[0].name}
+            age={personsState.persons[0].age}
+            changed={nameChangedHandler}
+          /&gt;
+          &lt;Person
+            name={personsState.persons[1].name}
+            age={personsState.persons[1].age}
+            click={switchNameHandler.bind(this, "TEST_NAME")}
+          &gt;
+            My hobbies: Racing
+          &lt;/Person&gt;
+          &lt;Person
+            name={personsState.persons[2].name}
+            age={personsState.persons[2].age}
+          /&gt;
+        &lt;/div&gt;
+        : null}
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+
+    </pre>
+    <p class="text center bold">
+      Output a list
+    </p>
+    <p class="text">
+      In React in order to output a list we can use a higher order array method
+      like <span class="snippet">map</span>.
+    </p>
+    <pre class="code">
+import React, { useState } from "react";
+import "./App.css";
+import Person from "./Person/Person";
+
+const App = (props) => {
+  const [personsState, setPersonsState] = useState(
+    {
+      persons: [
+        {
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    },
+  );
+
+  const [otherState, setOtherState] = useState("Some name..");
+  const [showState, setShowState] = useState(false);
+
+  const switchNameHandler = (newName) => {
+    console.log("Btn clicked and event triggered");
+    setPersonsState({
+      persons: [
+        {
+          name: newName,
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  const nameChangedHandler = (e) => {
+    setPersonsState({
+      persons: [
+        {
+          name: e.target.value,
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  const togglePersonsHandler = () => {
+    showState === false ? 
+    setShowState(true) : 
+    setShowState(false);
+  };
+
+  const style = {
+    backgroundColor: "red",
+    font: "inherit",
+    border: "1px solid blue",
+    padding: "8px",
+    cursor: "pointer",
+  };
+
+  return (
+   &lt;div className="App"&gt;
+     &lt;h1&gt;Hi, I am a react app&lt/h1&gt;
+     &lt;button style={style} onClick={togglePersonsHandler}&gt;
+        Switch Names
+     &lt;/button>
+      {showState === true
+        ? personsState.persons.map((person) => {
+          return&lt;Person
+            name={person.name}
+            age={person.age}
+          /&gt;;
+        })
+        : null}
+   &lt;/div&gt;
+  );
+};
+
+export default App;
+
+    </pre>
+    <p class="text">
+      Now we our outputting a full list using the map method, however we need to
+      pass a key to each list item. We even get an error for that in the
+      console:
+    </p>
+    <div class="devPic">
+      <img src="./img/key_error.png" alt="" />
+    </div>
+    <p class="text">
+      However, first, we will implement a delete handler so we can delete one
+      person from the array:
+    </p>
+    <pre class="code">
+import React, { useState } from "react";
+import "./App.css";
+import Person from "./Person/Person";
+
+const App = (props) => {
+  const [personsState, setPersonsState] = useState(
+    {
+      persons: [
+        {
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    },
+  );
+
+  const [otherState, setOtherState] = useState("Some name..");
+  const [showState, setShowState] = useState(false);
+
+  const switchNameHandler = (newName) => {
+    console.log("Btn clicked and event triggered");
+    setPersonsState({
+      persons: [
+        {
+          name: newName,
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  const nameChangedHandler = (e) => {
+    setPersonsState({
+      persons: [
+        {
+          name: e.target.value,
+          age: 28,
+        },
+
+        {
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  const togglePersonsHandler = () => {
+    showState === false ? 
+    setShowState(true) : 
+    setShowState(false);
+  };
+
+
+  //new handler
+  const deletePersonHandler = (personIndex) => {
+    const persons = personsState.persons;
+    //splice the array (re-create it)
+    persons.splice(personIndex, 1);
+    //put it back in state
+    setPersonsState({ persons });
+  };
+
+  const style = {
+    backgroundColor: "red",
+    font: "inherit",
+    border: "1px solid blue",
+    padding: "8px",
+    cursor: "pointer",
+  };
+
+  return (
+    &lt;div className="App"&gt;
+      &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+      &lt;button 
+        style={style} 
+        onClick={togglePersonsHandler}&gt;
+        Switch Names
+      &lt;/button&gt;
+      {showState === true
+        ? personsState.persons.map((person, index) => {
+          return &lt;Person
+            name={person.name}
+            age={person.age}
+            click={() => {
+              deletePersonHandler(index);
+            }}
+          /&gt;;
+        })
+        : null}
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+
+    </pre>
+    <p class="text">
+      Our current approach with <span class="snippet">splice()</span> has a
+      flaw, it mutates the state directly. A better approach and a best practice
+      is to create a copy of the object and not mutate it directly. We can do
+      that using the <span class="snippet">slice()</span> method or the spread
+      <span class="snippet">...</span> operator (which both copy the array):
+    </p>
+    <pre class="code">
+      const deletePersonHandler = (personIndex) => {
+        const persons = personsState.persons.slice();
+        // const persons = [...personsState.persons];
+        persons.splice(personIndex, 1);
+        setPersonsState({ persons });
+      };
+    </pre>
+    <p class="text">
+      We should always update state in an immutable way (so create a copy of it,
+      change it and update the state with the new object).
+    </p>
+    <p class="text center bold">
+      Adding a key to our list
+    </p>
+    <p class="text">
+      Our list is rendered and seems to be working correctly, but we still need
+      to pass a key prop to it, in order to remove the key error above. React
+      can update the list efficiently based on this key prop. This also brings a
+      huge performance benefit. React compares the previous state with the
+      current one and based on the difference it tries to re-render only what
+      changed. With our current setup it does not know so it re-renders
+      everything.
+    </p>
+    <p class="text">
+      The key will be a new <span class="snippet">id</span> property in the
+      Person object in the state:
+    </p>
+    <pre class="code">
+import React, { useState } from "react";
+import "./App.css";
+import Person from "./Person/Person";
+
+const App = (props) => {
+  const [personsState, setPersonsState] = useState(
+    {
+      persons: [
+        {
+          id: "dwqrfg",
+          name: "Ted",
+          age: 28,
+        },
+
+        {
+          id: "dfdgfgd",
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          id: "ffhsve",
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    },
+  );
+
+  const [otherState, setOtherState] = useState("Some name..");
+  const [showState, setShowState] = useState(false);
+
+  const nameChangedHandler = (e) => {
+    setPersonsState({
+      persons: [
+        {
+          id: "sdgf",
+          name: e.target.value,
+          age: 28,
+        },
+
+        {
+          id: "sdghgjg",
+          name: "Rosy",
+          age: 27,
+        },
+
+        {
+          id: "sdffdhgj",
+          name: "Kathy",
+          age: 25,
+        },
+      ],
+    });
+  };
+
+  const togglePersonsHandler = () => {
+    showState === false ? 
+    setShowState(true) : 
+    setShowState(false);
+  };
+
+  const deletePersonHandler = (personIndex) => {
+    const persons = personsState.persons.slice();
+    // const persons = [...personsState.persons];
+    persons.splice(personIndex, 1);
+    setPersonsState({ persons });
+  };
+
+  const style = {
+    backgroundColor: "red",
+    font: "inherit",
+    border: "1px solid blue",
+    padding: "8px",
+    cursor: "pointer",
+  };
+
+  return (
+    &lt;div className="App"&gt;
+      &lt;h1&gt;Hi, I am a react app&lt;/h1&gt;
+      &lt;button style={style} onClick={togglePersonsHandler}&gt;
+        Switch Names
+      &lt;/button&gt;
+      {showState === true
+        ? personsState.persons.map((person, index) => {
+          return &lt;Person
+            name={person.name}
+            age={person.age}
+            click={() => {
+              deletePersonHandler(index);
+            }}
+            key={person.id}
+          /&gt;;
+        })
+        : null}
+    &lt;/div&gt;
+  );
+};
+
+export default App;
+
+    </pre>
+    <p class="text">
+      In order to set the <span class="snippet">onChange</span> handler from the
+      Person component so that it works just as before but for all persons (with
+      two way data binding).
+    </p>
+    <p class="text">
+      First we need to pass the <span class="snippet">changed</span> prop into
+      the Person component.
+    </p>
+    <pre class="code">
+      changed={(event) => {
+        nameChangedHandler(event, person.id);
+      }}
+    </pre>
+    <p class="text">
+      Note that we pass it as a reference through an arrow function. In the
+      arrow function we receive the <span class="snippet">event</span> object
+      which we pass on to the <span class="snippet">nameChangedHandler</span>.
+    </p>
+    <p class="text">
+      The <span class="snippet">nameChangedHandler</span> will look like this:
+    </p>
+    <pre class="code">
+const nameChangedHandler = (event, id) => {
+  //grab the index of the person
+  const personIndex = personsState.persons.findIndex((p) => {
+    //if the id of the current person is the 1 received
+    return p.id === id;
+  });
+
+        //copy the person to update
+        const person = { ...personsState.persons[personIndex] };
+        person.name = event.target.value;
+    
+        //fetch all persons
+        const persons = [...personsState.persons];
+        //update specific person
+        persons[personIndex] = person;
+        //set the state again
+        setPersonsState({ persons });
+      };
+    </pre>
   </body>
 </html>
