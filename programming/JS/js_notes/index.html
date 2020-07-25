@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="../../../assets/css/main.css"
+      type="text/css"
+    />
+    <title>JS</title>
+  </head>
+  <body>
+    <h1 class="header">JS Basic</h1>
+    <p class="text center bold">JS Introduction</p>
+    <p class="text">
+      <span class="snippet">JavaScript</span> is a general purpose programming
+      language. It was initially designed only for frontend interaction but
+      starting with 2009 and the emergence of
+      <span class="snippet">JS runtimes</span> such as
+      <span class="snippet">nodeJS</span> it became a server side language too,
+      thus being capable of doing any system/back-end related task as well as
+      many other things outside the browser (e.g. mobile, desktop applications).
+    </p>
+    <p class="text center bold">the <span class="snippet">JS</span> console</p>
+    <p class="text">
+      The <span class="snippet">console</span> object has a bunch of useful
+      methods for debugging purposes.At the most basic level, we can log
+      variables with it to test their value throughout our program:
+    </p>
+    <pre class="code">
+        console.log("a string...");
+        console.log([1,2,3]);
+        console.log({name: "John Doe", age: 20});
+    </pre>
+    <p class="text">
+      The <span class="snippet">console.clear();</span> method clears the output
+      in the console.
+    </p>
+    <p class="text">
+      We can also use the <span class="snippet">console.table()</span> method to
+      display data more elegantly:
+    </p>
+    <pre class="code">
+      let object = { name: "John", age: 20 };
+      let array = [1, 2, 3];
+      console.log(object);
+      console.log(array);
+      console.table(object);
+      console.table(array);
+    </pre>
+    <p class="text">
+      The output of the code above would be:
+    </p>
+    <div class="devPic">
+      <img src="./img/console.png" alt="" />
+    </div>
+    <p class="text">
+      The benefit of the console can also be used with a more advanced debugging
+      technique. Say we have the below objects:1
+    </p>
+    <pre class="code">
+        let object1 = { name: "John", age: 20 };
+        let object2 = { name: "Mary", age: 19 };
+        let object3 = { name: "Anna", age: 18 };
+    </pre>
+    <p class="text">
+      We can put them all inside an object and
+      <span class="snippet">console.log</span> or
+      <span class="snippet">console.table</span> it instead of logging each of
+      them individually:
+    </p>
+    <pre class="code">
+        console.log({ object1, object2, object3 });
+    </pre>
+    <p class="text center bold">
+      Variables in JavaScript
+    </p>
+    <p class="text">
+      Variables are the building blocks of our programs (together with
+      functions). They are containers for data, and we use them throughout our
+      code. With ES5 and older versions, the only way to declare a variable was
+      with the <span class="snippet">var</span> keyword. With ES6 and further
+      on, we have 2 new ways to declare a variable:
+      <span class="snippet">let</span> and <span class="snippet">const</span>:
+    </p>
+    <pre class="code">
+        var name = "Mary";
+    </pre>
+    <p class="text">
+      The <span class="snippet">var</span> and
+      <span class="snippet">let</span> keywords are similar, there is a small
+      difference between them (the former is function scope and is hoisted while
+      the latter is block level scope and not hoisted). A disadvantage of the
+      <span class="snippet">var</span> keyword is that it can overwrite the
+      global scope thus polluting it:
+    </p>
+    <pre class="code">
+      //global scope
+      var a = 1;
+
+      if (true) {
+        //block lvl scope
+        var a = 2;//overwrites global scope
+      }
+      //global scope but...
+      console.log(a); //logs 2
+    </pre>
+    <p class="text">
+      On the contrary with <span class="snippet">let</span>we do not have this
+      issue:
+    </p>
+
+    <pre class="code">
+      //global scope
+      let a = 1;
+
+      if (true) {
+        //block lvl scope
+        let a = 2;//stays here
+      }
+      //global scope not polluted...
+      console.log(a); //logs 1
+    </pre>
+    <p class="text">
+      <span class="snippet">let</span> and
+      <span class="snippet">const</span> are block level scoped so they do not
+      overwrite the global scope (unlike <span class="snippet">var</span> ).
+    </p>
+    <p class="text">
+      Concerning <span class="snippet">const</span> it has a single peculiarity
+      compared to <span class="snippet">let</span>, namely that we cannot
+      re-assing it. We can reassign <span class="snippet">var</span> and
+      <span class="snippet">let</span> but not const. So we can do:
+    </p>
+    <pre class="code">
+        var num = 1;
+        num = 2;//can do this
+        var odd = 3;
+        odd = 4;//can do this
+    </pre>
+    <p class="text">
+      However, if we try the below:
+    </p>
+    <pre class="code">
+      const secondOdd = 5;
+      secondOdd = 6;//cannot do this :/
+    </pre>
+    <p class="text">
+      We get an error:
+    </p>
+    <div class="devPic">
+      <img src="./img/const_error.png" alt="" />
+    </div>
+    <p class="text center bold">
+      Data Types in JavaScript
+    </p>
+    <p class="text">
+      There are 6 data types that are <span class="snippet">primitive</span> in
+      JS:
+    </p>
+    <pre class="code">
+      //undefined 
+      console.log(typeof undefined); // 'undefined'
+      //boolean
+      console.log(typeof true); // 'boolean'
+      //number
+      console.log(typeof 1234); // 'number'
+      //string
+      console.log(typeof 'string here'); // 'string'
+      //bigint
+      console.log(typeof 10n); //'bigint'
+      //symbol
+      console.log(typeof Symbol()); // 'symbol'
+    </pre>
+    <p class="text">
+      There are also 3 <span class="snippet">reference type</span> data types
+    </p>
+    <pre class="code">
+      //null
+      console.log(typeof null); // 'object'
+      //Object, Array, Map, Set, etc..
+      const obj1 = new Object();
+      console.log(typeof obj1); // 'object'
+      //function
+      let myFunction = ()=> {
+        console.log("Yo!");
+      }
+      console.log(typeof myFunction); // 'function'
+    </pre>
+    <p class="text">
+      In order to check the data type of an object in JavaScript, we use the
+      <span class="snippet">typeof</span> operator
+    </p>
+    <p class="text center bold">
+      Type conversion in JavaScript
+    </p>
+    <p class="text">
+      Sometimes throughout our programs we are forced to work with various data
+      types and some of these types are not the right ones, so we need to
+      convert them to the adequate type:
+    </p>
+    <pre class="code">
+      //number to string
+      let num = 500;
+      let convertedNum = String(num);
+      let convertedToo = num.toString(); //string
+      console.log(typeof convertedNum); //string
+
+      // Bool to string
+      val = String(true);
+      // Date to string
+      val = String(new Date());
+      // Array to string
+      val = String([1,2,3,4]);
+      
+      //String to numberval = Number('5');
+      val = Number(true);
+      val = Number(false);
+      val = Number(null);
+      val = Number('hello');
+      val = Number([1,2,3]);
+      val = parseInt('100.30');
+      val = parseFloat('100.30');
+
+      //object to string
+      JSON.stringify({name: "Jonh", age: 20});
+    </pre>
+    <p class="text center bold">
+      Math object in JavaScript
+    </p>
+    <p class="text">
+      JavaScript offers a nice <span class="snippet">Math</span> object to do
+      various mathematical operations with it:
+    </p>
+    <pre class="code">
+const num1 = 100;
+const num2 = 50;
+let val;
+
+// Simple math with numbers
+val = num1 + num2;
+val = num1 * num2;
+val = num1 - num2;
+val = num1 / num2;
+val = num1 % num2;//modulo operator
+
+// Math Object
+val = Math.PI;
+val = Math.E;
+val = Math.round(2.4);
+val = Math.ceil(2.4);
+val = Math.floor(2.8);
+val = Math.sqrt(64);
+val = Math.abs(-3);
+val = Math.pow(8, 2);
+val = Math.min(2,33,4,1,55,6,3,-2);
+val = Math.max(2,33,4,1,55,6,3,-2);
+val = Math.random();
+
+val = Math.floor(Math.random() * 20 + 1);
+
+console.log(val);
+    </pre>
+    <p class="text center bold">
+      String methods and concatenation
+    </p>
+    <p class="text">
+      These are basic ways to work with and manipulate string values:
+    </p>
+    <pre class="code">
+      const firstName = "William";
+const lastName = "Johnson";
+const age = 36;
+const str = "Hello there my name is Brad";
+const tags = "web design,web development,programming";
+
+let val;
+
+val = firstName + lastName;
+
+// Concatenation
+val = firstName + " " + lastName;
+
+// Append
+val = "Brad ";
+val += "Traversy";
+
+val = "Hello, my name is " + firstName + " and I am " + age;
+
+// Escaping
+val = "That's awesome, I can't wait";
+
+// Length
+val = firstName.length;
+
+// concat()
+val = firstName.concat(" ", lastName);
+
+// Change case
+val = firstName.toUpperCase();
+val = firstName.toLowerCase();
+
+val = firstName[2];
+
+// indexOf()
+val = firstName.indexOf("l");
+val = firstName.lastIndexOf("l");
+
+// charAt()
+val = firstName.charAt(2);
+// Get last char
+val = firstName.charAt(firstName.length - 1);
+
+// substring()
+val = firstName.substring(0, 4);
+
+// slice()
+val = firstName.slice(0, 4);
+val = firstName.slice(-3);
+
+// split()
+val = str.split(" ");
+val = tags.split(",");
+
+// replace()
+val = str.replace("Brad", "Jack");
+
+// includes()
+val = str.includes("foo");
+
+
+    </pre>
+    <p class="text center bold">
+      Template literals (template strings)
+    </p>
+    <p class="text">
+      Template literals are a nice way to display variables embedded in HTML.
+      They were introduced to make the ES5 'concatenating' way of doing it, much
+      easier:
+    </p>
+    <pre class="code">
+      const name = 'John';
+const age = 31;
+const job = 'Web Developer';
+const city = 'Miami';
+let html;
+
+// Without template strings (es5)
+html = '&lt;ul&gt;' +
+       '&lt;li&gt;Name: ' + name + '&lt;/li&gt;' +
+       '&lt;li&gt;Age: ' + age + '&lt;/li&gt;' +
+       '&lt;li&gt;Job: ' + job + '&lt;/li&gt;' +
+       '&lt;li&gt;City: ' + city + '&lt;/li&gt;' +
+       '&lt;/ul&gt;';
+
+function hello(){
+  return 'hello';
+}
+
+// With template strings (es6)
+html = `
+  &lt;ul&gt;
+    &lt;li&gt;Name: ${name}&lt;/li&gt;
+    &lt;li&gt;Age: ${age}&lt;/li&gt;
+    &lt;li&gt;Job: ${job}&lt;/li&gt;
+    &lt;li&gt;City: ${city}&lt;/li&gt;
+    &lt;li&gt;${2 + 2}&lt;/li&gt;
+    &lt;li&gt;${hello()}&lt;/li&gt;
+    &lt;li&gt;${age &gt; 30 ? 'Over 30' : 'Under 30'}&lt;/li&gt;
+  &lt;/ul&gt;
+`;
+
+document.body.innerHTML = html;
+    </pre>
+    <script>
+      const firstName = "William";
+      const lastName = "Johnson";
+      const age = 36;
+      const str = "Hello there my name is Brad";
+      const tags = "web design,web development,programming";
+
+      let val;
+
+      val = firstName + lastName;
+
+      // Concatenation
+      val = firstName + " " + lastName;
+
+      // Append
+      val = "Brad ";
+      val += "Traversy";
+
+      val = "Hello, my name is " + firstName + " and I am " + age;
+
+      // Escaping
+      val = "That's awesome, I can't wait";
+
+      // Length
+      val = firstName.length;
+
+      // concat()
+      val = firstName.concat(" ", lastName);
+
+      // Change case
+      val = firstName.toUpperCase();
+      val = firstName.toLowerCase();
+
+      val = firstName[2];
+
+      // indexOf()
+      val = firstName.indexOf("l");
+      val = firstName.lastIndexOf("l");
+
+      // charAt()
+      val = firstName.charAt(2);
+      // Get last char
+      val = firstName.charAt(firstName.length - 1);
+
+      // substring()
+      val = firstName.substring(0, 4);
+
+      // slice()
+      val = firstName.slice(0, 4);
+      val = firstName.slice(-3);
+
+      // split()
+      val = str.split(" ");
+      val = tags.split(",");
+
+      // replace()
+      val = str.replace("Brad", "Jack");
+
+      // includes()
+      val = str.includes("foo");
+
+      console.log(val);
+    </script>
+  </body>
+</html>
