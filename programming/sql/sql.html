@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+    <title>SQL</title>
+  </head>
+  <body>
+    <h1 class="header">SQL Joins</h1>
+    <p class="text">
+      A SQL join is a Structured Query Language (SQL) instruction to combine
+      data from two sets of data (i.e. two tables).
+    </p>
+    <p class="text">
+      SQL is a special-purpose programming language designed for managing
+      information in a relational database management system (RDBMS). The word
+      relational here is key; it specifies that the database management system
+      is organized in such a way that there are clear relations defined between
+      different sets of data.
+    </p>
+    <p class="text center bold">Relational Database Example</p>
+    <p class="text">
+      Imagine you’re running a store and would like to record information about
+      your customers and their orders. By using a relational database, you can
+      save this information as two tables that represent two distinct entities:
+      customers and orders.
+    </p>
+    <p class="text center bold">
+      Customers
+    </p>
+    <div class="table">
+      <table border="1" cellpadding="5">
+        <tbody>
+          <tr>
+            <th align="center">customer_id</th>
+            <th align="center">first_name</th>
+            <th align="center">last_name</th>
+            <th align="center">email</th>
+            <th align="center">address</th>
+            <th align="center">city</th>
+            <th align="center">state</th>
+            <th align="center">zip</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>George</td>
+            <td>Washington</td>
+            <td>gwashington@usa.gov</td>
+            <td>3200 Mt Vernon Hwy</td>
+            <td>Mount Vernon</td>
+            <td>VA</td>
+            <td>22121</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>John</td>
+            <td>Adams</td>
+            <td>jadams@usa.gov</td>
+            <td>1250 Hancock St</td>
+            <td>Quincy</td>
+            <td>MA</td>
+            <td>02169</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>tjefferson@usa.gov</td>
+            <td>931 Thomas Jefferson Pkwy</td>
+            <td>Charlottesville</td>
+            <td>VA</td>
+            <td>22902</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>James</td>
+            <td>Madison</td>
+            <td>jmadison@usa.gov</td>
+            <td>11350 Constitution Hwy</td>
+            <td>Orange</td>
+            <td>VA</td>
+            <td>22960</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>James</td>
+            <td>Monroe</td>
+            <td>jmonroe@usa.gov</td>
+            <td>2050 James Monroe Pkwy</td>
+            <td>Charlottesville</td>
+            <td>VA</td>
+            <td>22902</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text">
+      Here, information about each customer is stored in its own row, with
+      columns specifying different bits of information, including their first
+      name, last name, and email address. Additionally, we associate a unique
+      customer number, or <span class="snippet">primary key</span>, with each
+      customer record.
+    </p>
+    <p class="text center bold">Orders</p>
+    <div class="table">
+      <table border="1" cellpadding="5">
+        <tbody>
+          <tr>
+            <th align="center">order_id</th>
+            <th align="center">order_date</th>
+            <th align="center">amount</th>
+            <th align="center">customer_id</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>07/04/1776</td>
+            <td>$234.56</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>03/14/1760</td>
+            <td>$78.50</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>05/23/1784</td>
+            <td>$124.00</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>09/03/1790</td>
+            <td>$65.50</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>07/21/1795</td>
+            <td>$25.50</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>11/27/1787</td>
+            <td>$14.40</td>
+            <td>9</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text">
+      Again, each row contains information about a specific order. Each order
+      has its own unique identification key –
+      <span class="snippet">order_id</span> for this table – assigned to it as
+      well.
+    </p>
+    <p class="text center bold">Relational Model</p>
+    <p class="text">
+      You’ve probably noticed that these two examples share similar information.
+      You can see these simple relations diagrammed below:
+    </p>
+    <div class="devPic">
+      <img src="./img/relation.png" alt="" />
+    </div>
+    <p class="text">
+      Note that the orders table contains two keys: one for the order and one
+      for the customer who placed that order. In scenarios when there are
+      multiple keys in a table, the key that refers to the entity being
+      described in that table is called the
+      <span class="snippet">primary key (PK)</span> and other key is called a
+      <span class="snippet">foreign key (FK)</span>.
+    </p>
+    <p class="text">
+      In our example, order_id is a primary key in the orders table, while
+      customer_id is both a primary key in the customers table and a foreign key
+      in the orders <table class="span snippet">Primary</table>  and <span class="snippet">foreign</span> keys are essential to describing
+      relations between the tables, and in performing <span class="snippet">SQL Joins</span>.
+    </p>
+    <p class="text center bold">SQL Join example</p>
+    <p class="text">
+      Let’s say we want to find all orders placed by a particular customer. We can do this by joining the customers and
+      orders tables together using the relationship established by the <span class="snippet">customer_id</span> key:
+    </p>
+    <pre class="code">
+      select order_date, order_amount
+      from customers
+      join orders
+        on customers.customer_id = orders.customer_id
+      where customer_id = 3
+    </pre>
+    <p class="text">
+      So, select <span class="snippet">order_date</span> and <span class="snippet">order_amount</span>
+      from <span class="snippet">customers</span> and <span class="snippet">join</span> the <span
+        class="snippet">customer_id</span>
+      from <span class="snippet">orders</span> where the id is equal to 3.
+    </p>
+    <p class="text">
+      Here, we’re joining the two tables using the <span class="snippet">join</span> keyword, and specifying what <span
+        class="snippet">key</span> to use when joining the tables in
+      the <span class="snippet">on customers.customer_id = orders.customer_id</span> clause following the join statement.
+      Here is the result of the above
+      SQL query, which includes two orders placed by Thomas Jefferson (customer_id = 3):
+    </p>
+    <div class="table">
+      <table border="1" cellpadding="5">
+        <tbody><tr>
+        <th align="center">order_id</th>
+        <th align="center">order_date</th>
+        <th align="center">order_amount</th>
+          </tr>
+        <tr>
+          <td>2</td>
+        <td>3/14/1760</td>
+        <td>$78.50</td>
+          </tr>
+        <tr>
+        <td>4</td>
+        <td>9/03/1790</td>
+        <td>$65.50</td>
+          </tr>
+        </tbody></table>
+    </div>
+    <p class="text">
+      This particular <span class="snippet">join</span> is an example of an <span class="snippet">“inner” join</span> .
+      Depending on the kind of analysis you’d like to perform, you may want to use a different method. There are actually a
+      number of different ways to join the two tables together, depending on your application. The next section will explain
+      <span class="snippet">inner</span>, <span class="snippet">left</span>, <span class="snippet">right</span>, and <span
+        class="snippet">full outer</span> joins, and provide examples using the data tables used above.
+    </p>
+    <!--  -->
+    <h1 class="header">SQL join Types</h1>
+    <p class="text">
+      One of the most basic things of SQL you will have to handle are SQL
+      joins.There are 4 types of joins: inner, left, right and full.
+    </p>
+    <p class="text">
+      Let's imagine we have two sets of data in a relational database: a table A
+      and a table B. The two tables have some sort of relation specified by a
+      primarty and a foreign key. The result of joining the two tables would
+      look like:
+    </p>
+    <div class="devPic">
+      <img src="./img/tables.png" alt="" />
+    </div>
+    <p class="text">
+      The extent of overlap between tables is determined by how many records in
+      the table A match the records in the table B. Depending on what subset of
+      data we would like to select from the two tables, the four join types can
+      be visualised as per below:
+    </p>
+    <p class="text center bold">
+      Inner Join
+    </p>
+    <div class="devPic">
+      <img src="./img/inner_join.png" alt="" />
+    </div>
+    <p class="text">
+      In an <span class="snippet">inner join</span> we select all records from
+      table A and table B where the join condition is met.
+    </p>
+    <p class="text center bold">
+      Left Join
+    </p>
+    <div class="devPic">
+      <img src="./img/left_join.png" alt="" />
+    </div>
+    <p class="text">
+      In a <span class="snippet">left join</span> we select all records from
+      Table A, along with records from Table B for which the join condition is
+      met (if at all).
+    </p>
+    <p class="text center bold">Right Join</p>
+    <div class="devPic">
+      <img src="./img/right_join.png" alt="" />
+    </div>
+    <p class="text">
+      In a <span class="snippet">right join</span>we select all records from
+      Table B, along with records from Table A for which the join condition is
+      met (if at all).
+    </p>
+    <p class="text center bold">
+      Full Join
+    </p>
+    <div class="devPic">
+      <img src="./img/full_join.png" alt="" />
+    </div>
+    <p class="text">
+      In a <span class="snippet">full join</span>we select all records from
+      Table A and Table B, regardless of whether the join condition is met or
+      not.
+    </p>
+    <p class="text center bold">
+      Example of SQL join types
+    </p>
+    <p class="text">
+      We will use the below tables in order to illustrate some joins examples.
+    </p>
+    <p class="text center">a customers table:</p>
+    <div class="table">
+      <table border="1" cellpadding="5">
+        <tbody>
+          <tr>
+            <th align="center">customer_id</th>
+            <th align="center">first_name</th>
+            <th align="center">last_name</th>
+            <th align="center">email</th>
+            <th align="center">address</th>
+            <th align="center">city</th>
+            <th align="center">state</th>
+            <th align="center">zipcode</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>George</td>
+            <td>Washington</td>
+            <td>gwashington@usa.gov</td>
+            <td>3200 Mt Vernon Hwy</td>
+            <td>Mount Vernon</td>
+            <td>VA</td>
+            <td>22121</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>John</td>
+            <td>Adams</td>
+            <td>jadams@usa.gov</td>
+            <td>1250 Hancock St</td>
+            <td>Quincy</td>
+            <td>MA</td>
+            <td>02169</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>tjefferson@usa.gov</td>
+            <td>931 Thomas Jefferson Pkwy</td>
+            <td>Charlottesville</td>
+            <td>VA</td>
+            <td>22902</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>James</td>
+            <td>Madison</td>
+            <td>jmadison@usa.gov</td>
+            <td>11350 Constitution Hwy</td>
+            <td>Orange</td>
+            <td>VA</td>
+            <td>22960</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>James</td>
+            <td>Monroe</td>
+            <td>jmonroe@usa.gov</td>
+            <td>2050 James Monroe Parkway</td>
+            <td>Charlottesville</td>
+            <td>VA</td>
+            <td>22902</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text center">an orders table</p>
+    <div class="table">
+      <table border="1" cellpadding="5">
+        <tbody>
+          <tr>
+            <th align="center">order_id</th>
+            <th align="center">order_date</th>
+            <th align="center">amount</th>
+            <th align="center">customer_id</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>07/04/1776</td>
+            <td>$234.56</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>03/14/1760</td>
+            <td>$78.50</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>05/23/1784</td>
+            <td>$124.00</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>09/03/1790</td>
+            <td>$65.50</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>07/21/1795</td>
+            <td>$25.50</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>11/27/1787</td>
+            <td>$14.40</td>
+            <td>9</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text">
+      *Note that (1) not every customer in our customers table has placed an
+      order and (2) there are a few orders for which no customer record exists
+      in our customers table.
+    </p>
+    <p class="text center bold">
+      <span class="snippet">Inner Join</span> example:
+    </p>
+    <p class="text">
+      Let’s say we wanted to get a list of those customers who placed an order
+      and the details of the order they placed. This would be a perfect fit for
+      an inner join, since an inner join returns records at the intersection of
+      the two tables.
+    </p>
+    <pre class="code">
+      select first_name, last_name, order_date, order_amount
+      from customers c
+      inner join orders o
+      on c.customer_id = o.customer_id
+    </pre>
+    <p class="text">
+      Note the example above selects the
+      <span class="snippet">first_name</span>,
+      <span class="snippet">last_name</span>,
+      <span class="snippet">order_data</span> and
+      <span class="snippet">order_amount</span> from the
+      <span class="snippet">customers</span> table, giving it an alias of
+      <span class="snippet">c</span> and joins it with the
+      <span class="snippet">orders</span> table, giving it an alias too of
+      <span class="snippet">o</span> and the condition for the join is that the
+      customer_id from <span class="snippet">c</span> is equal to the
+      customer_id from <span class="snippet">o</span>.
+    </p>
+    <p class="text">
+      The result of that query is:
+    </p>
+    <div class="table">
+      <table border="1" cellpadding="5">
+        <tbody>
+          <tr>
+            <th align="center">first_name</th>
+            <th align="center">last_name</th>
+            <th align="center">order_date</th>
+            <th align="center">order_amount</th>
+          </tr>
+          <tr>
+            <td>George</td>
+            <td>Washington</td>
+            <td>07/4/1776</td>
+            <td>$234.56</td>
+          </tr>
+          <tr>
+            <td>John</td>
+            <td>Adams</td>
+            <td>05/23/1784</td>
+            <td>$124.00</td>
+          </tr>
+          <tr>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>03/14/1760</td>
+            <td>$78.50</td>
+          </tr>
+          <tr>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>09/03/1790</td>
+            <td>$65.50</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text">
+      Note that only George Washington, John Adams and Thomas Jefferson placed
+      orders, with Thomas Jefferson placing two separate orders on 3/14/1760 and
+      9/03/1790.
+    </p>
+    <p class="text center bold">
+      <span class="snippet">Left Join</span> example:
+    </p>
+    <p class="text">
+      If we wanted to simply append information about orders to our customers
+      table, regardless of whether a customer placed an order or not, we would
+      use a left join. A left join returns all records from table A and any
+      matching records from table B.
+    </p>
+    <pre class="code">
+        select first_name, last_name, order_date, order_amount
+        from customers c
+        left join orders o
+        on c.customer_id = o.customer_id
+    </pre>
+    <p class="text">
+      We select the same <span class="snippet">first_name</span>,
+      <span class="snippet">last_name</span>,
+      <span class="snippet">order_data</span> and
+      <span class="snippet">order_amount</span> from the
+      <span class="snippet">customers</span> table and we do a
+      <span class="snippet">left join</span> with the orders table. The
+      condition for the left join is the same as the innerjoin above, but since
+      we are using a left join, the table from the left will be returned
+      entirely (regardless of mismatches with table b). That's why the query
+      above will return:
+    </p>
+    <div class="table">
+      <table border="1" cellpadding="5">
+        <tbody>
+          <tr>
+            <th align="center">first_name</th>
+            <th align="center">last_name</th>
+            <th align="center">order_date</th>
+            <th align="center">order_amount</th>
+          </tr>
+          <tr>
+            <td>George</td>
+            <td>Washington</td>
+            <td>07/04/1776</td>
+            <td>$234.56</td>
+          </tr>
+          <tr>
+            <td>John</td>
+            <td>Adams</td>
+            <td>05/23/1784</td>
+            <td>$124.00</td>
+          </tr>
+          <tr>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>03/14/1760</td>
+            <td>$78.50</td>
+          </tr>
+          <tr>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>09/03/1790</td>
+            <td>$65.50</td>
+          </tr>
+          <tr>
+            <td>James</td>
+            <td>Madison</td>
+            <td>NULL</td>
+            <td>NULL</td>
+          </tr>
+          <tr>
+            <td>James</td>
+            <td>Monroe</td>
+            <td>NULL</td>
+            <td>NULL</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text">
+      Note that since there were no matching records for James Madison and James
+      Monroe in our orders table, the order_date and order_amount are NULL,
+      which simply means there is no data for these fields.
+    </p>
+    <p class="text">
+      Note that since there were no matching records for James Madison and James
+      Monroe in our orders table, the order_date and order_amount are NULL,
+      which simply means there is no data for these fields.
+    </p>
+    <p class="text">
+      Also note that if we add the "where order_date IS NULl", we get a list of
+      all customers who have NOT yet placed an order:
+    </p>
+    <pre class="code">
+      select first_name, last_name, order_date, order_amount
+      from customers c
+      left join orders o
+      on c.customer_id = o.customer_id
+      where order_date is NULL
+    </pre>
+    <p class="text center bold">
+      Right Join
+    </p>
+    <p class="text">
+      Right join is a mirror version of the left join and allows to get a list
+      of all orders, appended with customer information.
+    </p>
+    <pre class="code">
+      select first_name, last_name, order_date, order_amount
+      from customers c
+      right join orders o
+      on c.customer_id = o.customer_id
+    </pre>
+    <p class="text">
+      So it selects <span class="snippet">first_name</span>,
+      <span class="snippet">last_name</span>,
+      <span class="snippet">order_date</span>,
+      <span class="snippet">order_amount</span> from
+      <span class="snippet">custommers</span> <span class="snippet">c</span> and
+      joins it with the <span class="snippet">customer_id</span> from
+      <span class="snippet">orders</span> <span class="snippet">o</span>. This
+      query will bring all the orders regardless of whether or not we have a
+      customer for them in the cutomers table:
+    </p>
+    <div class="table">
+      <table border="1" cellpadding="5">
+        <tbody>
+          <tr>
+            <th align="center">first_name</th>
+            <th align="center">last_name</th>
+            <th align="center">order_date</th>
+            <th align="center">order_amount</th>
+          </tr>
+          <tr>
+            <td>George</td>
+            <td>Washington</td>
+            <td>07/04/1776</td>
+            <td>$234.56</td>
+          </tr>
+          <tr>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>03/14/1760</td>
+            <td>$78.50</td>
+          </tr>
+          <tr>
+            <td>John</td>
+            <td>Adams</td>
+            <td>05/23/1784</td>
+            <td>$124.00</td>
+          </tr>
+          <tr>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>09/03/1790</td>
+            <td>$65.50</td>
+          </tr>
+          <tr>
+            <td>NULL</td>
+            <td>NULL</td>
+            <td>07/21/1795</td>
+            <td>$25.50</td>
+          </tr>
+          <tr>
+            <td>NULL</td>
+            <td>NULL</td>
+            <td>11/27/1787</td>
+            <td>$14.40</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text">
+      *Note that for 2 of the orders we have no customer, but since we used a
+      <span class="snippet">right join</span> we still got the line from the
+      orders table.
+    </p>
+    <p class="text">
+      Also note that the order in which the tables are joined is important. We
+      are <span class="snippet">right joining</span> the
+      <span class="snippet">orders</span> table to the
+      <span class="snippet">customers</span> table. If we were to
+      <span class="snippet">right join </span> the
+      <span class="snippet">customers</span> table to the
+      <span class="snippet">orders</span> table, the result would be the same as
+      <span class="snippet">left joining</span> the
+      <span class="snippet">orders</span> table to the
+      <span class="snippet">customers</span> table.
+    </p>
+    <p class="text">
+      *Note also that if we add a 'where first_name IS NULL' clause to the query
+      above, we can get all the orders for which we do not have customer
+      information:
+    </p>
+    <pre class="code">
+      select first_name, last_name, order_date, order_amount
+      from customers c
+      right join orders o
+      on c.customer_id = o.customer_id
+      where first_name is NULL
+    </pre>
+    <p class="text center bold">
+      Full Join
+    </p>
+    <p class="text">
+      In order to get all records from both tables we use a full join.
+    </p>
+    <pre class="code">
+      select first_name, last_name, order_date, order_amount
+      from customers c
+      full join orders o
+      on c.customer_id = o.customer_id
+    </pre>
+    <p class="text">
+      So select <span class="snippet">first_name</span>,
+      <span class="snippet">last_name</span>,
+      <span class="snippet">order_date</span>,
+      <span class="snippet">order_amount</span> from
+      <span class="snippet">customers</span> <span class="snippet">c</span> and
+      do a full join with <span class="snippet">orders</span>
+      <span class="snippet">o</span> where the
+      <span class="snippet">customer_id</span> matches, regardless of a match or
+      not:
+    </p>
+    <div class="table">
+      <table border="1" cellpadding="5">
+        <tbody>
+          <tr>
+            <th align="center">first_name</th>
+            <th align="center">last_name</th>
+            <th align="center">order_date</th>
+            <th align="center">order_amount</th>
+          </tr>
+          <tr>
+            <td>George</td>
+            <td>Washington</td>
+            <td>07/04/1776</td>
+            <td>$234.56</td>
+          </tr>
+          <tr>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>03/14/1760</td>
+            <td>$78.50</td>
+          </tr>
+          <tr>
+            <td>John</td>
+            <td>Adams</td>
+            <td>05/23/1784</td>
+            <td>$124.00</td>
+          </tr>
+          <tr>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>09/03/1790</td>
+            <td>$65.50</td>
+          </tr>
+          <tr>
+            <td>NULL</td>
+            <td>NULL</td>
+            <td>07/21/1795</td>
+            <td>$25.50</td>
+          </tr>
+          <tr>
+            <td>NULL</td>
+            <td>NULL</td>
+            <td>11/27/1787</td>
+            <td>$14.40</td>
+          </tr>
+          <tr>
+            <td>James</td>
+            <td>Madison</td>
+            <td>NULL</td>
+            <td>NULL</td>
+          </tr>
+          <tr>
+            <td>James</td>
+            <td>Monroe</td>
+            <td>NULL</td>
+            <td>NULL</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text">
+      *Note that now we have both the orders for which we do NOT have customers
+      and the customers which did NOT place an order.
+    </p>
+  </body>
+</html>

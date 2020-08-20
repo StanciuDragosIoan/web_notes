@@ -104,6 +104,21 @@ body {
   color: #fff !important;
 }
 
+.table {
+  padding: 2rem;
+  text-align: center;
+  background: #fff;
+  max-width: 1233px;
+  display: block;
+  margin: auto;
+}
+
+.table > table {
+  margin: auto;
+  width: 1000px;
+  font-size: 1.5rem;
+}
+
 /* Media queries < 333 */
 @media (max-width: 900px) {
   body {
