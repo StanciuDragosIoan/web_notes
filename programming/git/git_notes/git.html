@@ -221,7 +221,7 @@
     </p>
     <p class="text">
       On a workflow having <span class="snippet">master</span>  and <span class="snippet">development</span> branches, we start developing a <span class="snippet">feature-1</span> branch
-      and a <span class="snippet">feature-2</span> branch one after the other. However, the <span class="snippet">feature-1</span>
+      and a <span class="snippet">feature-2</span> branch one after the other (they are created from the <span class="snippet">development</span> branch). However, the <span class="snippet">feature-1</span>
       is finished first and merged into the <span class="snippet">development</span> branch and our <span class="snippet">feature-2</span>
       branch needs that new code (which is now merged into the <span class="snippet">development</span> branch).
     </p>
@@ -230,7 +230,7 @@
       moving around or combining some commits to a new base commit (so we rewrite) the history of the current branch. 
     </p>
     <p class="text">
-      Back to our demo, go create an <span class="snippet">index.html</span> file, into which we will work.
+      As for our demo, go create an <span class="snippet">index.html</span> file, into which we will work.
       First, initialize git, and create a <span class="snippet">master</span> branch. Then do a commit on it:
     </p>
     <div class="devPic">
@@ -284,7 +284,7 @@
       Now the development branch will look like this:
     </p>
     <div class="devPic">
-      <img src="./git_log_new_development.png" alt="">
+      <img src="./img/git_log_new_development.png" alt="">
     </div>
     <p class="text">*note how the <span class="snippet">development</span> branch has now 3 commits in it (the initial one plus the 2 we have
     merged from the <span class="snippet">feature-1</span> branch.</p>
@@ -315,15 +315,17 @@
     </div>
     <p class="text">
       Accept both changes in this case (as we want both <span class="snippet">feature-1</span> and <span class="snippet">feature-2</span> code). Next 
-      run <span class="snippet">git add .</span> and <span class="snippet">git rebase --continue</span>. Once the <span class="snippet">conflict</span> has been solved and the 
-      <span class="snippet">rebase</span> performed, <span class="snippet">feature-2</span> looks like this:
-    </p> 
+      run <span class="snippet">git add .</span> and <span class="snippet">git rebase --continue</span>. 
+      <p class="text">
+        Run also <span class="snippet">git commit --amend -m "feature 2 completed"</span> to edit the message of the single commit from <span class="snippet">feature-2</span>.
+      </p>
+      <p class="text">
+        Once the <span class="snippet">conflict</span> has been solved and the 
+      <span class="snippet">rebase</span> performed, <span class="snippet">feature-2</span> looks like this:   </p>
     <div class="devPic">
       <img src="./img/git_rebase_finished.png" alt="">
     </div>
-    <p class="text">
-      Run also <span class="snippet">git commit --amend -m "feature 2 completed"</span> to edit the message of the single commit from <span class="snippet">feature-2</span>.
-    </p>
+    
     <p class="text">
       *note how we have a single commit on the <span class="snippet">feature-2</span> branch but behind it, we have the 2 commits from <span class="snippet">feature-1</span> too
     so we have re-wrote the history of the <span class="snippet">feature-2</span> branch, incorporating the code from <span class="snippet">feature-1</span> without merging it into
