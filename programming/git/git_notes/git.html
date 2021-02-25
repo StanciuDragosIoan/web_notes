@@ -314,9 +314,6 @@
       <img src="./img/git_rebase_conflict.png" alt="">
     </div>
     <p class="text">
-      Run also <span class="snippet">git commit --amend -m "feature 2 completed"</span> to edit the message of the single commit from <span class="snippet">feature-2</span>.
-    </p>
-    <p class="text">
       Accept both changes in this case (as we want both <span class="snippet">feature-1</span> and <span class="snippet">feature-2</span> code). Next 
       run <span class="snippet">git add .</span> and <span class="snippet">git rebase --continue</span>. Once the <span class="snippet">conflict</span> has been solved and the 
       <span class="snippet">rebase</span> performed, <span class="snippet">feature-2</span> looks like this:
@@ -324,6 +321,9 @@
     <div class="devPic">
       <img src="./img/git_rebase_finished.png" alt="">
     </div>
+    <p class="text">
+      Run also <span class="snippet">git commit --amend -m "feature 2 completed"</span> to edit the message of the single commit from <span class="snippet">feature-2</span>.
+    </p>
     <p class="text">
       *note how we have a single commit on the <span class="snippet">feature-2</span> branch but behind it, we have the 2 commits from <span class="snippet">feature-1</span> too
     so we have re-wrote the history of the <span class="snippet">feature-2</span> branch, incorporating the code from <span class="snippet">feature-1</span> without merging it into
