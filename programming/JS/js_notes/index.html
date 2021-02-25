@@ -53,9 +53,7 @@
       console.table(object);
       console.table(array);
     </pre>
-    <p class="text">
-      The output of the code above would be:
-    </p>
+    <p class="text">The output of the code above would be:</p>
     <div class="devPic">
       <img src="./img/console.png" alt="" />
     </div>
@@ -77,9 +75,7 @@
     <pre class="code">
         console.log({ object1, object2, object3 });
     </pre>
-    <p class="text center bold">
-      Variables in JavaScript
-    </p>
+    <p class="text center bold">Variables in JavaScript</p>
     <p class="text">
       Variables are the building blocks of our programs (together with
       functions). They are containers for data, and we use them throughout our
@@ -140,25 +136,19 @@
     <pre class="code">
         var num = 1;
         num = 2;//can do this
-        var odd = 3;
+        let odd = 3;
         odd = 4;//can do this
     </pre>
-    <p class="text">
-      However, if we try the below:
-    </p>
+    <p class="text">However, if we try the below:</p>
     <pre class="code">
       const secondOdd = 5;
       secondOdd = 6;//cannot do this :/
     </pre>
-    <p class="text">
-      We get an error:
-    </p>
+    <p class="text">We get an error:</p>
     <div class="devPic">
       <img src="./img/const_error.png" alt="" />
     </div>
-    <p class="text center bold">
-      Data Types in JavaScript
-    </p>
+    <p class="text center bold">Data Types in JavaScript</p>
     <p class="text">
       There are 6 data types that are <span class="snippet">primitive</span> in
       JS:
@@ -196,9 +186,7 @@
       In order to check the data type of an object in JavaScript, we use the
       <span class="snippet">typeof</span> operator
     </p>
-    <p class="text center bold">
-      Type conversion in JavaScript
-    </p>
+    <p class="text center bold">Type conversion in JavaScript</p>
     <p class="text">
       Sometimes throughout our programs we are forced to work with various data
       types and some of these types are not the right ones, so we need to
@@ -218,21 +206,26 @@
       // Array to string
       val = String([1,2,3,4]);
       
-      //String to numberval = Number('5');
+      //String to number 
+      val = Number('5');
+      //bool to number
       val = Number(true);
       val = Number(false);
+      //obj to number
       val = Number(null);
+      //string to number
       val = Number('hello');
+      //array to number
       val = Number([1,2,3]);
+      //string to number
       val = parseInt('100.30');
+      //string to number
       val = parseFloat('100.30');
 
       //object to string
       JSON.stringify({name: "Jonh", age: 20});
     </pre>
-    <p class="text center bold">
-      Math object in JavaScript
-    </p>
+    <p class="text center bold">Math object in JavaScript</p>
     <p class="text">
       JavaScript offers a nice <span class="snippet">Math</span> object to do
       various mathematical operations with it:
@@ -251,7 +244,7 @@ val = num1 % num2;//modulo operator
 
 // Math Object
 val = Math.PI;
-val = Math.E;
+val = Math.E;//base for logarithms
 val = Math.round(2.4);
 val = Math.ceil(2.4);
 val = Math.floor(2.8);
@@ -266,14 +259,12 @@ val = Math.floor(Math.random() * 20 + 1);
 
 console.log(val);
     </pre>
-    <p class="text center bold">
-      String methods and concatenation
-    </p>
+    <p class="text center bold">String methods and concatenation</p>
     <p class="text">
       These are basic ways to work with and manipulate string values:
     </p>
     <pre class="code">
-      const firstName = "William";
+const firstName = "William";
 const lastName = "Johnson";
 const age = 36;
 const str = "Hello there my name is Brad";
@@ -335,16 +326,14 @@ val = str.includes("foo");
 
 
     </pre>
-    <p class="text center bold">
-      Template literals (template strings)
-    </p>
+    <p class="text center bold">Template literals (template strings)</p>
     <p class="text">
       Template literals are a nice way to display variables embedded in HTML.
       They were introduced to make the ES5 'concatenating' way of doing it, much
       easier:
     </p>
     <pre class="code">
-      const name = 'John';
+const name = 'John';
 const age = 31;
 const job = 'Web Developer';
 const city = 'Miami';
@@ -377,68 +366,612 @@ html = `
 
 document.body.innerHTML = html;
     </pre>
-    <script>
-      const firstName = "William";
-      const lastName = "Johnson";
-      const age = 36;
-      const str = "Hello there my name is Brad";
-      const tags = "web design,web development,programming";
-
+    <p class="text center bold">Array & Array Methods</p>
+    <p class="text">
+      Arrays are collections of data. Here are some methods to work with them:
+    </p>
+    <pre class="code">
+      // Create some arrays
+      const numbers = [43,56,33,23,44,36,5];
+      const numbers2 = new Array(22,45,33,76,54);
+      const fruit = ['Apple', 'Banana', 'Orange', 'Pear'];
+      const mixed = [
+              22, 'Hello', true, undefined, null, 
+              {a:1, b:1}, new Date()
+            ];
+      
       let val;
-
-      val = firstName + lastName;
-
-      // Concatenation
-      val = firstName + " " + lastName;
-
-      // Append
-      val = "Brad ";
-      val += "Traversy";
-
-      val = "Hello, my name is " + firstName + " and I am " + age;
-
-      // Escaping
-      val = "That's awesome, I can't wait";
-
-      // Length
-      val = firstName.length;
-
-      // concat()
-      val = firstName.concat(" ", lastName);
-
-      // Change case
-      val = firstName.toUpperCase();
-      val = firstName.toLowerCase();
-
-      val = firstName[2];
-
-      // indexOf()
-      val = firstName.indexOf("l");
-      val = firstName.lastIndexOf("l");
-
-      // charAt()
-      val = firstName.charAt(2);
-      // Get last char
-      val = firstName.charAt(firstName.length - 1);
-
-      // substring()
-      val = firstName.substring(0, 4);
-
-      // slice()
-      val = firstName.slice(0, 4);
-      val = firstName.slice(-3);
-
-      // split()
-      val = str.split(" ");
-      val = tags.split(",");
-
-      // replace()
-      val = str.replace("Brad", "Jack");
-
-      // includes()
-      val = str.includes("foo");
-
+      
+      // Get array length
+      val = numbers.length;
+      // Check if is array
+      val = Array.isArray(numbers);
+      // Get single value
+      val = numbers[3];
+      val = numbers[0];
+      // Insert into array
+      numbers[2] = 100;
+      // Find index of value
+      val = numbers.indexOf(36);
+      
+      // MUTATING ARRAYS
+      // // Add on to end
+      // numbers.push(250);
+      // // Add on to front
+      // numbers.unshift(120);
+      // // Take off from end
+      // numbers.pop();
+      // // Take off from front
+      // numbers.shift();
+      // // Splice values
+      // numbers.splice(1,3);
+      // // Reverse
+      // numbers.reverse();
+      
+      // Concatenate array
+      val = numbers.concat(numbers2);
+      
+      // Sorting arrays
+      val = fruit.sort();
+      // val = numbers.sort();
+      
+      // // Use the "compare function"
+      // val = numbers.sort(function(x, y){
+      //   return x - y;
+      // });
+      
+      // // Reverse sort
+      // val = numbers.sort(function(x, y){
+      //   return y - x;
+      // });
+      
+      // Find
+      function over50(num){
+        return num > 50;
+      }
+      
+      val = numbers.find(over50);
+      
+      console.log(numbers);
       console.log(val);
-    </script>
+      
+    </pre>
+    <p class="text center bold">Object literals</p>
+    <p class="text">
+      Object literals are just as their names imply objects which we can
+      configure to suit our needs:
+    </p>
+    <pre class="code">
+
+      //create person object
+      const person = {
+        firstName: 'Steve',
+        lastName: 'Smith',
+        age: 36,
+        email: 'steve@aol.com',
+        hobbies: ['music', 'sports'],
+        address: {
+          city: 'Miami',
+          state: 'FL'
+        },
+        getBirthYear: function(){
+          return new Date().getFullYear() - this.age;
+        }
+      }
+      
+      let val;
+      
+      val = person;
+      // Get specific value
+      val = person.firstName;
+      val = person['lastName'];
+      val = person.age;
+      val = person.hobbies[1];
+      val = person.address.state;
+      val = person.address['city'];
+      val = person.getBirthYear();
+      
+      console.log(val);
+      
+      const people = [
+        {name: 'John', age: 30},
+        {name: 'Mike', age: 23},
+        {name: 'Nancy', age: 40}
+      ];
+      
+      for(let i = 0; i &lt; people.length; i++){
+        console.log(people[i].name);
+      }
+    </pre>
+    <p class="text center bold">Date Object in JavaScript:</p>
+    <p class="text">
+      JS provides a handy date object to work with by getting or setting
+      attributes onto it:
+    </p>
+    <pre class="code">
+let val;
+
+const today = new Date();
+let birthday = new Date('9-10-1981 11:25:00');
+birthday = new Date('September 10 1981');
+birthday = new Date('9/10/1981');
+
+val = today.getMonth();
+val = today.getDate();
+val = today.getDay();
+val = today.getFullYear();
+val = today.getHours();
+val = today.getMinutes();
+val = today.getSeconds();
+val = today.getMilliseconds();
+val = today.getTime();
+
+birthday.setMonth(2);
+birthday.setDate(12);
+birthday.setFullYear(1985);
+birthday.setHours(3);
+birthday.setMinutes(30);
+birthday.setSeconds(25);
+
+console.log(birthday);
+    </pre>
+    <p class="text center bold">If statements and comparison operators</p>
+    <p class="text">They allow us to perform logic in our programs:</p>
+    <pre class="code">
+      if (something) {
+        // do something
+      } else {
+        // do something else
+      }
+      
+      const id = 100;
+      
+      // EQUAL TO
+      if (id == 100) {
+        console.log("CORRECT");
+      } else {
+        console.log("INCORRECT");
+      }
+      
+      // NOT EQUAL TO
+      if (id != 101) {
+        console.log("CORRECT");
+      } else {
+        console.log("INCORRECT");
+      }
+      
+      // EQUAL TO VALUE & TYPE
+      if (id === 100) {
+        console.log("CORRECT");
+      } else {
+        console.log("INCORRECT");
+      }
+      
+      // NOT EQUAL TO VALUE & TYPE
+      if (id !== 100) {
+        console.log("CORRECT");
+      } else {
+        console.log("INCORRECT");
+      }
+      
+      // Test if undefined
+      if (typeof id !== "undefined") {
+        console.log(`The ID is ${id}`);
+      } else {
+        console.log("NO ID");
+      }
+      
+      // GREATER OR LESS THAN
+      if (id &lt;= 100) {
+        console.log("CORRECT");
+      } else {
+        console.log("INCORRECT");
+      }
+      
+      // IF ELSE
+      
+      const color = "yellow";
+      
+      if (color === "red") {
+        console.log("Color is red");
+      } else if (color === "blue") {
+        console.log("Color is blue");
+      } else {
+        console.log("Color is not red or blue");
+      }
+      
+      // LOGICAL OPERATORS
+      
+      const name = "Steve";
+      const age = 70;
+      
+      // AND &&
+      if (age > 0 && age &lt; 12) {
+        console.log(`${name} is a child`);
+      } else if (age >= 13 && age &lt;= 19) {
+        console.log(`${name} is a teenager`);
+      } else {
+        console.log(`${name} is an adult`);
+      }
+      
+      // OR ||
+      if (age &lt; 16 || age > 65) {
+        console.log(`${name} can not run in race`);
+      } else {
+        console.log(`${name} is registered for the race`);
+      }
+      
+      // TERNARY OPERATOR
+      console.log(id === 100 ? "CORRECT" : "INCORRECT");
+      
+      // WITHOUT BRACES
+      if (id === 100) console.log("CORRECT");
+      else console.log("INCORRECT");
+      
+      if (id !== 100) console.log("INCORRECT");
+      else console.log("CORRECT");
+      
+    </pre>
+    <p class="text center bold">Switches</p>
+    <p class="text">
+      Switches allow us to perform a type of
+      <span class="snippet">if(){}else{}</span> logic in a more elegant way.
+      They are useful when a single value changes multiple times:
+    </p>
+    <pre class="code">
+const color = 'yellow';
+
+switch(color){
+  case 'red':
+    console.log('Color is red');
+    break;
+  case 'blue':
+    console.log('Color is blue');
+    break;
+  default:
+    console.log('Color is not red or blue');
+    break;
+}
+
+let day;
+
+switch(new Date().getDay()){
+  case 0:
+    day = 'Sunday';
+    break;
+  case 1:
+    day = 'Monday';
+    break;
+  case 2:
+    day = 'Tuesday';
+    break;
+  case 3:
+    day = 'Wednesday';
+    break;
+  case 4:
+    day = 'Thursday';
+    break;
+  case 5:
+    day = 'Friday';
+    break;
+  case 6:
+    day = 'Saturday';
+    break;
+}
+
+console.log(`Today is ${day}`);
+    </pre>
+    <p class="text center bold">
+      Function declarations and function expressions
+    </p>
+    <p class="text">A function declaration is something like:</p>
+    <pre class="code">
+function greet(firstName = 'John', lastName = 'Doe'){
+  return 'Hello ' + firstName + ' ' + lastName;
+}
+    </pre>
+    <p class="text">
+      *note that we 'declare' the function with the keyword
+      <span class="snippet">function</span>.
+    </p>
+    <p class="text">
+      A function expression on the other hand is something like:
+    </p>
+    <pre class="code">
+      const square = function(x = 3){
+        return x*x;
+      };
+    </pre>
+    <p class="text">
+      We still use the keyword <span class="snippet">function</span> but we put
+      the function inside a variable called square. This is the expression.
+    </p>
+    <p class="text bold">IIFE - Immediately Invoked Function Expression</p>
+    <p class="text">
+      It is a function that runs as soon as it's declared. It can be used to
+      limit isolate scope:
+    </p>
+    <pre class="code">
+      (function(name){
+        console.log('Hello '+ name);
+      })('IFFEE');
+    </pre>
+    <p class="text center bold">General Loops</p>
+    <pre class="code">
+      // FOR LOOP
+
+for (let i = 0; i < 10; i++) {
+  if (i === 2) {
+    console.log("2 is my favorite number");
+    continue;
+  }
+
+  if (i === 5) {
+    console.log("Stop the loop");
+    break;
+  }
+
+  console.log("Number " + i);
+}
+
+// WHILE LOOP
+
+let i = 0;
+
+while (i < 10) {
+  console.log("Number " + i);
+  i++;
+}
+
+// DO WHILE
+
+let i = 100;
+
+do {
+  console.log("Number " + i);
+  i++;
+} while (i < 10);
+
+// LOOP THROUGH ARRAY
+const cars = ["Ford", "Chevy", "Honda", "Toyota"];
+
+for (let i = 0; i < cars.length; i++) {
+  console.log(cars[i]);
+}
+
+// FOREACH
+cars.forEach(function (car, index, array) {
+  console.log(`${index} : ${car}`);
+  console.log(array);
+});
+
+// FOR IN LOOP (loop through objects)
+const user = {
+  firstName: "John",
+  lastName: "Doe",
+  age: 40,
+};
+
+for (let x in user) {
+  console.log(`${x} : ${user[x]}`);
+}
+
+    </pre>
+    <p class="text center bold">The window Object</p>
+    <pre class="code">
+      // WINDOW METHODS / OBJECTS / PROPERTIES
+
+// Alert
+alert("Hello World");
+
+// Prompt
+const input = prompt();
+alert(input);
+
+// Confirm
+if (confirm("Are you sure")) {
+  console.log("YES");
+} else {
+  console.log("NO");
+}
+
+let val;
+
+// Outter height and width
+val = window.outerHeight;
+val = window.outerWidth;
+
+// Inner height and width
+val = window.innerHeight;
+val = window.innerWidth;
+
+// Scroll points
+val = window.scrollY;
+val = window.scrollX;
+
+// Location Object
+val = window.location;
+val = window.location.hostname;
+val = window.location.port;
+val = window.location.href;
+val = window.location.search;
+
+// Redirect
+window.location.href = "http://google.com";
+// Reload
+window.location.reload();
+
+// History Object
+
+window.history.go(-2);
+val = window.history.length;
+
+// Navigator Object
+val = window.navigator;
+val = window.navigator.appName;
+val = window.navigator.appVersion;
+val = window.navigator.userAgent;
+val = window.navigator.platform;
+val = window.navigator.vendor;
+val = window.navigator.language;
+
+console.log(val);
+
+    </pre>
+    <p class="text center bold">ES6 Promises</p>
+    <p class="text">
+      Promises handle async operations and 'promise' to do something once that
+      finishes using the &lt;span class="snippet"&gt;.then()&lt;/span&gt;
+      syntax:
+    </p>
+
+    <pre class="code">
+ 
+      const posts = [
+  {title: 'Post One', body: 'This is post one'},
+  {title: 'Post Two', body: 'This is post two'}
+];
+ 
+
+function createPost(post) {
+  //create promise which takes resolve and reject as arguments in CB 
+  return new Promise(function(resolve, reject){
+    setTimeout(function() {
+      posts.push(post);
+
+      //error for testing
+      const error = false;
+
+      if(error){
+        //call reject (promise failed)
+        reject('ERROR SOMETHING went wrong');
+      } else {
+        //call resolve(); 
+        resolve();
+      }
+      
+    }, 2000);
+  });
+  
+}
+
+
+function getPosts() {
+  setTimeout(function() {
+    let output = '';
+    posts.forEach(function(post){
+      output += `&lt;li&gt;${post.title}&lt;/li&gt;`;
+    });
+    document.body.innerHTML = output;
+  }, 1000);
+}
+
+//call getPosts in .then();
+createPost({title: 'Post Three', body: 'This is post three'})
+ //get posts if promise fulfilled
+  .then(getPosts)
+  //catch error if promise not fulfilled
+  .catch((err)=>{
+    console.log(err);
+  });
+  </pre
+    >
+    <p class="text center bold">The Fetch API</p>
+    <p class="text">
+      The <span class="snippet">Fetch API</span> is a newer standard for
+      handling asynchronous code. It returns a promise.
+    </p>
+    <pre class="code">
+
+      //work with text with Fetch
+
+      function getText() {
+        fetch("test.txt")
+        //call .then since fetch returns a promise
+        .then(function(res){
+            //returns another promise
+            return res.text();
+        })
+        //call .then() again from the res.text() promise
+        .then(function(data){
+          console.log(data);
+        })
+        //catch error
+        .catch(function(err){
+          console.log(err);
+        })
+      }
+
+
+      //work with JSON with Fetch
+
+      function getJSON(){
+        fetch("test.json")
+          .then(function(res){
+            //res.json() returns a promise
+            return res.json();
+          })
+          //fulfill the promise from .json()
+          .then(function(data){
+            console.log(data);
+          })
+          //catch error
+          .catch(function(err){
+            console.log(err);
+          })
+      }
+
+
+
+      //work with external API with fetch
+      
+      function getJSON(){
+        fetch("thttps://api/resources")
+          .then(function(res){
+            //res.json() returns a promise
+            return res.json();
+          })
+          //fulfill the promise from .json()
+          .then(function(data){
+            console.log(data);
+          })
+          //catch error
+          .catch(function(err){
+            console.log(err);
+          })
+      }
+    </pre>
+    <p class="text center bold">Aysnc/ Await</p>
+    <p class="text">
+      The async keyword by itself generates a promise. See the code below:
+    </p>
+    <pre class="code">
+      async function myFunc(){
+        console.log("Hello");
+      }
+
+      myFunc(); //logs a promise
+      //if we want to log the string we do
+      myFunc().then(res => console.log(res));
+    </pre>
+    <p class="text">
+      Inside an async function we can use the
+      <span class="snippet">await</span> keyword to await for an async operation
+      (for instance for the fulfillment of a promise):
+    </p>
+    <pre class="code">
+      async function myFunc(){
+         const promise = new Promise((resolve, reject)=>{
+           setTimeout(resolve('Hello'), 1000)
+         });
+
+         //wait for promise
+         const res = await promise;
+         return res;
+      }
+
+
+      myFunc().then(res => console.log(res));
+    </pre>
   </body>
 </html>
