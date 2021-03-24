@@ -331,5 +331,39 @@
     so we have re-wrote the history of the <span class="snippet">feature-2</span> branch, incorporating the code from <span class="snippet">feature-1</span> without merging it into
     <span class="snippet">feature-2</span> and keeping a clean history.
     </p>
+    <h1 class="header">How git stores stuff</h1>
+    <p class="text">
+      There are 4 <span class="snippets">leves</span> at which git stores stuff:
+    </p>
+    <p class="text">
+      1. Serve level (the code that is in the remote  repo in github or other platforms)
+    </p>
+    <p class="text">
+      2. The local cache (here git stores metadata about the repo such as the hash of the head, etc...)
+    </p>
+    <p class="text">
+      3. The local branch (here's your own code with the local commits and all)
+    </p>
+    <p class="text">
+      4. The <span class="snippet">uncommited</span> changes with <span class="snippet">staged</span> and 
+      <span class="snippet">unstaged</span> stuff that we have yet to <span class="snippet">commit</span>
+    </p>
+    <h1 class="header">git <span class="snippet">pull</span> vs git <span class="snippet">fetch</span></h1>
+    <p class="text">
+      The basic difference between <span class="snippet">git pull</span> and <span class="snippet">git fetch</span> is that 
+      the latter just refreshes the local cache (so it brings changes from the remote repo in github - Layer 1 to the local cache - Layer 2).
+      It does this without applying the changes.
+    </p>
+    <p class="text">In order to test that, just clone this repo: <a href="https://github.com/StanciuDragosIoan/git_playground" target="_blank">github repo</a> </p>
+    <p class="text">Once cloned, if we run inside:</p>
+    <pre class="code">
+      git branch
+    </pre>
+    <p class="text">
+      The output for that is:
+    </p>
+    <div class="devPic">
+      <img src="./img/git_squash.png" alt="" />
+    </div>
   </body>
 </html>
