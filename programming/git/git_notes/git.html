@@ -363,7 +363,95 @@
       The output for that is:
     </p>
     <div class="devPic">
-      <img src="./img/git_squash.png" alt="" />
+      <img src="./img/git_branch_1.png" alt="" />
     </div>
+    <p class="text">
+      This means that we have cloned the repo, which has copied the master branch to our local machine. It also means that
+      the <span class="snippet">local cache</span> level of git (Level 2) has all the branches. So we have them in the local
+      cache but not on the local machine. If we run:
+    </p>
+    <pre class="code">
+      git branch -a
+    </pre>
+    <p class="text">
+      We get the below:
+    </p>
+    <div class="devPic">
+      <img src="./img/git_branch_a_1.png" alt="" />
+    </div>
+    <p class="text">
+      Note that we have all the branches in the cache level (so git 'knows') about all of them but we have a local copy only for the master branch.4
+      If we want one of the other branches we just run <span class="snippet">git checkout branch_name</span> for instance:
+    </p>
+    <pre class="code">
+      git checkout Feature-1
+    </pre>
+    <p class="text">
+      Now if we run:
+    </p>
+    <pre class="code">
+      git branch
+    </pre>
+    <p class="text">We get the below:</p>
+    <div class="devPic">
+      <img src="./img/git_branch_2.png" alt="" />
+    </div>
+    <p class="text">
+      So now we have a local copy of <span class="snippet">Feature-1</span> too and we are <span class="snippet">checked out</span> on it.
+    </p>
+    <p class="text">
+      Now if we create a new branch inside the remote repo (so from the web interface) and we run again <span class="snippet">git branch -a</span>,
+      it will not show the newly created branch. However, if we run:
+    </p>
+    <pre class="code">
+      git fetch
+    </pre>
+    <div class="devPic">
+      <img src="./img/git_fetch_1.png" alt="" />
+    </div>
+    <p class="text">
+      *note how it has all the branches now, after the <span class="snippet">fetch</span> because git fetch has updated our cached level with 
+      the latest info from git (with Feature-3).
+    </p>
+    <p class="text">
+      Another example, would be to do a commit onto one of the remote branches from the web interface (as if some1 else had pushed onto it). 
+    </p>
+    <p class="text">
+      In order to perform this test, just run:
+    </p>
+    <pre class="code">
+      git checkout Feature-3
+    </pre>
+    <p class="text">
+      Next, make a commit in the <span class="snippet">Feature-3</span> branch (from the web interface of github) and run:
+    </p>
+    <pre class="code">
+      git diff Feature-3 origin/Feature-3
+    </pre>
+    <p class="text">
+      This command will give no output at all because our local git is not aware of the changes in the remote repo.
+    </p>
+    <p class="text">
+      However if we run <span class="snippet">git fetch</span> and then <span class="snippet">git diff Feature-3 origin/Feature-3</span>
+      we get the below output:
+    </p>
+    <div class="devPic">
+      <img src="./img/git_fetch_2.png" alt="" />
+    </div>
+    <p class="text">
+      Note that there is 1 commit difference in <span class="snippet">Feature-3</span> between local and the origin. So now if we run <span class="snippet">git pull</span>
+      we will get that local commit too. Also, keep in mind that <span class="snippet">git pull</span> performs a <span class="snippet">fetch</span>
+      and a <span class="snippet">merge</span> under the hood so another difference between the <span class="snippet">pull</span> and <span class="snippet">git merge FETCH_HEAD</span>
+      command would be the fact that the former applies the changes, while the <span class="snippet">fetch</span> only writes them in the local cache (Level 2). This is useful for when
+      we want to see the changes but we may not want to apply them to our local branch.
+    </p>
+    <p class="text">
+      In a nutshell we want to use <span class="snippet">git fetch</span> when we want to see the remote changes on a branch without applying them (but this is cumbersome because we 
+      need to run <span class="snippet">git fetch</span>  followed by <span class="snippet">git diff fetched_branch origin/fetched_branch</span> ). It would
+      probably be easier to check the chances in the web interface directly. However you must use <span class="snippet">git fetch</span> when a new branch is pushed onto the remote repo
+      after you have cloned it locally
+      and you need it too (git only cloned the branches that were in the remote repo at the moment of your cloning so if someone else pushes an extra branch and you need it locally, you need
+      to do a <span class="snippet">git fetch</span>).
+    </p>
   </body>
 </html>
