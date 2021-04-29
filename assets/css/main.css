@@ -37,6 +37,7 @@ body {
   margin: auto;
   margin-bottom: -1rem;
   line-height: 3rem;
+  overflow-y: auto;
 }
 
 .snippet {

@@ -1,0 +1,276 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="../../../assets/css/main.css"
+      type="text/css"
+    />
+    <title>Node_JS</title>
+  </head>
+  <body>
+    <h1 class="header">NodeJS (basic)</h1>
+    <p class="text center bold">Create a Server in NodeJS</p>
+    <p class="text">
+      NodeJS has a bunch of core modules (http, https, fs, path, os). We can
+      also install 3rd party modules.
+    </p>
+    <p class="text">
+      For creating a server we use the http module (which allows us to launch a
+      server, or send a request). Https is used for launching an SSL encoded
+      serve.
+    </p>
+    <p class="text">
+      For creating a server, we need to import the http module:
+    </p>
+    <pre class="code">
+      //import http module
+      const http = require("http");
+    </pre>
+    <p class="text">
+      In order to create the server we use the
+      <span class="snippet">createServer()</span> method. It takes a request
+      listener as an argument. A request listener is a callback function that
+      will execute for every request. The request listener takes in a request
+      and a response object, so we can read data from the request or send back a
+      response to the request.
+    </p>
+    <pre class="code">
+      //request listener
+        function rqListener(req, res) {
+           console.log(req); 
+           console.log(res);
+          }
+
+      //create server 
+      const server = http.createServer(rqListener);
+    </pre>
+
+    <p class="text">
+      We can also pass the request listener as an anonymous function:
+    </p>
+    <pre class="code">
+      const server = http.createServer(
+        (req, res) => {
+          console.log(req); 
+          console.log(res);
+        }
+      );
+    </pre>
+    <p class="text">
+      Start the server with the <span class="snippet">listen()</span> method
+      (which takes in a port and a host as an argument). Since we are on our
+      local machine, we do not need to specify a host, it will use localhost by
+      default.
+    </p>
+    <pre class="code">
+      //start the server
+      server.listen(3000);
+    </pre>
+    <p class="text">Run the file with:</p>
+    <pre class="code">
+     node server
+   </pre
+    >
+    <p class="text">
+      Go to http://localhost:3000 and you will see nothing (because the server
+      is not configured to send back any response), but if you go back in the
+      terminal where you ran the file, you will see the request and response
+      objects logged, so the server is running.
+    </p>
+    <p class="text center bold">NodeJS Program Lifecycle</p>
+    <p class="text">
+      When starting the script, node read it, executed it and it never stopped.
+      This happened because of the event loop which is a loop process that keeps
+      running as long as there are event listeners listed. One event we
+      registered was the request listener callback function. (and we never
+      unregistered it because the server should be up and running). NodeJS uses
+      this event driven approach because it is single threaded but it must also
+      handle many connections at once (which it does).
+    </p>
+    <p class="text">
+      In order to unregister an event listener, we need to use the
+      <span class="snippet">process.exit()</span> function:
+    </p>
+    <pre class="code">
+      //import http module
+      const http = require("http");
+
+      //create server
+      const server = http.createServer((req, res) => {
+        console.log(req);
+        process.exit;//exit on request
+      });
+
+      //start the server
+      server.listen(3000);
+    </pre>
+    <p class="text">
+      If we run the server.js script now, it will start and it will not stop
+      until we make a request to it. Once we make the request, it will log the
+      output and stop.
+    </p>
+    <p class="center text bold">The NodeJS Request</p>
+    <p class="text">
+      The request object is the object that NodeJS created when we hit the
+      <span class="snippet">http://localhost:3000</span> endpoint with our GET
+      request.The object has many properties like the headers:
+    </p>
+    <div class="devPic">
+      <img src="./img/headers.png" alt="" />
+    </div>
+    <p class="text">
+      In the request we can see the host, the caching of the response (we have
+      no response configured so far), the browser, the http version used, etc..
+    </p>
+    <p class="text">
+      We can even check specific data from the request object via its
+      properties:
+    </p>
+    <pre class="code">
+      //import http module
+      const http = require("http");
+
+      //create server
+      const server = http.createServer(
+        (req, res) => {
+        //grab specific data
+        console.log(req.url, req.method, req.headers);
+        process.exit;
+      });
+
+      //start the server
+      server.listen(3000);
+    </pre>
+    <p class="text">The output for the above is:</p>
+    <div class="devPic">
+      <img src="./img/properties.png" alt="" />
+    </div>
+    <p class="text">
+      Note the url is <span class="snippet">/</span>, because we have nothing
+      after <span class="snippet">http://localhost:3000</span>. If instead of
+      that we type: <span class="snippet">http://localhost:3000/test123</span>,
+      we get output as url <span class="snippet">/test123</span>. After the URL
+      we have the request (<span class="snippet">GET</span>), followed by the
+      headers:
+    </p>
+    <div class="devPic">
+      <img src="./img/properties2.png" alt="" />
+    </div>
+    <p class="text center bold">Sending back a response</p>
+    <p class="text">
+      A basic way to send a node response from the server is using the methods:
+      of the response object ( <span class="snippet">res.setHeader()</span> ),
+      <span class="snippet">res.write()</span> and
+      <span class="snippet">res.send().</span>
+    </p>
+    <pre class="code">
+//import http module
+const http = require("http");
+
+//create server
+const server = http.createServer(
+  (req, res) => {
+    //set content type header
+    res.setHeader("Content-Type", "text/html");
+    //send actual html as response
+    res.write("&lt;html&gt;");
+    res.write("&lt;head&gt;&lt;title&gt;Basic Page&lt;/title&gt;&lt;/head&gt;");
+    res.write("&lt;body&gt;&lt;h1&gt;Hello Node JS&lt;/h1&gt;&lt;/body&gt;");
+    res.write("&lt;/html&gt;");
+    //end response and send it to client
+    res.end(); //can't call write() anymore after end()
+});
+
+//start the server
+server.listen(3000);
+
+    </pre>
+    <p class="text">
+      If we open the browser and we go to developer tools, the network tab and
+      reload, we can click on the localhost request and if we select the
+      <span class="snippet">localhost</span> request, we can see that we have
+      the <span class="snippet">Headers</span> tab open by default. We can see
+      our <span class="snippet">Content-Type:text/html</span> header set
+      together with other default headers set by the browser:
+    </p>
+    <div class="devPic">
+      <img src="./img/chrome_tools.png" alt="" />
+    </div>
+    <p class="text">
+      If we click on the <span class="snippet">Response</span> tab, we can see
+      the html response raw (remember, we set it with
+      <span class="snippet">res.send():</span>
+      <div class="devPic">
+        <img src="./img/chrome_tools2.png" alt="" />
+      </div>
+    </p>  
+    <p class="text center bold">How to route a reuqest</p>
+    <p class="text">In order to route a request, we need to parse the url:</p>
+    <pre class="code">
+//import http module
+const http = require("http");
+
+//create server
+const server = http.createServer((req, res) => {
+  //parse url
+  const url = req.url;
+  if (url === "/") {
+    //redirect
+    res.write("&lt;html&gt;");
+    res.write(`&lt;head&gt;
+                &lt;title&gt;Enter Msg&lt;/title&gt;
+              &lt;/head&gt;`);
+    res.write(
+      `&lt;body&gt;
+        &lt;form action='/message' method='POST'&gt;
+          &lt;input type='text' name='message'&gt;
+          &lt;button type='submit'&gt;Send&lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/body&gt;`,
+    );
+    res.write("&lt;/html&gt;");
+    //return so we break execution
+    return res.end();
+  }
+  //set content type header
+  res.setHeader("Content-Type", "text/html");
+  //send actual html as response
+  res.write("&lt;html&gt;");
+  res.write(`&lt;head&gt;
+              &lt;title&gt;Basic Node Page&lt;/title&gt;
+            &lt;/head&gt;`);
+  res.write(`&lt;body&gt;
+              &lt;h1&gt;Hello from Node JS&lt;/h1&gt;
+             &lt;/body&gt;
+            `);
+  res.write("&lt;/html&gt;");
+  //end response and send it to client
+});
+
+//start the server
+server.listen(3000);
+
+    </pre>
+      <p class="text">
+      The routing of the request is done when the request hits the
+      <span class="snippet">/</span> url. Also, note how we return
+      after the if statement, in order to prevent further execution
+      of the function. If we run the server now, we see the form with
+      the input field and submit button in the browser, if we hit submit,
+      we get redirected to the same defautl view as the one we had before.
+    </p>
+  
+ 
+    </body>
+</html> 
+
+ 
+
+ 

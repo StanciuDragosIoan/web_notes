@@ -46,9 +46,7 @@
     <pre class="code">
       docker --version
     </pre>
-    <p class="text">
-      In order to test docker run:
-    </p>
+    <p class="text">In order to test docker run:</p>
     <pre class="code">
       docker run hello-world
     </pre>
@@ -70,9 +68,7 @@
       it.When the Docker daemon starts, it creates a Unix socket accessible by
       members of the docker group.
     </p>
-    <p class="text">
-      First create the docker group:
-    </p>
+    <p class="text">First create the docker group:</p>
     <pre class="code">
       sudo groupadd docker
     </pre>
@@ -95,5 +91,26 @@
     <div class="devPic">
       <img src="./img/hello_docker.png" alt="" />
     </div>
+    <p class="text center bold">How to setup a DB container</p>
+    <p class="text">
+      In order to set up a persistent docker container, just run the below
+      command:
+    </p>
+    <pre class="code">
+      docker run -d --restart unless-stopped -v /Users/dragosstanciu/work_stuff/docker_vol/postgres:/var/lib/postgresql/data -p 0.0.0.0:5433:5432 --name postgres -e POSTGRES_PASSWORD=mysecretpassword postgres:13
+    </pre>
+    <p class="text">
+      This command starts a container with the
+      <span class="snippet">--restart unless-stopped</span> flag (so it will
+      reboot the container at each system reboot unless we explicitly stop it),
+      it configures the volume for that container in the
+      <span class="snippet"
+        >/Users/dragosstanciu/work_stuff/docker_vol/postgres</span
+      >
+      path (inside the container that corresponds to
+      <span class="snippet">/var/lib/postgresql/data</span> ), it gives it a
+      port on localhost to run on (5433) and sets a password via the cli
+      arguments.
+    </p>
   </body>
 </html>

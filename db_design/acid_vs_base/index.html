@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+  <title>ACID vs BASE</title>
+</head>
+
+<body>
+  <h1 class="header">ACID vs BASE</h1>
+
+  <p class="text">
+    Deciding on the right database management system <span class="snippet">(DBMS) </span> can be a difficult task. The
+    number of available options is
+    huge. Before you start searching for an adequate database solution, consider your requirements.
+  </p>
+  <p class="text">
+    A recommended first step in this process is to choose a <span class="snippet">database transaction model</span>.
+    This is a set of rules which
+    determine how a database organizes, stores, and manipulates data.
+  </p>
+  <p class="text">
+    <span class="snippet">ACID</span> and <span class="snippet">BASE</span> are two of the most popular transactional
+    models.
+  </p>
+  <p class="text center bold">
+    <span class="snippet">ACID</span> vs <span class="snippet">BASE</span>
+  </p>
+  <p class="text">
+    The <span class="snippet">CAP</span> theorem states that it is impossible to achieve both consistency and
+    availability in a partition tolerant
+    distributed system (i.e., a system which continues to work in cases of temporary communication breakdowns).
+  </p>
+  <p class="text">
+    * the <span class="snippet">CAP</span> theoreme comes from <span class="snippet">Consistency, Availability and
+      Partition tolerance (the system keeps operating even if some messages are delayed)</span>.
+  </p>
+  <p class="text">The fundamental difference between <span class="snippet">ACID</span> and <span
+      class="snippet">BASE</span> database models is the way they deal with limitation.
+  </p>
+  <p class="text">
+    The <span class="snippet">ACID</span> model provides a consistent system.
+  </p>
+  <p class="text">
+    The <span class="snippet">BASE</span> model provides a high availability.
+  </p>
+  <p class="text">
+    To provide further insight, we will discuss each of the models separately and then compare them.
+  </p>
+  <p class="text center bold">
+    ACID model
+  </p>
+  <p class="text">
+    The <span class="snippet">ACID</span> database transaction model ensures that a performed transaction is always
+    consistent. This makes it a good fit for businesses which deal with online transaction processing (e.g. financial
+    institutions) or online analyticl processing (e.g. data warehousing). These organizations need database systems
+    which can handle many small simultaneous transactions. There must be 0 tolerance for invalid state.
+  </p>
+  <p class="text">
+    To better explain the <span class="snippet">ACID</span> model, it's best to start by breaking apart the acronym in
+    its name.
+  </p>
+  <div class="devPic">
+    <img src="./img/acid-acronym.png" alt="">
+  </div>
+  <p class="text">
+    <span class="snippet">ACID</span> stands for
+  </p>
+  <p class="text">
+    <span class="snippet">Atomic</span> - Each transaction is either properly carried out or the
+    process halts and the database reverts back to the state before the transaction started. This ensures that all data
+    in the database is valid.
+  </p>
+  <p class="text">
+    <span class="snippet">Consistent</span> - A processed transaction will never endanger the structural integrity of
+    the database.
+  </p>
+  <p class="text">
+    <span class="snippet">Isolated</span> - Transactions cannot compromise the integrity of other transactions by
+    interacting with them while they are still in progress.
+  </p>
+  <p class="text">
+    <span class="snippet">Durable</span> - The data related to the completed transaction will persist even in the cases
+    of network or power outages. If a transaction fails, it will not impact the manipulated data.
+  </p>
+  <p class="text center bold">
+    ACID Use Case Example
+  </p>
+  <p class="text">
+    Financial institutions will almost exclusively use <span class="snippet">ACID</span> databases. Money transfers
+    depend on the atomic nature of
+    <span class="snippet">ACID</span>.
+  </p>
+  <p class="text">
+    An interrupted transaction which is not immediately removed from the database can cause a lot of issues. Money could
+    be debited from one account and, due to an error, never credited to another.
+  </p>
+  <p class="text">
+    Which Databases are actually <span class="snippet">ACID</span> compliant?
+  </p>
+  <p class="text">
+    One safe way to make sure your database is <span class="snippet">ACID</span> compliant is to choose a relational
+    database management system.
+    These include MySQL, PostgreSQL, Oracle, SQLite, and Microsoft SQL Server.
+  </p>
+  <p class="text">
+    Some <span class="snippet">NoSQL DBMSs</span>, such as <strong>Apache’s CouchDB or IBM’s Db2</strong> , also possess
+    a certain degree
+    of <span class="snippet">ACID</span> compliance. However,
+    the philosophy behind the <span class="snippet">NoSQL</span> approach to database management goes against the strict
+    <span class="snippet">ACID</span> rules. Hence, <span class="snippet">NoSQL</span>
+    databases are not the recommended choice for those who need strict environments.
+  </p>
+  <p class="text center bold">
+    BASE model
+  </p>
+  <p class="text">
+    The rise of <span class="snippet">NoSQL</span> databases provided a flexible and fluid way to manipulate data. As a
+    result, a new database model
+    was designed, reflecting these properties.
+  </p>
+  <p class="text">
+    The acronym <span class="snippet">BASE</span> is slightly more confusing than <span class="snippet">ACID</span>.
+    However, the words behind it
+    suggest ways in which the <span class="snippet">BASE</span>
+    model is different.
+  </p>
+  <div class="devPic">
+    <img src="./img/base-acronym.png" alt="">
+  </div>
+  <p class="text">
+    <span class="snippet">BASE</span> stands for:
+  </p>
+  <p class="text">
+    <span class="snippet">Basically Available</span> - Rather than enforcing immediate consistency, BASE-modelled NoSQL
+    databases will ensure availability of data by spreading and replicating it across the nodes of the database cluster.
+  </p>
+  <p class="text">
+    <span class="snippet">Soft State </span> - Due to the lack of immediate consistency, data values may change over
+    time. The BASE model breaks off with the concept of a database which enforces its own consistency, delegating that
+    responsibility to developers
+  </p>
+  <p class="text">
+    <span class="snippet">
+      Eventually Consistent - he fact that <span class="snippet">BASE</span> does not enforce immediate consistency does
+      not mean that it never
+      achieves it. However, until it does, data reads are still possible (even though they might not reflect the
+      reality)
+    </span>
+  </p>
+  <p class="text center bold">
+    BASE Use Case Example
+  </p>
+  <p class="text">
+    Marketing and customer service companies who deal with sentiment analysis will prefer the elasticity of <span
+      class="snippet">BASE</span> when
+    conducting their social network research. Social network feeds are not well structured but contain huge amounts of
+    data which a <span class="snippet">BASE</span>-modeled database can easily store.
+  </p>
+  <p class="text">
+    Which Databases are Using the <span class="snippet">BASE</span> Model?
+  </p>
+  <p class="text">
+    Just as <strong>SQL</strong> databases are almost uniformly <span class="snippet">ACID</span> compliant,
+    <strong>NoSQL</strong>
+    databases tend to conform to <span class="snippet">BASE</span>
+    principles.
+    <strong> MongoDB, Cassandra and Redis </strong> are among the most popular <strong>NoSQL</strong> solutions,
+    together with <strong> Amazon
+      DynamoDB and
+      Couchbase</strong>.
+  </p>
+  <p class="text center bold">
+    <span class="snippet">ACID</span> vs. <span class="snippet">BASE</span>: Which One is Good for You?
+  </p>
+  <p class="text">
+    It is not possible to give a straight answer to the question of which database model is better. Therefore, a
+    decision must be reached by considering all the aspects of the project.
+  </p>
+  <p class="text">
+    Given their highly structured nature, <span class="snippet">ACID</span>-compliant databases will be a better fit for
+    those who require
+    consistency, predictability, and reliability.
+  </p>
+  <p class="text">
+    Those who consider growth to be among their priorities will likely want to choose the <span
+      class="snippet">BASE</span> model, because it enables
+    easier scaling up and provides more flexibility. However, <span class="snippet">BASE</span> also requires developers
+    who will know how to deal
+    with the limitations of the model.
+  </p>
+</body>
+
+</html>
