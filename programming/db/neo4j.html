@@ -1,0 +1,3468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+    <title>Neo4j</title>
+  </head>
+
+  <body>
+    <h1 class="header">Neo4j Notes</h1>
+    <!--course module here -->
+    <p class="text center bold">#### Neo4j Fundamentals ###</p>
+    <p class="text center bold">### Graph Thinking</p>
+    <p class="text center bold">The 7 bridges</p>
+    <p class="text">
+      It’s 1736, in Königsberg, Prussia Leonard Euler is trying to solve a
+      problem. Kongsberg (modern day Kaliningrad, Russia) is divided by the
+      Pregel River into four sections which are connected by seven bridges.
+    </p>
+    <div class="devPic">
+      <img src="./assets//konigsberg.jpeg" alt="" />
+    </div>
+    <p class="text">
+      The question that Euler is pondering is: Can we take a walk through the
+      city that would cross each of the seven bridges only once?
+    </p>
+    <div class="devPic">
+      <img src="./assets//7-bridges.jpeg" alt="" />
+    </div>
+    <p class="text center bold">Foundation for graph theory</p>
+    <p class="text">
+      He eventually solved the problem by reformulating it, and in doing so laid
+      the foundations for graph theory.
+    </p>
+    <p class="text">
+      He realized that the land masses themselves weren’t an important factor.
+      In fact, it was the bridges that connected the land masses that were the
+      most important thing.
+    </p>
+    <p class="text">
+      His approach was to define the problem in abstract terms, taking each land
+      mass and representing it as an abstract
+      <span class="snippet">node</span>, then connecting these land masses
+      together with a set of seven <span class="snippet">edges</span> that
+      represent the bridges. These elements formed a
+      <span class="snippet"> “graph”</span>.
+    </p>
+
+    <div class="text center bold">Applying the theory</div>
+    <p class="text">
+      Using this abstraction, <span class="snippet">Euler</span> was able to
+      definitively demonstrate that there was no solution to this problem.
+      Regardless of where you enter this graph, and in which order you take the
+      bridges, you can’t travel to every land mass without taking one bridge at
+      least twice.
+    </p>
+    <p class="text">
+      But it wasn’t a completely wasted effort. Although graphs originated in
+      mathematics, they are also a very convenient way of modeling and analyzing
+      data. While there is certainly value in the data that we hold, it is the
+      connections between data that can really add value. Creating or inferring
+      relationships between your records can yield real insights into a dataset.
+    </p>
+    <div class="devPic">
+      <img src="./assets/graph.jpeg" alt="" test />
+    </div>
+    <p class="text">
+      Fast forward 300 years and these founding principles are used to solve
+      complex problems including route finding, supply chain analytics, and
+      real-time recommendations.
+    </p>
+
+    <p class="text bold center">Graph Elements</p>
+    <p class="text">
+      The elements that make up a graph are
+      <span class="snippet">nodes</span> (also known as vertiges) and
+      <span class="snippet">relationships</span> (also known as edges),
+    </p>
+    <div class="devPic">
+      <img src="./assets/large-social-graph.jpeg" alt="" />
+    </div>
+    <p class="text center bold">Nodes</p>
+    <p class="text">
+      <span class="snippet">Nodes</span> (or vertices) are the circles in a
+      graph. Nodes commonly represent objects, entities, or merely things.
+    </p>
+    <p class="text">
+      In the <span class="snippet">Seven Bridges of Königsberg</span> example in
+      the previous lesson, nodes were used to represent the land masses.
+    </p>
+    <p class="text">
+      Another example that everyone can relate to is the concept of a social
+      graph. People interact with each other and form relationships of varying
+      strengths.
+    </p>
+    <p class="text">
+      The diagram below has two nodes which represent two people, Michael and
+      Sarah. On their own, these elements are uninspiring. But when we start to
+      connect these circles together, things start to get interesting.
+    </p>
+    <div class="devPic">
+      <img src="./assets/michael-sarah.jpeg" alt="" />
+    </div>
+    <p class="text">
+      Nodes typically represent strings. Examples of entities that could
+      typically be represented as a node are: person, product, event, book or
+      subway station.
+    </p>
+    <p class="text center bold">Relationshipts</p>
+    <p class="text">
+      <span class="snippet">Relationships</span> (or edges) are used to connect
+      nodes. We can use relationships to describe how nodes are connected to
+      each other. For example Michael has the WORKS_AT relationship to Graph Inc
+      because he works there. Michael has the MARRIED_TO relationship to Sarah
+      because he is married to her. All of a sudden, we know that we are looking
+      at the beginnings of some sort of social graph.
+    </p>
+    <div class="devPic">
+      <img src="./assets/michael-married-sarah.jpeg" alt="" />
+    </div>
+    <p class="text">Now, let’s introduce a third person, Hans, to our Graph:</p>
+    <div class="devPic">
+      <img src="./assets/michael-knows-hans.jpeg" alt="" />
+    </div>
+    <p class="text">
+      <span class="snippet">Hans</span> also
+      <span class="snippet">works for</span> Graph Inc along with
+      <span class="snippet">Michael</span>. Depending on the size of the company
+      and the properties of the relationship, we may be able to infer that
+      Michael and Hans know each other.
+    </p>
+    <p class="text">
+      If that is the case, how likely is it that Sarah and Hans know each other?
+    </p>
+    <p class="text">
+      These are all questions that can be answered using a graph.
+    </p>
+    <p class="text center bold">Relationships are typically verbs.</p>
+    <p class="text">
+      We could use a <span class="snippet">relationship</span> to represent a
+      personal or professional <span class="snippet">connection</span> (Person
+      <span class="snippet">knows</span> Person, Person
+      <span class="snippet">married</span> to Person), to state a fact (Person
+      <span class="snippet">lives in</span> Location, Person
+      <span class="snippet">owns</span> Car, Person
+      <span class="snippet">rated</span> Movie), or even to represent a
+      hierarchy (Parent <span class="snippet">parent of</span> Child, Software
+      <span class="snippet">depends on</span> Library).
+    </p>
+
+    <p class="text center bold">Graph characteristics and traversal</p>
+    <p class="text">
+      There are a few types of graph characteristics to consider. In addition,
+      there are many ways that a graph may be traversed to answer a question.
+    </p>
+    <p class="text center bold">Directed vs. undirected graphs</p>
+    <p class="text">
+      In an undirected graph, relationships are considered to be bi-directional
+      or symmetric.
+    </p>
+    <p class="text">
+      An example of an undirected graph would include the concept of marriage.
+      If Michael is married to Sarah, then it stands to reason that Sarah is
+      also married to Michael.
+    </p>
+    <div class="devPic">
+      <img src="./assets/michael-sarah-undirected.jpeg" alt="" />
+    </div>
+    <p class="text">
+      A directed graph adds an additional dimension of information to the graph.
+      Relationships with the same type but in opposing directions carry a
+      different semantic meaning.
+    </p>
+    <p class="text">
+      For example, if marriage is a symmetrical relationship, then the concept
+      of love is asymmetrical. Although two people may like or love each other,
+      the amount that they do so may vary drastically. Directional relationships
+      can often be qualified with some sort of weighting. Here we see that the
+      strength of the LOVES relationship describes how much one person loves
+      another.
+    </p>
+    <div class="devPic">
+      <img src="./assets/michael-sarah-directed.jpeg" alt="" />
+    </div>
+    <p class="text">
+      At a larger scale, a large network of social connections may also be used
+      to understand network effects and predict the transfer of information or
+      disease. Given the strength of connections between people, we can predict
+      how information would spread through a network.
+    </p>
+    <p class="text center bold">Weighted vs. unweighted graphs</p>
+    <p class="text">
+      The concept of love is also an example of a weighted graph.
+    </p>
+    <p class="text">
+      In a weighted graph, the relationships between nodes carry a value that
+      represents a variety of measures, for example cost, time, distance or
+      priority.
+    </p>
+    <p class="text">
+      A basic shortest path algorithm would calculate the shortest distance
+      between two nodes in the graph. This could be useful for finding the
+      fastest walking route to the local store or working out the most efficient
+      route to travel from city to city.
+    </p>
+    <div class="devPic">
+      <img src="./assets/roads.jpeg" alt="" />
+    </div>
+    <p class="text">
+      In this example, the question that we might have for this graph is: What
+      is the shortest drive from Springfield to Centerville? Using the
+      <span class="snippet">HAS_ROAD</span>
+      relationships and the distance for these relationships, we can see that
+      the shortest drive will be to start in Springfield, then go to Cliffside,
+      then to Newtown, and finally arrive in Centerville.
+    </p>
+    <p class="text">
+      More complex shortest path algorithms (for example, Dijkstra’s algorithm
+      or A* search algorithm) take a weighting property on the relationship into
+      account when calculating the shortest path. Say we have to send a package
+      using an international courier, we may prefer to send the package by air
+      so it arrives quickly, in which case the weighting we would take into
+      account is the time it takes to get from one point to the next.
+    </p>
+    <p class="text">
+      Inversely, if cost is an issue we may prefer to send the package by sea
+      and therefore use a property that represents cost to send the
+      package.Inversely, if cost is an issue we may prefer to send the package
+      by sea and therefore use a property that represents cost to send the
+      package.
+    </p>
+    <p class="text center bold">Graph traversal</p>
+    <p class="text">
+      How one answers questions about the data in a graph is typically
+      implemented by traversing the graph. To find the shortest path between
+      Springfield to Centerville, the application would need to traverse all
+      paths between the two cities to find the shortest one.
+    </p>
+    <p class="text center bold">Springfield-Newtown-Centerville = 26</p>
+    <p class="text center bold">
+      Springfield-Cliffside-Newtown-Centerville = 23
+    </p>
+    <p class="text center bold">
+      Springfield-Cliffside-Melrose-Certerville = 49
+    </p>
+    <p class="text">
+      Traversal implies that the relationships are followed in the graph. There
+      are different types of traversals in graph theory that can impact
+      application performance. For example, can a relationship be traversed
+      multiple times or can a node be visited multiple times?
+    </p>
+    <p class="text">
+      Neo4j’s <span class="snippet">Cypher</span> statement language is
+      optimized for node traversal so that relationships are not traversed
+      multiple times, which is a huge performance win for an application.
+    </p>
+    <p class="text center bold">Graphs Are Everywhere</p>
+    <p class="text">
+      As we discovered previously, the fundamental structure of a graph has
+      applications far beyond mathematics. In fact, you may have seen the phrase
+      Graphs are Everywhere across the
+      <span class="snippet">
+        <a href="https://neo4j.com/" target="_blank">neo4j.com</a>
+      </span>
+      website. It is our hope that you will start to see the connections between
+      things everywhere.
+    </p>
+    <p class="text center bold">common use cases for Neo4j</p>
+    <p class="text">E-commerce and real-time recommendations</p>
+    <p class="text">
+      Many online stores are traditionally built and run on relational
+      databases. But by adding a graph database, either as a primary data store
+      or as an additional data store, we can start to serve real time
+      recommendations.
+    </p>
+    <p class="text">
+      The first area that can be improved in e-commerce is the category
+      hierarchy. To find products in a parent and subsequent child categories
+      can be difficult in a traditional SQL query, or require the duplication of
+      data. Conversely, this can be represented in a couple of lines of Cypher:
+    </p>
+    <pre class="code">
+//cypher
+MATCH (c:Category)-[:HAS_CHILD|HAS_PRODUCT*1..3]->(p:Product)
+RETURN p.id, p.title, collect(c.name) AS categories
+    </pre>
+    <p class="text">
+      You may also be familiar with the
+      <span class="snippet">People who bought {Product A} also bought…​ </span>
+      sections on your favorite online store. These types of recommendations can
+      be computationally expensive to generate due to the large amount of data
+      that needs to be held in memory. This creates the need for batch processes
+      to be deployed in order to generate the recommendations.
+    </p>
+    <p class="text">
+      Where graph databases have the advantage in this use case, is that a much
+      smaller proportion of the graph needs to be traversed in order to generate
+      the recommendation. You can simply traverse from one Product node, through
+      the users who have purchased that product and onwards to the subsequent
+      products that they have bought.
+    </p>
+    <p class="text">
+      Given the existing data in the graph about Customers, Orders, and
+      Products, we can infer the rating for a product based upon the number of
+      times the customer ordered a product.
+    </p>
+
+    <p class="text center bold">Investigative journalism</p>
+    <p class="text">
+      The most prominent user of Neo4j for investigative journalism is the
+      International Consortium of Investigative Journalists (ICIJ). One such
+      graph that was created by the ICIJ was the Panama Papers. The purpose of
+      this graph was to identify possible corruption based upon the
+      relationships between people, companies, and most importantly financial
+      institutions.
+    </p>
+    <p class="text">
+      We have a subset of the Panama Papers investigation in a Neo4j Graphgist
+      representing the family of the Azerbaijan’s President Ilham Aliyev.
+    </p>
+    <div class="devPic">
+      <img src="./assets/panama-papers-graphgist.png" alt="" />
+    </div>
+    <p class="text">
+      The purpose of this graph to enable one to answer these questions:
+    </p>
+    <p class="text">
+      What families with the name that contains the string 'aliye' are Officers
+      of Companies?
+    </p>
+    <p class="text">
+      How is the family with the name that contains the string 'aliye' related
+      to Companies?
+    </p>
+    <p class="text">How are Officers related to each other?</p>
+    <p class="text">
+      What are the connections between multiple companies and a family?
+    </p>
+    <p class="text center bold">Network and IT operations</p>
+    <p class="text">
+      Many enterprises use Neo4j to help them understand how information flows
+      through a system and how components of a network are related. This is
+      useful for planning, analysis of costs, and also to troubleshoot problems
+      when a problem arises.
+    </p>
+    <p class="text">
+      One of our Neo4j Community members contributed this sample data model to
+      demonstrate how one might use a graph to identify network dependencies.
+      Here is the data model:
+    </p>
+    <div class="devPic">
+      <img src="./assets/network-graphgist.png" alt="" />
+    </div>
+    <p class="text">You can use this type of data model to answer:</p>
+    <p class="text">What are the direct dependencies of public websites?</p>
+    <p class="text">What are the direct dependencies of internal websites?</p>
+    <p class="text">What is the most depended-upon component?</p>
+    <p class="text">
+      Find the dependency chain for a business critical component.
+    </p>
+    <p class="text">What is the impact of removing a server?</p>
+
+    <p class="text center bold">### Property Graphs</p>
+    <p class="text center bold">What is a Property Graph?</p>
+    <p class="text center bold">Nodes, Labels and Properties</p>
+    <p class="text">
+      Recall that nodes are the graph elements that represent the
+      <span class="snippet">things</span> in our data. We can use two additional
+      elements to provide some extra context to the data.
+    </p>
+    <p class="text">
+      Let’s take a look at how we can use these additional elements to improve
+      our social graph.
+    </p>
+    <p class="text bold">Labels</p>
+    <p class="text">
+      By adding a label to a node, we are signifying that the node belongs to a
+      subset of nodes within the graph. Labels are important in Neo4j because
+      they provide a starting point for a Cypher statement.
+    </p>
+    <p class="text">
+      Let’s take <span class="snippet">Michael</span> and
+      <span class="snippet">Sarah</span> - in this context both of these nodes
+      are <span class="snippet">persons</span>.
+    </p>
+    <div class="devPic">
+      <img src="./assets/node-labels.jpeg" alt="" />
+    </div>
+    <p class="text">
+      We can embellish the graph by adding more labels to these nodes; Michael
+      identifies as <span class="snippet">male</span> and Sarah is
+      <span class="snippet">female</span>. In this context, Michael is an
+      <span class="snippet">employee</span> of a company, but we don’t have any
+      information about Sarah’s employment status.
+    </p>
+    <p class="text">
+      Michael works for a company called Graph Inc, so we can add that label to
+      the node that represents a company.
+    </p>
+    <p class="text bold">Node properties</p>
+    <p class="text">
+      So far we’re assuming that the nodes represent Michael, Sarah, and Graph
+      Inc. We can make this concrete by adding properties to the node.
+    </p>
+    <p class="text">
+      <span class="snippet">Properties</span> are
+      <span class="snippet">key:value</span>pairs and can be added or removed
+      from a node as necessary. Property values can be a single value or list of
+      values
+      <span class="snippet">
+        <a
+          href="https://neo4j.com/docs/cypher-manual/current/syntax/values/"
+          target="_blank"
+          >that conform to the Cypher type system</a
+        > </span
+      >.
+    </p>
+    <div class="devPic">
+      <img src="./assets/node-properties.jpeg" alt="" />
+    </div>
+    <p class="text">
+      By adding <span class="snippet">firstName</span> and
+      <span class="snippet">lastName</span>
+      <span class="snippet">properties</span>, we can see that the Michael node
+      refers to Michael Faraday, known for Faraday’s law of induction, the
+      Faraday cage and lesser known as the inventor of the Party Balloon.
+      Michael was born on 22 September 1791.
+    </p>
+    <p class="text">
+      Sarah’s full name is <span class="snippet">Sarah Faraday</span>, and her
+      maidenName is <span class="snippet">Barnard</span>.
+    </p>
+    <p class="text">
+      By looking at the name property on the Graph Inc node, we can see that it
+      refers to the company <span class="snippet">Graph Inc</span>, with a city
+      of <span class="snippet">London</span>, has 56 employees (numEmployees),
+      and does business as Graph Incorporated and GI (dba).
+    </p>
+    <p class="text center bold">Relationships</p>
+    <p class="text">
+      A relationship in Neo4j is a connection between two nodes.
+    </p>
+    <p class="text">Relationship direction</p>
+    <p class="text">
+      In Neo4j, each relationship <span class="snippet">must</span> have a
+      direction in the graph. Although this direction is required, the
+      relationship can be queried in either direction, or ignored completely at
+      query time.
+    </p>
+    <p class="text">
+      A <span class="snippet">relationship</span> is created between a
+      <span class="snippet">source node</span>
+      and a <span class="snippet">destination node</span>, so these nodes must
+      exist before you create the relationship.
+    </p>
+    <div class="devPic">
+      <img src="./assets/relationship-direction.jpeg" alt="" />
+    </div>
+    <p class="text">
+      If we consider the concept of <span class="snippet">directed</span> &
+      <span class="snippet">undirected</span> graphs that we discussed in the
+      previous module, the direction of the
+      <span class="snippet">MARRIED_TO</span> relationship must exist and may
+      provide some additional context but can be ignored for the purpose of the
+      query. In <span class="snippet">Neo4j</span>, the
+      <span class="snippet">MARRIED_TO</span> relationship must have a
+      direction.
+    </p>
+    <p class="text">
+      The direction of a relationship can be important when it comes to
+      hierarchy, although whether the relationships point up or down towards the
+      tree is an arbitrary decision.
+    </p>
+    <p class="text bold">Relationship type</p>
+    <p class="text">
+      Each relationship in a neo4j graph <span class="snippet">must</span> have
+      a type. This allows us to choose at query time which part of the graph we
+      will traverse.
+    </p>
+    <p class="text">
+      For example, we can traverse through every relationship from Michael, or
+      we can specify the <span class="snippet">MARRIED_TO</span> relationship to
+      end up only at Sarah’s node.
+    </p>
+    <div class="devPic">
+      <img src="./assets/relationship-types.jpeg" alt="" />
+    </div>
+    <p class="text">
+      Here are sample <span class="snippet">Cypher statement</span> statements
+      to support this:
+    </p>
+    <pre class="code">
+// traverse the Michael node to return the Sarah node
+MATCH (p:Person {firstName: 'Michael'})-[:MARRIED_TO]-(n) RETURN n;
+
+// traverse the Michael node to return the Graph Inc node
+MATCH (p:Person {firstName: 'Michael'})-[:WORKS_AT]-(n) RETURN n;
+
+// traverse all relationships from the Michael node
+// to return the Sarah node and the Graph Inc node
+MATCH (p:Person {firstName: 'Michael'})--(n) RETURN n 
+    </pre>
+    <p class="text bold">Relationship properties</p>
+    <p class="text">
+      As with nodes, relationships can also have properties. These can refer to
+      a cost or distance in a weighted graph or just provide additional context
+      to a relationship.
+    </p>
+    <div class="devPic">
+      <img src="./assets/relationship-properties.jpeg" alt="" />
+    </div>
+    <p class="text">
+      In our graph, we can place a <span class="snippet">property</span> on the
+      <span class="snippet">MARRIED_TO</span>
+      <span class="snippet">relationship</span> to hold the
+      <span class="snippet">date</span> in which Michael and Sarah were married.
+      This <span class="snippet">date</span> relationship has a roles property
+      to signify any <span class="snippet">roles</span> that the employee has
+      filled at the company. If Michael also worked at another company, his
+      <span class="snippet">WORKS_AT</span>
+      <span class="snippet">relationship</span> to the other company would have
+      a different value for the roles property.
+    </p>
+
+    <p class="text center bold">Native Graph Advantage</p>
+    <p class="text">Neo4j is a native graph database</p>
+    <p class="text">
+      Neo4j is a native graph database, meaning that everything from the storage
+      of the data to the query language have been designed specifically with
+      traversal in mind. Just like any other enterprise DBMS, Neo4j is
+      <span class="snippet">
+        <a href="../../db_design/acid_vs_base/index.html" target="_blank"
+          >ACID</a
+        >
+      </span>
+      compliant. A group of modifications in a transaction will all either
+      commit or fail.
+    </p>
+    <p class="text">
+      Where native graph databases stand apart from other databases is the
+      concept of <span class="snippet">index-free adjacency</span>. When a
+      database transaction is committed, a reference to the relationship is
+      stored with the nodes at both the start and end of the relationship. As
+      each node is aware of every incoming and outgoing relationship connected
+      to it, the underlying graph engine will simply chase pointers in memory -
+      something that computers are exceptionally good at.
+    </p>
+    <p class="text center bold">Index-free adjacency (IFA)</p>
+    <p class="text">
+      One of the key features that makes Neo4j graph databases different from an
+      RDBMS is that Neo4j implements
+      <span class="snippet">index-free adjacency</span>.
+    </p>
+    <p class="text">RDBMS query</p>
+    <p class="text">
+      To better understand the benefit of index-free adjacency, let’s look at
+      how a query executes in an RDBMS.
+    </p>
+    <p class="text">Suppose you have this table in the RDBMS.</p>
+    <div class="devPic">
+      <img src="./assets/RelationalTable1.png" alt="" />
+    </div>
+    <p class="text">
+      You execute this SQL query to find the third-degree parents of the group
+      with the ID of 3:
+    </p>
+    <pre class="code">
+//sql
+SELECT PARENT_ID
+FROM GROUPS
+WHERE ID = (SELECT PARENT_ID
+    FROM GROUPS
+    WHERE ID = (SELECT PARENT_ID
+        FROM GROUPS
+        WHERE ID = 3))
+    </pre>
+    <p class="text">
+      The result of this query is 1, but in order to determine this result, the
+      SQL Server needed to:
+    </p>
+    <p class="text">1. Locate the innermost clause.</p>
+    <p class="text">2. Build the query plan for the subclause.</p>
+    <p class="text">3. Execute the query plan for the subclause.</p>
+    <p class="text">4. Locate the next innermost clause.</p>
+    <p class="text">5. Repeat Steps 2-4.</p>
+    <p class="text">This resulted in:</p>
+    <p class="text">3 planning cycles</p>
+    <p class="text">3 index lookups</p>
+    <p class="text">3 DB reads</p>
+    <p class="text bold">Neo4j storage</p>
+    <p class="text">
+      With index-free adjacency, Neo4j stores nodes and relationships as objects
+      that are linked to each other via pointers. Conceptually, the graph looks
+      like:
+    </p>
+    <div class="devPic">
+      <img src="./assets/IFA-1-new.png" alt="" />
+    </div>
+    <p class="text">These nodes and relationships are stored as:</p>
+    <div class="devPic">
+      <img src="./assets/IFA-2-new.png" alt="" />
+    </div>
+    <p class="text">Neo4j Cypher statement</p>
+    <p class="text">Suppose we had this query in Cypher:</p>
+    <pre class="code">
+//Cypher
+MATCH (n) &lt;-- (:Group) &lt;-- (:Group) &lt;-- (:Group {id: 3})
+RETURN n.id
+  </pre
+    >
+    <p class="text">
+      Using IFA, the Neo4j graph engine starts with the anchor of the query
+      which is the Group node with the id of 3. Then it uses the links stored in
+      the relationship and node objects to traverse the graph pattern.
+    </p>
+    <div class="devPic">
+      <img src="./assets/IFA-3-new.png" alt="" />
+    </div>
+    <p class="text">To perform this query, the Neo4j graph engine needed to:</p>
+    <p class="text">1. Plan the query based upon the anchor specified.</p>
+    <p class="text">2. Use an index to retrieve the anchor node.</p>
+    <p class="text">3. Follow pointers to retrieve the desired result node.</p>
+    <p class="text">
+      The benefits of <span class="snippet">IFA</span> compared to relational
+      <span class="snippet">DBMS</span> access are:
+    </p>
+    <p class="text">Fewer index lookups.</p>
+    <p class="text">No table scans.</p>
+    <p class="text">Reduced duplication of data.</p>
+    <p class="text center bold">Non-graph DBs to Graph</p>
+    <p class="text bold">Benefit of Neo4j over Relational</p>
+    <p class="text">
+      As mentioned in the last lesson, index-free adjacency is a huge
+      differentiator between relational and graph databases. While relationships
+      are stored at write-time in a graph database, the joins made in a
+      relational database are computed at read-time. This means that, as the
+      number of records in a relational database increases, the slower the query
+      becomes. The query time in a graph database will remain consistent to the
+      size of the data that is actually touched during a query.
+    </p>
+    <p class="text">
+      Having relationships treated as first class citizens also provides an
+      advantage when starting out. Modelling relationships in a graph is more
+      natural than creating pivot tables to represent many-to-many
+      relationships.
+    </p>
+    <p class="text bold">Northwind RDBMS to graph</p>
+    <p class="text">Let’s look at the Northwind RDBMS data model.</p>
+    <div class="devPic">
+      <img src="./assets/northwind.jpg" alt="" />
+    </div>
+    <p class="text">
+      In this example, an <span class="snippet">order</span> can contain one or
+      more <span class="snipept">products</span> and a
+      <span class="snippet">product</span> can appear in one or more
+      <span class="snippet">orders</span>. In a relational database, the
+      <span class="snippet">Order Details</span> table is required to handle the
+      <span class="snippet">many-to-many</span> relationships. The more orders
+      added, and subsequently the larger the
+      <span class="snippet">Order Details</span> table grows, the slower order
+      queries will become.
+    </p>
+    <p class="text">
+      In a graph, we can simply model a
+      <span class="snippet">CONTAINS</span> relationship from the
+      <span class="snippet">Order</span> <span class="snippet">node</span> to
+      each <span class="snippet">Product</span>
+      <span class="snippet">node</span>. The
+      <span class="snippet">Product</span> node has a unit price
+      <span class="snippet">property</span> and the
+      <span class="snippet">CONTAINS</span>
+      <span class="snippet">relationship</span>
+      which has properties to represent the quantity and discount.
+    </p>
+    <div class="devPic">
+      <img src="./assets/northwind-as-graph.svg" alt="" />
+    </div>
+    <p class="text bold">NoSQL datastores to graph</p>
+    <p class="text">
+      NoSQL databases solve many of the problems, and they are great for write
+      throughput.
+    </p>
+    <p class="text">
+      But there are problems with how data is queried. The two most common NoSQL
+      databases represent key/value stores and documents.
+    </p>
+    <p class="text bold">Key-value stores</p>
+    <p class="text">
+      The <span class="snippet">key-value</span> model is great and highly
+      performant for lookups of huge amounts of simple or even complex values.
+      Here is how a typical <span class="snippet">key-value</span> store is
+      structured.
+    </p>
+    <div class="devPic">
+      <img src="./assets/key_value_model.jpg" alt="" />
+    </div>
+    <p class="text bold">Key-value as a graph</p>
+    <p class="text">
+      However, when the values are themselves interconnected, you have a graph.
+      Neo4j lets you traverse quickly among all the connected values and find
+      insights in the relationships. The graph version shows how each key is
+      related to a single value and how different values can be related to one
+      another (like nodes connected to one another through relationships).
+    </p>
+    <div class="devPic">
+      <img src="./assets/key_value_as_graph.jpg" alt="" />
+    </div>
+    <p class="text bold">Document stores</p>
+    <p class="text">
+      The structured hierarchy of a
+      <span class="snippet">Document model</span> accommodates a lot of
+      schema-free data that can easily be represented as a tree. Although trees
+      are a type of graph, a tree represents only one projection or perspective
+      of your data. This is how a document store hierarchy is structured as
+      pieces within larger components.
+    </p>
+    <div class="devPic">
+      <img src="./assets/document_model.jpg" alt="" />
+    </div>
+    <p class="text bold">Document model as graph</p>
+    <p class="text">
+      If you refer to other documents (or contained elements) within that tree,
+      you have a more expressive representation of the same data that you can
+      easily navigate using a graph. A graph data model lets more than one
+      natural representation emerge dynamically as needed. This graph version
+      demonstrates how moving this data to a graph structure allows you to view
+      different levels and details of the tree in different combinations.
+    </p>
+    <div class="devPic">
+      <img src="./assets/document_as_graph.jpg" alt="" />
+    </div>
+    <p class="text center bold">The Movie Graph</p>
+    <p class="text">Let's create a movie graph.</p>
+    <p class="text bold">Nodes</p>
+    <p class="text">
+      The nodes in the Movie database represent people, movies, and in some
+      versions of the Movie database, genres for the movies.The "starter"
+      version of the Movie database contains 171 nodes.
+    </p>
+    <p class="text">Node properties</p>
+    <p class="text">
+      All <span class="snippet">Movie</span> nodes have a
+      <span class="snippet">property</span>, title that is used to uniquely
+      identify a movie. This property exists for all
+      <span class="snippet">Movie</span>
+      nodes.
+    </p>
+    <p class="text">
+      Other properties that a <span class="snippet">Movie</span> node may have
+      are:
+    </p>
+    <p class="text">
+      <span class="snippet">released</span>, the year that the movie was
+      released.
+    </p>
+    <p class="text">
+      <span class="snippet">tagline</span>, a phrase to describe the movie.
+    </p>
+    <p class="text">
+      So for example, we see in these two Movie nodes, they both have a title
+      and released property, but only one of them has a tagline property.
+    </p>
+    <div class="devPic">
+      <img src="./assets/movie-properties.png" alt="" />
+    </div>
+    <p class="text">
+      All <span class="snippet">Person</span> nodes have a property,
+      <span class="snippet">name</span> that is used to uniquely identify a
+      person. Some <span class="snippet">Person</span> nodes have a property,
+      <span class="snippet">born</span>, but not all of them.
+    </p>
+    <div class="devPic">
+      <img src="./assets/person-properties.png" alt="" />
+    </div>
+    <p class="text bold">Relationships</p>
+    <p class="text">
+      As you have learned, the most important element of a graph database is its
+      relationships. A relationship has a type and a direction and represents
+      the relationship between two specific nodes.
+    </p>
+    <p class="text">
+      Some of the relationships in the "starter" Movie graph include:
+    </p>
+    <div class="devPic">
+      <img src="./assets/roads.jpeg" alt="" />
+    </div>
+    <p class="text">
+      A person can have multiple relationships to a movie. For example, a person
+      can be both an actor and a director for a particular movie. In the Movie
+      graph, people are either actors, directors, writers and/or producers given
+      these relationships.
+    </p>
+    <div class="devPic">
+      <img src="./assets/hoffa.png" alt="" />
+    </div>
+    <p class="text">
+      So, for example, the movie "Hoffa" in the Movie graph has these
+      <span class="snippet">relationships</span>. It has four
+      <span class="snippet">actors</span> and one
+      <span class="snippet">director</span>. Danny DeVito directed and acted in
+      this movie. In our "starter" Movie graph, this movie has no writers or
+      producers defined.
+    </p>
+    <p class="text">Other relationships in the graph include:</p>
+    <div class="devPic">
+      <img src="./assets/relationships2.png" alt="" />
+    </div>
+    <p class="text">
+      Using these relationships, people can be reviewers, followers, or
+      followees. In the Movie graph, people who review movies or follow other
+      people are not actors, directors, writers, or producers.
+    </p>
+    <p class="text">Here are the reviewers in our "starter" Movie graph:</p>
+    <div class="devPic">
+      <img src="./assets/reviewers.png" alt="" />
+    </div>
+    <p class="text">
+      We have three Person nodes here for people who reviewed movies. All three
+      of these reviewers reviewed the movie, The Replacements. Two people here
+      are following Jessica Thompson
+    </p>
+    <p class="text bold">Relationship properties</p>
+    <p class="text">
+      The <span class="snippet">ACTED_IN</span>
+      <span class="snippet">relationship</span> may have the roles property that
+      represents the roles that an actor had when s/he acted in a specific
+      movie.
+    </p>
+    <p class="text">
+      For example, in the "starter" Movie database, the actor, Hugo Weaving, has
+      these properties defined for each of his
+      <span class="snippet">ACTED_IN</span> relationships to these movies:
+    </p>
+    <div class="devPic">
+      <img src="./assets/relationships3.png" alt="" />
+    </div>
+    <p class="text">
+      For movie reviewers, the
+      <span class="snippet">REVIEWED </span> relationship has the rating and
+      summary properties:
+    </p>
+    <div class="devPic">
+      <img src="./assets/reviewed-properties.png" alt="" />
+    </div>
+
+    <!-- course module here -->
+    <p class="text center bold">#### Cypher Fundamentals ###</p>
+    <p class="text center bold">Introduction to Cypher</p>
+    <p class="text bold">What is Cypher?</p>
+    <p class="text">Cypher is a query language designed for graphs.</p>
+    <p class="text">
+      The whiteboard model of our domain entities is stored in the database as a
+      graph. When we draw a graph on the whiteboard, we represent entities as
+      circles connected together using arrows. In this example, the entities are
+      people and movies. We have Person and Movie nodes in our graph.
+    </p>
+    <div class="devPic">
+      <img src="./assets/whiteboard.jpeg" alt="" />
+    </div>
+    <p class="text">
+      Just as we would draw circles and arrows on a whiteboard, we write out the
+      pattern in Cypher:
+    </p>
+    <p class="text">
+      <span class="snippet">Nodes</span> are represented by parentheses
+      <span class="snippet">()</span>.
+    </p>
+    <p class="text">
+      We use a colon to signify the <span class="snippet">label(s)</span>, for
+      example <span class="snippet">(:Person)</span>.
+    </p>
+    <p class="text">
+      <span class="snippet">Relationships</span> between nodes are written with
+      two dashes, for example <span class="snippet">(:Person)--(:Movie)</span>.
+    </p>
+    <p class="text">
+      The <span class="snippet">direction</span> of a
+      <span class="snippet">relationship</span> is indicated using a greater
+      than or less than symbol <span class="snippet">&lt;</span> or
+      <span class="snippet">&gt;</span> , for example
+      <span class="snippet">(:Person)--&gt;(:Movie)</span>.
+    </p>
+    <p class="text">
+      The <span class="snippet">type</span> of the
+      <span class="snippet">relationship</span> is written using the square
+      brackets between the two dashes: <span class="snippet">[ and ]</span>, for
+      example <span class="snippet">[:ACTED_IN]</span>
+    </p>
+    <p class="text">
+      <span class="snippet">Properties</span> drawn in a speech bubble are
+      specified in a JSON like syntax.
+      <span class="snippet">Properties</span> in
+      <span class="snippet"></span> are key/value pairs, for example
+      <span class="snippet">{name: 'Tom Hanks'}</span>.
+    </p>
+    <p class="text">For example, a Cypher pattern in the graph could be:</p>
+    <pre class="code">
+// example Cypher pattern
+(m:Movie {title: 'Cloud Atlas'})&lt;-[:ACTED_IN]-(p:Person)
+    </pre>
+    <p class="text">
+      The two node types in this pattern are
+      <span class="snippet">Movie</span> and Person. The
+      <span class="snippet">Person</span> nodes have a directed ACTED_IN
+      relationship to <span class="snippet">Movie</span> nodes. The specific
+      <span class="snippet">Movie</span> node in this pattern is filtered by the
+      'title' <span class="snippet">property</span> with a value of 'Cloud
+      Atlas'. So this pattern represents all people in the graph who acted in
+      the movie, 'Cloud Atlas'.
+    </p>
+    <p class="text">How Cypher works</p>
+    <p class="text">
+      Cypher works by matching patterns in the data. We retrieve data from the
+      graph using the <span class="snippet">MATCH</span> keyword. You can think
+      of the <span class="snippet">MATCH</span> clause as similar to the
+      <span class="snippet">FROM</span>
+      clause in an <span class="snippet">SQL</span> statement.
+    </p>
+    <p class="text">
+      For example, if we want to find a <span class="snippet">Person</span> in
+      the graph, we would <span class="snippet">MATCH</span> a pattern of a
+      single node with a label of <span class="snippet">:Person</span> -
+      prefixed with a colon <span class="snippet">:</span>.
+    </p>
+    <pre class="code">
+//Partial
+MATCH (:Person)
+// incomplete MATCH clause because we need to return something
+    </pre>
+    <p class="text">
+      Suppose we want to retrieve all <span class="snippet">Person</span> nodes
+      from the graph. We can assign a variable by placing a value before the
+      colon. Let's use the variable <span class="snippet">p</span>. Now that
+      <span class="snippet">p</span>
+      represents all <span class="snippet">Person</span> nodes retrieved from
+      the graph, we can return them using the
+      <span class="snippet">RETURN</span> clause.
+    </p>
+    <pre class="code">
+MATCH (p:Person)
+RETURN p
+    </pre>
+    <p class="text">
+      This query returns all nodes in the graph with the
+      <span class="snippet">Person</span> label.
+    </p>
+    <p class="text">
+      Now, say we want to find the node which represents the
+      <span class="snippet">Person</span> who’s name is Tom Hanks. Our
+      <span class="snippet">Person</span>
+      nodes all have a name property. We can use the braces
+      <span class="snippet">{..}</span> to specify the key/value pair of name
+      and Tom Hanks as the filter. As Tom Hanks is a string, we will need to
+      place it inside single or double quotes.
+    </p>
+    <pre class="code">
+MATCH (p:Person {name: 'Tom Hanks'})
+RETURN p
+    </pre>
+    <p class="text">
+      This query returns a single node that represents Tom Hanks.
+    </p>
+    <p class="text">
+      In our Cypher statement, we can access properties using a dot notation.
+      For example, to return the name property value using its property key
+      <span class="snippet">p.name</span>.
+    </p>
+    <pre class="code">
+MATCH (p:Person {name: 'Tom Hanks'})
+RETURN  p.born
+    </pre>
+    <p class="text">
+      This query returns the value of the born property of the Tom Hanks node.
+    </p>
+    <p class="text">
+      Another way that you can filter queries is by using the
+      <span class="snippet">WHERE</span> clause, rather than specifying the
+      property value inline with braces.
+    </p>
+    <p class="text">This query returns the same data as the previous query.</p>
+    <pre class="code">
+MATCH (p:Person)
+WHERE p.name = 'Tom Hanks'
+RETURN p.name
+    </pre>
+    <p class="text">
+      Here is an example where we filter by two values for name.
+    </p>
+    <pre class="code">
+MATCH (p:Person)
+WHERE p.name = 'Tom Hanks' OR p.name = 'Rita Wilson'
+RETURN p.name, p.born
+    </pre>
+    <p class="text">
+      This query returns two names and their associated birth years.
+    </p>
+    <p class="text center bold">Creating Nodes</p>
+    <p class="text">
+      We use the <span class="snippet">MERGE</span> keyword to create a pattern
+      in the database.
+    </p>
+    <p class="text">
+      After the <span class="snippet">MERGE</span> keyword, we specify the
+      pattern that we want to create. Usually this will be a single node or a
+      relationship between two nodes.
+    </p>
+    <p class="text">
+      Suppose we want to create a node to represent Michael Caine.
+    </p>
+    <pre class="code">
+        MERGE (p:Person {name: 'Michael Caine'})
+    </pre>
+    <p class="text">
+      It creates a single node in the graph. Note that when you use
+      <span class="snippet">MERGE</span> to create a node, you must specify at
+      least one property that will be the unique primary key for the node.
+    </p>
+    <p class="text">Executing multiple Cypher clauses</p>
+    <p class="text">
+      We can also chain multiple MERGE clauses together within a single Cypher
+      code block.
+    </p>
+    <pre class="code">
+MERGE (p:Person {name: 'Katie Holmes'})
+MERGE (m:Movie {title: 'The Dark Knight'})
+RETURN p, m
+    </pre>
+    <p class="text">
+      This code creates two nodes, each with a primary key property. Because we
+      have specified the variables <span class="snippet">p</span> and
+      <span class="snippet">m</span>, we can use them in the code to return the
+      created nodes.
+    </p>
+    <p class="text bold">
+      Using <span class="snippet">CREATE</span> instead of
+      <span class="snippet">MERGE</span> to create nodes
+    </p>
+    <p class="text">
+      Cypher has a <span class="snippet">CREATE</span> clause you can use for
+      creating nodes. The benefit of using
+      <span class="snippet">CREATE</span> is that it does not look up the
+      <span class="snippet">primary key</span> before adding the node. You can
+      use <span class="snippet">CREATE</span> if you are sure your data is clean
+      and you want greater speed during import. We use
+      <span class="snippet">MERGE</span> in this training because it eliminates
+      duplication of nodes.
+    </p>
+    <p class="text center bold">Creating Relationships</p>
+    <p class="text">Creating a relationship between two nodes</p>
+    <p class="text">
+      Just like you can use <span class="snippet">MERGE</span> to create nodes
+      in the graph, you use <span class="snippet">MERGE</span> to create
+      relationships between two nodes. First you must have references to the two
+      nodes you will be creating the relationship for. When you create a
+      relationship between two nodes, it must have:
+    </p>
+    <p class="text">Type</p>
+    <p class="text">Direction</p>
+    <p class="text">
+      For example, if the <span class="snippet">Person</span> and
+      <span class="snippet">Movie</span> nodes both already exist, we can find
+      them using a <span class="snippet">MATCH</span> clause before creating the
+      relationship between them.
+    </p>
+    <pre class="code">
+MATCH (p:Person {name: 'Michael Caine'})
+MATCH (m:Movie {title: 'The Dark Knight'})
+MERGE (p)-[:ACTED_IN]->(m)
+    </pre>
+    <p class="text">
+      Here we find the two nodes that we want to create the relationship
+      between. Then we use the reference to the found nodes to create the
+      <span class="snippet">ACTED_IN</span> relationship.
+    </p>
+    <p class="text">We can confirm that this relationship exists as follows:</p>
+    <pre class="code">
+MATCH (p:Person {name: 'Michael Caine'})-[:ACTED_IN]-(m:Movie {title: 'The Dark Knight'})
+RETURN p, m
+    </pre>
+    <p class="text">
+      Notice also that you need not specify direction in the
+      <span class="snippet">MATCH</span> pattern since the query engine will
+      look for all nodes that are connected, regardless of the direction of the
+      relationship.
+    </p>
+    <p class="text">For example, if we specified this relationship pattern:</p>
+    <pre class="code">
+MATCH (p:Person {name: 'Michael Caine'})&lt;-[:ACTED_IN]-(m:Movie {title: 'The Dark Knight'})
+RETURN p, m
+    </pre>
+    <p class="text">
+      This query returns no nodes since there are no nodes with the
+      <span class="snippet">ACTED_IN</span>
+      relationship to <span class="snippet">Person</span> nodes in the graph.
+    </p>
+    <p class="text bold">
+      Creating nodes and relationships using multiple clauses
+    </p>
+    <p class="text">
+      We can also chain multiple <span class="snippet">MERGE</span> clauses
+      together within a single Cypher code block.
+    </p>
+    <pre class="code">
+MERGE (p:Person {name: 'Chadwick Boseman'})
+MERGE (m:Movie {title: 'Black Panther'})
+MERGE (p)-[:ACTED_IN]-(m)
+    </pre>
+    <p class="text">
+      This code creates two nodes and a relationship between them. Because we
+      have specified the variables p and m, we can use them in the code to
+      create the relationship between the two nodes.
+    </p>
+    <p class="text">
+      Note that in this <span class="snippet">MERGE</span> clause where we
+      create the relationships, we did not specify the direction of the
+      relationship. By default, if you do not specify the direction when you
+      create the relationship, it will always be assumed left-to-right.
+    </p>
+    <p class="text">We can confirm that this relationship exists as follows:</p>
+    <pre class="code">
+        MATCH (p:Person {name: 'Chadwick Boseman'})-[:ACTED_IN]-(m:Movie {title: 'Black Panther'})
+RETURN p, m
+    </pre>
+    <p class="text bold">
+      Using <span class="snippet">MERGE</span> to create nodes and a
+      relationship in single clause
+    </p>
+    <p class="text">
+      What <span class="snippet">MERGE</span> does is create the node or
+      relationship if it does not exist in the graph.
+    </p>
+    <p class="text">
+      This code successfully creates the nodes and relationship:
+    </p>
+    <pre class="code">
+MERGE (p:Person {name: 'Emily Blunt'})-[:ACTED_IN]-&gt;(m:Movie {title: 'A Quiet Place'})
+RETURN p, m
+    </pre>
+    <p class="text bold center">Updating Properties</p>
+    <p class="text bold">Adding properties for a node or relationship</p>
+    <p class="text">
+      There are two ways that you can set a property for a node or relationship.
+    </p>
+    <p class="text bold">
+      1. Inline as part of the <span class="snippet">MERGE</span> clause
+    </p>
+    <p class="text">
+      You can set a property for a relationship inline as follows:
+    </p>
+    <pre class="code">
+MERGE (p:Person {name: 'Michael Caine'})
+MERGE (m:Movie {title: 'Batman Begins'})
+MERGE (p)-[:ACTED_IN {roles: ['Alfred Penny']}]->(m)
+RETURN p,m
+    </pre>
+    <p class="text">
+      In this code, the actor, Michael Caine exists but the movie, Batman Begins
+      does not. We find the Person node and we create the Movie node. Then, we
+      create the <span class="snippet">ACTED_IN</span> relationship between the
+      Michael Caine node and the newly-created Batman Begins node. And we set
+      the roles property for this relationship to an array of values -
+      containing one value, Alfred Penny. Notice that for inline property
+      setting, we use the JSON-style of adding the property key/value pairs in
+      braces <span class="snippet">{ .. }</span>, just like we did when we
+      specified the property for the node.
+    </p>
+    <p class="text bold">
+      2. Using the SET keyword for a reference to a node or relationship
+    </p>
+    <p class="text">
+      We also have the option to use the
+      <span class="snippet">SET</span> keyword for setting a property value. In
+      the context of particular <span class="snippet">MERGE</span> or
+      <span class="snippet">MATCH</span>
+      clause where you have defined a variable to reference the node or
+      relationship, you can set property values.
+    </p>
+    <pre class="code">
+MATCH (p:Person)-[r:ACTED_IN]->(m:Movie)
+WHERE p.name = 'Michael Caine' AND m.title = 'The Dark Knight'
+SET r.roles = ['Alfred Penny']
+RETURN p, r, m
+    </pre>
+    <p class="text bold">Setting multiple properties</p>
+    <p class="text">
+      If you need to set multiple properties, you separate them with a comma
+      (,). For example:
+    </p>
+    <pre class="code">
+MATCH (p:Person)-[r:ACTED_IN]-&gt;(m:Movie)
+WHERE p.name = 'Michael Caine' AND m.title = 'The Dark Knight'
+SET r.roles = ['Alfred Penny'], r.year = 2008
+RETURN p, r, m
+    </pre>
+    <p class="text bold">Updating properties</p>
+    <p class="text">
+      If you have a reference to a node or relationship, you can also use SET to
+      modify the property. For example, if we wanted to modify Michael Caine’s
+      role to be something different, we could do the following:
+    </p>
+    <pre class="code">
+MATCH (p:Person)-[r:ACTED_IN]-&gt;(m:Movie)
+WHERE p.name = 'Michael Caine' AND m.title = 'The Dark Knight'
+SET r.roles = ['Mr. Alfred Penny']
+RETURN p, r, m
+    </pre>
+    <p class="text bold">Removing properties</p>
+    <p class="text">
+      You can remove or delete a property from a node or relationship by using
+      the <span class="snippet">REMOVE</span> keyword, or setting the property
+      to <span class="snippet">null</span>.
+    </p>
+    <p class="text">
+      Here we remove the <span class="snippet">roles</span> property of this
+      <span class="snippet">relationship</span>:
+    </p>
+    <pre class="code">
+MATCH (p:Person)-[r:ACTED_IN]-&gt;(m:Movie)
+WHERE p.name = 'Michael Caine' AND m.title = 'The Dark Knight'
+REMOVE r.roles
+RETURN p, r, m
+    </pre>
+    <p class="text">
+      Here we remove the <span class="snippet">born</span> property from an
+      actor:
+    </p>
+    <pre class="code">
+        MATCH (p:Person)
+        WHERE p.name = 'Gene Hackman'
+        SET p.born = null
+        RETURN p
+    </pre>
+    <p class="text">
+      You should never remove the property that is used as the primary key for a
+      node.
+    </p>
+    <p class="text center bold">Merge processing</p>
+    <p class="text">
+      We can use <span class="snippet">MERGE</span> to create nodes and
+      relationships in the graph. <span class="snippet">MERGE</span>
+      operations work by first trying to find a pattern in the graph. If the
+      pattern is found then the data already exists and is not created. If the
+      pattern is not found, then the data can be created.
+    </p>
+    <p class="text">Customizing <span class="snippet">MERGE</span> behavior</p>
+    <p class="text">
+      You can also specify behavior at runtime that enables you to set
+      properties when the node is created or when the node is found. We can use
+      the <span class="snippet">ON CREATE SET</span> or
+      <span class="snippet">ON MATCH SET </span> conditions, or the
+      <span class="snippet">SET</span> keywords to set any additional
+      properties.
+    </p>
+    <p class="text">
+      In this example, if the Person node for McKenna Grace does not exist, it
+      is created and the <span class="snippet">createdAt</span> property is set.
+      If the node is found, then the
+      <span class="snippet">updatedAt</span> property is set. In both cases, the
+      <span class="snippet">born</span> property is set.
+    </p>
+    <p class="text">
+      Run this Cypher code at least 2 times to observe what properties are set.
+    </p>
+    <pre class="code">
+// Find or create a person with this name
+MERGE (p:Person {name: 'McKenna Grace'})
+
+// Only set the `createdAt` property if the node is created during this query
+ON CREATE SET p.createdAt = datetime()
+
+// Only set the `updatedAt` property if the node was created previously
+ON MATCH SET p.updatedAt = datetime()
+
+// Set the `born` property regardless
+SET p.born = 2006
+
+RETURN p
+    </pre>
+    <p class="text">
+      If you want to set multiple properties for an
+      <span class="snippet">ON CREATE SET</span> or
+      <span class="snippet">ON MATCH SET</span> clause, you separate them by
+      commas. For example:
+    </p>
+    <pre class="code">
+        ON CREATE SET m.released = 2020, m.tagline = `A great ride!'
+    </pre>
+    <p class="text bold">Merging with relationships</p>
+    <p class="text">
+      You can use <span class="snippet">MERGE</span> to create nodes or
+      relationships:
+    </p>
+    <pre class="code">
+// Find or create a person with this name
+MERGE (p:Person {name: 'Michael Caine'})
+
+// Find or create a movie with this title
+MERGE (m:Movie {title: 'The Cider House Rules'})
+
+// Find or create a relationship between the two nodes
+MERGE (p)-[:ACTED_IN]->(m)
+    </pre>
+    <p class="text">
+      Another way your can create these nodes and relationship is as follows:
+    </p>
+    <pre class="code">
+MERGE (p:Person {name: 'Michael Caine'})-[:ACTED_IN]-&gt;(m:Movie {title: 'The Cider House Rules'})
+RETURN p, m
+    </pre>
+    <p class="text">Here is what happens in the query processor:</p>
+    <p class="text">
+      1. Neo4j will attempt to find a Person node with the name Michael Caine.
+    </p>
+    <p class="text">2. If it does not exist, it creates the node.</p>
+    <p class="text">
+      3. Then, it will attempt to expand the
+      <span class="snippet">ACTED_IN</span> relationships in the graph for this
+      node.
+    </p>
+    <p class="text">
+      4. If there are any <span class="snippet">ACTED_IN</span> relationships
+      from this node, it looks for a Movie with the title 'The Cider House
+      Rules'.
+    </p>
+    <p class="text">
+      5. If there is no node for the Movie, it creates the node.
+    </p>
+    <p class="text">
+      6. If there is no relationship between the two nodes, it then creates the
+      <span class="snippet">ACTED_IN</span> relationship between them.
+    </p>
+    <p class="text center bold">Deleting Data</p>
+    <p class="text">In a Neo4j database you can delete:</p>
+
+    <p class="text">nodes</p>
+    <p class="text">relationships</p>
+    <p class="text">properties</p>
+    <p class="text">labels</p>
+    <p class="text">
+      To delete any data in the database, you must first retrieve it, then you
+      can delete it.
+    </p>
+    <pre class="code">
+        //create node
+        MERGE (p:Person {name: 'Jane Doe'})
+
+        //delete node
+        MATCH (p:Person)
+        WHERE p.name = 'Jane Doe'
+        DELETE p
+    </pre>
+    <p class="text bold">Deleting a relationship</p>
+    <p class="text">
+      Suppose we had our Jane Doe node again where she was added as an actor in
+      the movie, The Matrix. Run this code to create the node and the
+      relationship.
+    </p>
+    <pre class="code">
+MATCH (m:Movie {title: 'The Matrix'})
+MERGE (p:Person {name: 'Jane Doe'})
+MERGE (p)-[:ACTED_IN]-&gt;(m)
+RETURN p, m
+    </pre>
+    <p class="text">
+      This code creates one node and the relationship from Jane Doe to The
+      Matrix.
+    </p>
+    <p class="text">
+      To leave the Jane Doe node in the graph, but remove the relationship we
+      retrieve the relationship and delete it.
+    </p>
+    <pre class="code">
+    MATCH (p:Person {name: 'Jane Doe'})-[r:ACTED_IN]->(m:Movie {title: 'The Matrix'})
+    DELETE r
+    RETURN p, m
+</pre
+    >
+    <p class="text">
+      * Note that if we recreate the relationship and we attempt to delete the
+      Jane Doe <span class="snippet">node</span> (while it still has a
+      relationship) we receive an error as Neo4j prevents orphaned records in
+      the graph.
+    </p>
+    <p class="text bold">Deleting a node and its relationships</p>
+    <p class="text">
+      Neo4j provides a feature where you cannot delete a node if it has incoming
+      or outgoing relationships. This prevents the graph from having orphaned
+      relationships.
+    </p>
+    <pre class="code">
+        MATCH (p:Person {name: 'Jane Doe'})
+        DETACH DELETE p
+    </pre>
+    <p class="text">This code deletes the relationship and the Person node.</p>
+    <p class="text">
+      Note we can also delete all nodes and relationships in the DB with this
+      query:
+    </p>
+    <pre class="code">
+MATCH (n)
+DETACH DELETE n
+    </pre>
+
+    <!-- course module here -->
+    <p class="text center bold">#### Graph Data Modeling Fundamentals ###</p>
+    <p class="text bold">What is Graph Data Modeling?</p>
+    <p class="text">Why model?</p>
+    <p class="text">
+      If you will use a Neo4j graph to support part or all of your application,
+      you must collaboratively work with your stakeholders to design a graph
+      that will:
+    </p>
+    <p class="text">Answer the key use cases for the application.</p>
+    <p class="text">
+      Provide the best Cypher statement performance for the key use cases.
+    </p>
+    <p class="text bold">Components of a Neo4j graph</p>
+    <p class="text">
+      The Neo4j components that are used to define the graph data model are:
+    </p>
+    <p class="text">Nodes</p>
+    <p class="text">Labels</p>
+    <p class="text">Relationships</p>
+    <p class="text">Properties</p>
+
+    <p class="text bold center">Data modeling process</p>
+    <p class="text">Here are the steps to create a graph data model:</p>
+    <p class="text">
+      1. Understand the domain and define specific use cases (questions) for the
+      application.
+    </p>
+    <p class="text">2. Develop the initial graph data model:</p>
+    <p class="text">a. Model the Nodes (entities)</p>
+    <p class="text">b. Model the relationships metween nodes</p>
+    <p class="text">3. Test the use cases against the initial data model.</p>
+    <p class="text">
+      4. Create the graph (instance model) with test data using Cypher.
+    </p>
+    <p class="text">
+      5. Test the use cases, including performance against the graph.
+    </p>
+    <p class="text">
+      6. Refactor (improve) the graph data model due to a change in the key use
+      cases or for performance reasons.
+    </p>
+    <p class="text">
+      7. Implement the refactoring on the graph and retest using Cypher.
+    </p>
+    <p class="text">
+      Graph data modeling is an <span class="snippet">iterative</span> process.
+      Your initial graph data model is a starting point, but as you learn more
+      about the use cases or if the use cases change, the initial graph data
+      model will need to change. In addition, you may find that especially when
+      the graph scales, you will need to modify the graph (refactor) to achieve
+      the best performance for your key use cases.
+    </p>
+    <p class="text">
+      Refactoring is very common in the development process. A Neo4j graph has
+      an optional schema which is quite flexible, unlike the schema in an RDBMS.
+      A Cypher developer can easily modify the graph to represent an improved
+      data model.
+    </p>
+
+    <p class="text center bold">The Domain</p>
+    <p class="text">#bestPractice</p>
+    <p class="text bold">Understanding the domain for your application</p>
+    <p class="text">Before you begin the data modeling process you must:</p>
+    <p class="text">
+      Identify the stakeholders and developers of the application.
+    </p>
+    <p class="text">With the stakeholders and developers:</p>
+    <p class="text">Describe the application in detail.</p>
+    <p class="text">Identify the users of the application (people, systems).</p>
+    <p class="text">Agree upon the use cases for the application.</p>
+    <p class="text">Rank the importance of the use cases.</p>
+
+    <p class="text center bold">Movie domain</p>
+    <p class="text">
+      The domain includes movies, people who acted or directed movies, and users
+      who rated movies. What makes this domain interesting are the connections
+      or relationships between nodes in the graph.
+    </p>
+    <p class="text">Use cases</p>
+    <p class="text">
+      Most use cases for an application can be enumerated by a comprehensive
+      list of questions. The use cases help to define how the application will
+      behave at runtime.
+    </p>
+    <p class="text">
+      Here are the use cases you will be working with to develop the initial
+      graph data model:
+    </p>
+    <p class="text">1. What people acted in a movie?</p>
+    <p class="text">2. What person directed a movie?</p>
+    <p class="text">3 .What movies did a person act in?</p>
+    <p class="text">4. How many users rated a movie?</p>
+    <p class="text">5. Who was the youngest person to act in a movie?</p>
+    <p class="text">6. What role did a person play in a movie?</p>
+    <p class="text">
+      7. What is the highest rated movie in a particular year according to imDB?
+    </p>
+    <p class="text">8. What drama movies did an actor act in?</p>
+    <p class="text">9. What users gave a movie a rating of 5?</p>
+    <p class="text">
+      In our domain, we want to differentiate a person who acted in or directed
+      a movie and a user or reviewer who rated a movie. We have much more
+      information about people such as their birth date, their tmdbId etc. Users
+      who rated movies will just be named or identified.
+    </p>
+    <p class="text center bold">Purpose of the Model</p>
+    <p class="text">
+      When performing the graph data modeling process for an application, you
+      will need at least two types of models:
+    </p>
+    <p class="text">Data Model</p>
+    <p class="text">Instance Model</p>
+    <p class="text bold center">Data model</p>
+    <p class="text">
+      The data model describes the <span class="snippet">labels</span>,
+      <span class="snippet">relationships</span>, and
+      <span class="snippet">properties</span> for the graph. It does not have
+      specific data that will be created in the graph.
+    </p>
+    <p class="text">Here is an example of a data model:</p>
+    <div class="devPic">
+      <img src="./assets/sample-data-model.png" alt="" />
+    </div>
+    <p class="text">
+      There is nothing that uniquely identifies a
+      <span class="snippet">node</span> with a given label. A graph data model,
+      however is important because it defines the names that will be used for
+      <span class="snippet">labels</span>,
+      <span class="snippet">relationship</span>
+      <span class="snippet">types</span>, and
+      <span class="snippet">properties</span> when the graph is created and used
+      by the application.
+    </p>
+    <p class="text bold center">Style guidelines for modeling</p>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      As you begin the graph data modeling process, it is important that you
+      agree upon how labels, relationship types, and property keys are named.
+      Labels, relationship types, and property keys are case-sensitive, unlike
+      Cypher keywords which are case-insensitive.
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      A Neo4j best practice is to use the following when you name the elements
+      of the graph, but you are free to use any convention for your application.
+    </p>
+    <p class="text">
+      A label is a single identifier that begins with a capital letter and can
+      be CamelCase.
+    </p>
+    <p class="text">
+      Examples: <span class="snippet">Person</span>,
+      <span class="snippet">Company</span>,
+      <span class="snippet">GithubRepo</span>
+    </p>
+    <p class="text">
+      A relationship type is a single identifier that is in all capital letters
+      with the underscore character.
+    </p>
+    <p class="text">
+      Examples: <span class="snippet">FOLLOWS</span>,
+      <span class="snippet">MARRIED_TO</span>
+    </p>
+    <p class="text">
+      A property key for a node or a relationship is a single identifier that
+      begins with a lower-case letter and can be camelCase.
+    </p>
+    <p class="text">
+      Examples: <span class="snippet">departmentId</span>,
+      <span class="snippet">firstName</span>
+    </p>
+    <p class="text">
+      Property key names need not be unique for different nodes. For example, a
+      Person node and a Movie node, each can have the property key of
+      <span class="snippet">creationId</span>
+    </p>
+    <p class="text bold center">Instance model</p>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      An important part of the graph data modeling process is to test the model
+      against the use cases. To do this, you need to have a set of sample data
+      that you can use to see if the use cases can be answered with the model.
+    </p>
+    <p class="text">Here is an example of an instance model:</p>
+    <div class="devPic">
+      <img src="./assets/sample-data-instance-model.png" alt="" />
+    </div>
+    <p class="text bold center">Modeling Nodes</p>
+    <p class="text bold">Defining labels</p>
+    <p class="text">
+      Entities are the dominant nouns in your application use cases:
+    </p>
+    <p class="text">
+      1. What <span class="snippet">ingredients</span> are used in a
+      <span class="snippet">recipe</span>?
+    </p>
+    <p class="text">
+      2. <span class="snippet">Who</span> is married to this person?
+    </p>
+    <p class="text">
+      The entities of your use cases will be the labeled nodes in the graph data
+      model.
+    </p>
+    <p class="text">
+      In the Movie domain, we use the <span class="snippet">nouns</span> in our
+      use cases to define the labels, for example:
+    </p>
+    <p class="text">
+      1. What <span class="snippet">people</span> acted in a
+      <span class="snippet">movie</span>?
+    </p>
+    <p class="text">
+      2. What <span class="snippet">person</span> directed a
+      <span class="snippet">movie</span>?
+    </p>
+    <p class="text">
+      3. What <span class="snippet">movies</span> did a
+      <span class="snippet">person</span> act in?
+    </p>
+    <p class="text">
+      Here are some of the labeled nodes that we will start with.
+    </p>
+    <div class="devPic">
+      <img src="./assets/movie-person-labels.png" alt="" />
+    </div>
+    <p class="text">
+      * Notice here that we use CamelCase for the names for labels.
+    </p>
+    <p class="text bold">Node properties</p>
+    <p class="text">Node properties are used to:</p>
+    <p class="text">Uniquely identify a node.</p>
+    <p class="text">
+      Answer specific details of the use cases for the application.
+    </p>
+    <p class="text">Return data.</p>
+    <p class="text">
+      For example, in a <span class="snippet">Cypher</span> statement,
+      properties are used to:
+    </p>
+    <p class="text">Anchor (where to begin the query).</p>
+    <pre class="code">
+        MATCH (p:Person {name: 'Tom Hanks'})-[:ACTED_IN]-(m:Movie) 
+        RETURN m
+    </pre>
+    <p class="text">Traverse the graph (navigation)</p>
+    <pre class="code">
+        MATCH (p:Person)-[:ACTED_IN]-(m:Movie {title: 'Apollo 13'})-[:RATED]-(u:User) 
+        RETURN p,u
+    </pre>
+    <p class="text">Return data from the query.</p>
+    <pre class="code">
+        MATCH (p:Person {name: 'Tom Hanks'})-[:ACTED_IN]-(m:Movie) 
+        RETURN m.title, m.released
+    </pre>
+    <p class="text">Unique identifiers in the Movie graph</p>
+    <p class="text">
+      In the Movie graph, we use the following properties to uniquely identify
+      our nodes:
+    </p>
+    <p class="text">Person.tmdbid</p>
+    <p class="text">Movie.tmdbid</p>
+    <p class="text bold">Properties for nodes</p>
+    <p class="text">
+      In addition to the <span class="snippet">tmdbId</span> that is used to
+      uniquely identify a node, we must revisit the use cases to determine the
+      types of data a node must hold.
+    </p>
+    <p class="text">
+      Here is a list of our use cases specific to
+      <span class="snippet">Person</span> and
+      <span class="snippet">Movie</span> nodes that we will focus on. These use
+      cases inform us about the data we need in
+      <span class="snippet">Movie</span> and
+      <span class="snippet">Person</span> nodes.
+    </p>
+    <div class="devPic">
+      <img src="./assets/revisit-use-cases.png" alt="" />
+    </div>
+    <p class="text center bold">
+      Given the details of the steps of these use cases, here are the properties
+      we will define for the <span class="snippet">Movie</span> nodes:
+    </p>
+    <p class="text">Movie.title (string)</p>
+    <p class="text">Movie.released (date)</p>
+    <p class="text">Movie.imdbRating (decimal between 0-10)</p>
+    <p class="text">Movie.genres (list of strings)</p>
+    <p class="text center bold">
+      Here are the properties we will define for the
+      <span class="snippet">Person</span> nodes:
+    </p>
+    <p class="text">Person.name (string)</p>
+    <p class="text">Person.born (date)</p>
+    <p class="text">Person.died (date)</p>
+    <p class="text">* Note: The died property will be optional.</p>
+    <p class="text">Here is the initial data model:</p>
+    <div class="devPic">
+      <img src="./assets/before-challenge1-data-model.png" alt="" />
+    </div>
+    <p class="text">
+      And here is the initial instance model you will be creating:
+    </p>
+    <div class="devPic">
+      <img src="./assets/before-challenge1-instance-model.png" alt="" />
+    </div>
+    <p class="text">
+      After testing our model, we could identify some new labels (nodes) that we
+      need to create. For instance we need to be able to differentiate rating
+      website users from other types of people who are actors and directors.
+    </p>
+    <div class="devPic">
+      <img src="./assets/after-challenge1-data-model.png" alt="" />
+    </div>
+
+    <p class="text center bold">Modeling Relationships</p>
+    <p class="text">
+      Connections are the <span class="snippet">verbs</span> in your use cases:
+    </p>
+    <p class="text">
+      1. What <span class="snippet">ingredients</span> are used in a
+      <span class="snippet">recipe</span>?
+    </p>
+    <p class="text">
+      Who is <span class="snippet">married</span> to this person?
+    </p>
+    <p class="text">
+      At a glance, connections are straightforward things, but their micro- and
+      macro-design are arguably the most critical factors in graph performance.
+      Using “connections are verbs” is a fine shorthand to get started, but
+      there are other important considerations that you will learn about later
+      in this course.
+    </p>
+    <p class="text bold">Naming relationships</p>
+    <p class="text">
+      Choosing good names (types) for the relationships in the graph is
+      important. Relationship types need to be something that is intuitive to
+      stakeholders and developers alike. Relationship types cannot be confused
+      with an entity name.
+    </p>
+    <p class="text">
+      So in our example use cases, we could define these relationship types:
+      <span class="snippet">USES</span> and <span class="snippet">MARRIED</span>
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      Note here that we use the Neo4j best practice of all capital
+      letters/underscore characters for the name of the relationship.
+    </p>
+    <p class="text bold">Relationship direction</p>
+    <p class="text">
+      When you create a relationship in <span class="snippet">Neo4j</span>, a
+      direction must either be specified explicitly or inferred by the
+      left-to-right direction in the pattern specified. At runtime, during a
+      query, direction is typically not required.
+    </p>
+    <p class="text">
+      In our example use cases shown above, the
+      <span class="snippet">USES</span> relationship must be created to go from
+      a Recipe node to an Ingredient node.
+    </p>
+    <div class="devPic">
+      <img src="./assets/uses.png" alt="" />
+    </div>
+    <p class="text">
+      The <span class="snippet">MARRIED</span> relationship could be created to
+      start in either node since this type of relationship is symmetric.
+    </p>
+    <div class="devPic">
+      <img src="./assets/married.png" alt="" />
+    </div>
+    <p class="text">
+      A relationship is typically between 2 different nodes, but it can also be
+      to the same node.
+    </p>
+    <p class="text bold">Fanout</p>
+    <p class="text">
+      Here, we have entities (Person, Residence) represented not as a single
+      node, but as a network or linked nodes.
+    </p>
+    <div class="devPic">
+      <img src="./assets/fanout.png" alt="" />
+    </div>
+    <p class="text">
+      This is an extreme example of fanout, and is almost certainly overkill for
+      any real-life solution, but some amount of fanout can be very useful.
+    </p>
+    <p class="text">
+      The main risk about fanout is that it can lead to very dense nodes, or
+      supernodes. These are nodes that have hundreds of thousands of incoming or
+      outgoing relationships Supernodes need to be handled carefully.
+    </p>
+    <p class="text bold">Relationships in the Movie graph</p>
+    <p class="text">
+      Now let’s look at identifying the relationships for these use cases:
+    </p>
+    <p class="text">
+      What people <span class="snippet">acted</span> in a movie?
+    </p>
+    <p class="text">
+      What person <span class="snippet">directed</span> a movie?
+    </p>
+    <p class="text">
+      What movies did a person <span class="snippet">act</span> in?
+    </p>
+    <p class="text">Given these use cases, we name the relationships:</p>
+    <p class="text">
+      <span class="snippet">ACTED_IN</span>
+    </p>
+    <p class="text">
+      <span class="snippet">DIRECTED</span>
+    </p>
+    <p class="text">
+      Furthermore, both of these relationship types start at
+      <span class="snippet">Person</span> nodes and end in
+      <span class="snippet">Movie</span> nodes.
+    </p>
+    <p class="text">Here is the supporting graph data model:</p>
+    <div class="devPic">
+      <img src="./assets/adding-first-relationships.png" alt="" />
+    </div>
+    <p class="text">
+      And here is the instance model to support this graph data model:
+    </p>
+    <div class="devPic">
+      <img src="./assets/adding-first-relationships-instance.png" alt="" />
+    </div>
+    <p class="text">
+      Tom Hanks acted in two movies. Meg Ryan and Jack Nicholson each acted in
+      one movie. Danny DeVito both acted in and directed the same movie.
+      Exploring relationships with this instance model we see that the movie
+      Apollo 13 has a single actor in the graph, but the other two movies have
+      two actors each.
+    </p>
+    <p class="text center bold">Properties for relationships</p>
+    <p class="text">
+      <span class="snippet">Properties</span> for a
+      <span class="snippet">relationship</span> are used to enrich how two nodes
+      are related. When you define a property for a relationship, it is because
+      your use cases ask a specific question about how two nodes are related,
+      not just that they are related.
+    </p>
+    <p class="text">
+      For example they can be added to a relationship to further describe it.
+    </p>
+    <div class="devPic">
+      <img src="./assets/relationship-properties2.jpeg" alt="" />
+    </div>
+    <p class="text">
+      Here we see that we have a date property on the
+      <span class="snippet">MARRIED</span> relationship to further describe the
+      <span class="snippet">relationship</span> between Michael and Sarah.
+      Additionally, we have a roles property on the
+      <span class="snippet">WORKS_AT</span>
+      <span class="snippet">relationship</span> to describe the roles that
+      Michael has or had when he worked at Graph Inc.
+    </p>
+    <p class="text">
+      These properties are specific to the relationship between two nodes.
+    </p>
+    <p class="text center bold">Relationship properties in the Movie graph</p>
+    <p class="text">
+      Just like you analyze the use cases for naming labels, relationship types,
+      and node properties, you use the use cases to come up with properties for
+      relationships.
+    </p>
+    <p class="text">Here is a use case:</p>
+    <p class="text">6. What role did a person play in a movie?</p>
+    <p class="text">The runtime operations for this use case are:</p>
+    <p class="text">1. Retrieve the name of the person.</p>
+    <p class="text">
+      2. Follow the <span class="snippet">ACTED_IN</span> relationships to
+      movies.
+    </p>
+    <p class="text">3. Filter the movie by its title.</p>
+    <p class="text">
+      4. Return the <span class="snippet">role</span> from the
+      <span class="snippet">ACTED_IN</span> relationship between the two nodes.
+    </p>
+    <p class="text">
+      We know that the role for a particular
+      <span class="snippet">ACTED_IN</span> relationship will be necessary for
+      this use case. So we add the role property to this relationship. Here is
+      the data model:
+    </p>
+    <div class="devPic">
+      <img src="./assets/before-challenge1-data-model2.png" alt="" />
+    </div>
+    <p class="text">And here is the instance model you will be creating:</p>
+    <div class="devPic">
+      <img src="./assets/before-challenge1-instance-model2.png" alt="" />
+    </div>
+    <p class="text">
+      Each <span class="snippet">ACTED_IN</span> relationship here has a
+      different value for the <span class="snippet">role</span> property.
+    </p>
+    <p class="text center bold">Identifying a New Relationship</p>
+    <p class="text">We need to refactor the model for a new use case:</p>
+    <p class="text">Use case #9: What users gave a movie a rating of 5?</p>
+    <p class="text">
+      We have already identified the <span class="snippet">Person</span> and
+      <span class="snippet">Movie</span> nodes and the
+      <span class="snippet">ACTED_IN</span> and
+      <span class="snippet">DIRECTED</span> relationships for our use cases:
+    </p>
+    <p class="text">
+      * What <span class="snippet">people</span> acted in a movie?
+      <br />
+      What person <span class="snippet">directed</span> a movie?
+      <br />
+      What movies did a person <span class="snippet">act</span> in?
+    </p>
+    <div class="devPic">
+      <img src="./assets/before-challenge1-data-model3.png" alt="" />
+    </div>
+    <p class="text">
+      We have an additional use case that we must model for asking a question
+      about users who rated movies. We have defined the User label to represent
+      users who reviewed or rated movies.
+    </p>
+    <p class="text">
+      After adding the new relationships, the model instance will look like
+      this:
+    </p>
+    <div class="devPic">
+      <img src="./assets/after-challenge2-instance-model.png" alt="" />
+    </div>
+    <p class="text">#bestPractice</p>
+    <p class="text center bold">Testing the Model</p>
+    <p class="text">
+      To ensure that the graph can satisfy every use case, we must test the use
+      cases against the graph.
+    </p>
+    <p class="text">Example of test case ( What people acted in a movie?)</p>
+    <p class="text">
+      We will execute this query where you specify the title of the movie:
+    </p>
+    <pre class="code">
+MATCH (p:Person)-[:ACTED_IN]-(m:Movie)
+WHERE m.title = 'Sleepless in Seattle'
+RETURN p.name AS Actor
+    </pre>
+    <p class="text">
+      As we go through the use cases, we may think of more data that we want to
+      add to the graph to round out the testing.
+    </p>
+    <p class="text">
+      The Cypher code used to test the use cases needs to be carefully reviewed
+      for correctness. In addition, we must understand that if and when the
+      graph is refactored, the Cypher code for these use cases may need to be
+      modified to improve performance.
+    </p>
+    <p class="text">
+      The basic testing to ensure that the use cases can be answered by the data
+      model is the first step of testing.
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      A really important factor with testing the graph is scalability. How will
+      these queries perform if the graph has millions of nodes or relationships?
+      This is where you need to work with the Cypher developers to test the
+      performance of the queries when the graph grows.
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text center bold">Refactoring the graph</p>
+    <p class="text">
+      Refactoring is the process of changing the data model and the graph.
+    </p>
+    <p class="text">There are three reasons why you would refactor:</p>
+    <p class="text">
+      . The graph as modeled does not answer all of the use cases
+      <br />
+      . A new use case has come up that we must account for in the data model
+      <br />
+      . The Cypher for the use cases does not perform optimally, especially when
+      the graph scales
+    </p>
+    <p class="text bold">Steps for refactor</p>
+    <p class="text">To refactor a graph data model and a graph, we must:</p>
+    <p class="text">1. Design the new data model.</p>
+    <p class="text">
+      2. Write Cypher code to transform the existing graph to implement the new
+      data model.
+    </p>
+    <p class="text">
+      3. Retest all use cases, possibly with updated Cypher code.
+    </p>
+    <p class="text center bold">Labels in the Graph</p>
+    <p class="text bold">Labels at runtime</p>
+    <p class="text">
+      Node labels serve as an anchor point for a query. By specifying a label,
+      we are specifying a subset of one or more nodes with which to start a
+      query. Using a label helps to reduce the amount of data that is retrieved.
+    </p>
+    <p class="text">For example:</p>
+    <pre class="code">
+        MATCH (n) RETURN n //returns all nodes in the graph.
+        MATCH (n:Person) RETURN n //returns all Person nodes in the graph.
+    </pre>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      Our goal in modeling should be to reduce the size of the graph that is
+      touched by a query.
+    </p>
+    <p class="text">
+      In Cypher, you can produce a <span class="snippet">query plan</span> that
+      shows what operations occur during the query. This figure shows a query
+      plan by the number of db hits for the query to retrieve all Person nodes:
+    </p>
+    <div class="devPic">
+      <img src="./assets/query-plan.png" alt="" />
+    </div>
+    <p class="text">
+      If Person nodes also had a label which is the country that a person is
+      from, then we could used this Cypher code to retrieve all people from the
+      US:
+    </p>
+    <pre class="code">
+        MATCH (n:US) RETURN n //returns all US nodes in the graph which happen to be Person nodes.
+    </pre>
+    <p class="text">
+      But having a label that is specific like this might be overkill,
+      especially if the query could be:
+    </p>
+    <pre class="code">
+        MATCH (n:Person) WHERE n.country = 'US' RETURN n
+    </pre>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      In Cypher, you cannot parameterize labels so keeping the country as a
+      property makes the Cypher code more flexible.
+    </p>
+    <p class="text">
+      But if we have a strong use case for having multiple labels for a node, we
+      should do so.
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text center bold">Do not overuse labels</p>
+    <p class="text">
+      You should use labels wisely in your data model. They should be used if it
+      will help with most of your use cases. A best practice is to limit the
+      number of labels for a node to 4.
+    </p>
+    <p class="text">
+      Here is an example of overuse of labels in the data model:
+    </p>
+    <div class="devPic">
+      <img src="./assets/label-overuse.png" alt="" />
+    </div>
+    <p class="text">
+      Here we see <span class="snippet">Person</span> nodes that have a label
+      representing the <span class="snippet">country</span> that a
+      <span class="snippet">Person</span> is from like we described earlier.
+    </p>
+    <p class="text">
+      In addition, we see multiple labels for
+      <span class="snippet">Movie</span> nodes. The label represents the
+      languages available for a movie.
+    </p>
+    <p class="text">
+      This is another similar scenario where you must decide if an important use
+      case is related to the language of a movie. Again if the use of a property
+      for a node will suffice, then it is best to not have the label.
+    </p>
+    <p class="text center bold">New use case</p>
+    <p class="text">
+      Here is an example where adding a label will help our queries at runtime.
+    </p>
+    <p class="text">What if we added a new use case:</p>
+    <p class="text">Use case #10: What actors were born before 1950?</p>
+    <p class="text">Here is the Cypher statement to test this use case:</p>
+    <pre class="code">
+MATCH (p:Person)-[:ACTED_IN]-()
+WHERE p.born &lt; '1950'
+RETURN p.name
+    </pre>
+    <p class="text">Here is what this Cypher statement does:</p>
+    <p class="text">
+      1. A node by label scan to retrieve all
+      <span class="snippet">Person</span> nodes.
+    </p>
+    <p class="text">
+      2. Tests the <span class="snippet">born</span> property for the nodes
+      retrieved to filter them.
+    </p>
+    <p class="text">
+      3. Determines which of these filtered nodes have the outgoing
+      <span class="snippet">ACTED_IN</span>
+      relationship.
+    </p>
+    <p class="text">4. Returns the name property values.</p>
+    <p class="text">#bestPractice</p>
+    <p class="text center bold">Profiling a query</p>
+    <p class="text">
+      You can use the PROFILE keyword to see the performance for a query.
+    </p>
+    <pre class="code">
+PROFILE MATCH (p:Person)-[:ACTED_IN]-()
+WHERE p.born &lt; '1950'
+RETURN p.name
+    </pre>
+    <p class="text">This is the result of the profile:</p>
+    <div class="devPic">
+      <img src="./assets/initial-profile.png" alt="" />
+    </div>
+    <p class="text">
+      Because the cache is automatically populated, it is sometimes hard to
+      measure performance with a small dataset. That is, db hits and elapsed
+      time may not be comparable. What you can see, however, is the number of
+      rows that are retrieved in the query and this number can be compared.
+    </p>
+    <p class="text">
+      In the first step of this query, we see that 5 rows are returned. You can
+      imagine that if this were a fully-loaded graph with millions of nodes, in
+      step 1, it would need to retrieve a lot of Person nodes, some of which are
+      not actors. One way that you can optimize this retrieval is to change the
+      data model to include an <span class="snippet">Actor</span> label for a
+      <span class="snippet">Person</span> node.
+    </p>
+    <p class="text center bold">Refactoring the model</p>
+    <p class="text">
+      If we refactor, the initial node by label scan would only retrieve the
+      <span class="snippet">Actor</span> nodes.
+    </p>
+    <p class="text">
+      Here is the refactored instance model we will create in the graph:
+    </p>
+    <div class="devPic">
+      <img src="./assets/added-actor-label-instance2.png" alt="" />
+    </div>
+    <p class="text center bold">Refactor the graph</p>
+    <p class="text">
+      With Cypher, you can easily transform the graph. With this code we can
+      find all <span class="snippet">Person</span> nodes that have an
+      <span class="snippet">ACTED_IN</span>
+      relationship. We then set a label for the node.
+    </p>
+    <pre class="code">
+MATCH (p:Person)
+WHERE exists ((p)-[:ACTED_IN]-())
+SET p:Actor
+    </pre>
+    <p class="text">#bestPractice</p>
+    <ptext class="center bold"> Retesting after refactoring </ptext>
+    <p class="text">
+      After you have refactored the graph, you should revisit all queries for
+      your use cases.
+    </p>
+    <p class="text">
+      You should first determine if any of the queries need to be rewritten to
+      take advantage of the refactoring.
+    </p>
+    <p class="text">Example of query refactor as per new use case:</p>
+    <p class="text">Use case #1: What people acted in a movie?</p>
+    <p class="text">
+      We rewrite this query to use the <span class="snippet">Actor</span> label.
+    </p>
+    <p class="text">Original code:</p>
+    <pre class="code">
+MATCH (p:Person)-[:ACTED_IN]-(m:Movie)
+WHERE m.title = 'Sleepless in Seattle'
+RETURN p.name AS Actor
+    </pre>
+    <p class="text">New code:</p>
+    <pre class="code">
+MATCH (p:Actor)-[:ACTED_IN]-(m:Movie)
+WHERE m.title = 'Sleepless in Seattle'
+RETURN p.name AS Actor
+    </pre>
+    <p class="text">#bestPractice</p>
+    <p class="text bold">Profiling Queries</p>
+    <p class="text">
+      For the query that uses the <span class="snippet">Person</span> label we
+      see this result that first retrieves the 5 Person nodes:
+    </p>
+    <div class="devPic">
+      <img src="./assets/profile-retrieve-person.png" alt="" />
+    </div>
+    <p class="text">
+      For the query that uses the <span class="snippet">Actor</span> label we
+      see this result that first retrieves the 4 Actor nodes, a slight
+      improvement for this small graph:
+    </p>
+    <div class="devPic">
+      <img src="./assets/profile-retrieve-actor.png" alt="" />
+    </div>
+    <p class="text">#bestPractice</p>
+    <p class="text center bold">Avoid These Labels</p>
+    <p class="text">
+      Sometimes it's bad to use certain types of labels such as:
+    </p>
+    <p class="text bold">Semantically orthogonal labels</p>
+    <p class="text">
+      Labels should have nothing to do with one another. You should be careful
+      not to use the same type of label in different contexts. For example,
+      using the region for all types of nodes is not useful for most queries.
+    </p>
+    <p class="text">
+      Here is an example where both <span class="snippet">Person</span> nodes
+      and <span class="snippet">User</span> nodes are labeled with
+      <span class="snippet">regions</span>. If there are no use cases where the
+      region is significant for both types of nodes, it is not helpful to use
+      these same labels for <span class="snippet">Person</span> nodes and
+      <span class="snippet">User</span> nodes.
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text">Don’t do this:</p>
+    <div class="devPic">
+      <img src="./assets/orthogonal-labels.png" alt="" />
+    </div>
+    <p class="text bold">Representing class hierarchies</p>
+    <p class="text">
+      You also want to avoid labeling your nodes to represent hierarchies.
+    </p>
+    <p class="text">
+      Suppose we have this hierarchy of Screen Actors Guild memberships:
+    </p>
+    <div class="devPic">
+      <img src="./assets/SAG-hierarchy.jpeg" alt="" />
+    </div>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      This is often called <span class="snippet">“inheritance”</span> or
+      <span class="snippet">“IS-A”</span>
+      relationships. You should <span class="snippet">NOT</span> do this where
+      nodes have multiple labels that represent a hierarchy such as this:
+    </p>
+    <div class="devPic">
+      <img src="./assets/SAG-nodes.png" alt="" />
+    </div>
+    <p class="text">#bestPractice</p>
+    <p class="text">Instead, you should do this:</p>
+    <div class="devPic">
+      <img src="./assets/SAG-membership.png" alt="" />
+    </div>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      So instead of duplicating labels, we should create a new node for the
+      respective lable and link to it.
+    </p>
+    <p class="text center bold">Eliminating Duplicate Data</p>
+    <p class="text">Duplicate data</p>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      You should take care to avoid duplicating data in your graph. Where some
+      databases require a form of denormalization to improve the speed of a set
+      of queries, this is not always the case with a graph database.
+      De-duplicating data gives you the added benefit of allowing you to query
+      through a node - for example, finding other customers who have purchased a
+      particular product, or finding similar movies based on the rating of other
+      users.
+    </p>
+    <p class="text">
+      In addition, duplicating data in the graph increases the size of the graph
+      and the amount of data that may need to be retrieved for a query.
+    </p>
+    <p class="text bold">New use case</p>
+    <p class="text">We have a new use case that we must account for.</p>
+    <p class="text center bold">
+      Use case #11: What movies are available in a particular language?
+    </p>
+    <p class="text">Our current instance model looks like this:</p>
+    <div class="devPic">
+      <img src="./assets/instance-model-thus-far.png" alt="" />
+    </div>
+    <p class="text">
+      We do not account for languages in the data model so we will have to add
+      this data.
+    </p>
+    <p class="text">Duplicate data example</p>
+    <p class="text">
+      Suppose we add a property to each <span class="snippet">Movie</span> node
+      in the graph named languages that represents the languages in which a
+      movie is available.
+    </p>
+    <p class="text">Here is what the instance model would look like:</p>
+    <div class="devPic">
+      <img src="./assets/languages-property-instance-model.png" alt="" />
+    </div>
+    <p class="text">
+      Here we see that all Movie nodes have English in the list of languages.
+      This is duplicate data and for a scaled database, would represent a lot of
+      duplication.
+    </p>
+    <p class="text center bold">Refactoring Duplicate Data</p>
+    <p class="text">
+      Here is our current instance model where each Movie node has a languages
+      property:
+    </p>
+    <div class="devPic">
+      <img src="./assets/languages-property-instance-model.png" alt="" />
+    </div>
+    <p class="text">For our latest use case:</p>
+    <p class="text">
+      Use case #11: What movies are available in a particular language?
+    </p>
+    <p class="text">This query finds all movies in Italian:</p>
+    <pre class="code">
+MATCH (m:Movie)
+WHERE 'Italian' IN m.languages
+RETURN m.title
+    </pre>
+    <p class="text">
+      What this query does is retrieve all Movie nodes and then test whether the
+      languages property contains Italian. There are two issues with the data
+      model, especially if the graph scales:
+      <br />
+      . The name of the language is duplicated in many Movie nodes
+      <br />
+      . In order to perform the query, all Movie nodes must be retrieved.
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      A solution here is to model properties as nodes (so to replace the
+      duplicate property with a dedicated note and have relations pointing to it
+      from all the nodes where the property was initially duplicated).
+    </p>
+    <p class="text center bold">Refactor properties as nodes</p>
+    <p class="text">
+      Here are the steps we use to refactor:
+      <br />
+      1. We take the property values for each Movie node and create a Language
+      node.
+      <br />
+      2. Then we create the
+      <span class="snippet">IN_LANGUAGE</span> relationship between that Movie
+      node and the Language node.
+      <br />
+      3. Finally, we remove the <span class="snippet">languages</span> property
+      from the Movie node.
+    </p>
+    <p class="text">
+      This is the code to refactor the graph to turn the property values into
+      nodes:
+    </p>
+    <pre class="code">
+MATCH (m:Movie)
+UNWIND m.languages AS language
+WITH  language, collect(m) AS movies
+MERGE (l:Language {name:language})
+WITH l, movies
+UNWIND movies AS m
+WITH l,m
+MERGE (m)-[:IN_LANGUAGE]->(l);
+MATCH (m:Movie)
+SET m.languages = null
+    </pre>
+    <p class="text">
+      This code iterates through all <span class="snippet">Movie</span> nodes
+      and creates a <span class="snippet">Language</span> node for each language
+      it finds and then creates the
+      <span class="snippet">relationship</span> between the
+      <span class="snippet">Movie</span> node and
+      <span class="snippet">Language</span> node using the
+      <span class="snippet">IN_LANGUAGE</span>
+      relationship. It uses the Cypher
+      <span class="snippet">UNWIND</span> clause to separate each element of the
+      languages property list into a separate row value that is processed later
+      in the query.
+    </p>
+    <p class="text">
+      This is what the instance model looks like after the refactoring:
+    </p>
+    <div class="devPic">
+      <img src="./assets/instance-add-language-node.png" alt="" />
+    </div>
+    <p class="text">
+      There will only be one node with the language value of English and we
+      remove the languages property from all Movie nodes. This eliminates a lot
+      of duplication in the graph.
+    </p>
+    <p class="text">
+      This is the query that will turn the
+      <span class="snippet">languages</span> property into a
+      <span class="snippet">Language</span> node:
+    </p>
+    <pre class="code">
+MATCH (m:Movie)
+UNWIND m.languages AS language
+WITH  language, collect(m) AS movies
+MERGE (l:Language {name:language})
+WITH l, movies
+UNWIND movies AS m
+WITH l,m
+MERGE (m)-[:IN_LANGUAGE]->(l);
+MATCH (m:Movie)
+SET m.languages = null
+    </pre>
+    <p class="text">
+      Now we need to modify the Cypher query for our use case too (find all
+      italian language available movies)
+    </p>
+    <p class="text">Initial query was this:</p>
+    <pre class="code">
+MATCH (m:Movie)
+WHERE 'Italian' IN m.languages
+RETURN m.title
+    </pre>
+    <p class="text">
+      This query can now be modified to instead use the newly-created
+      <span class="snippet">Language</span>
+      node.
+    </p>
+    <pre class="code">
+MATCH (m:Movie)-[:IN_LANGUAGE]-(l:Language)
+WHERE  l.name = 'Italian'
+RETURN m.title
+    </pre>
+
+    <p class="text">
+      This is the query through which we'd remove the
+      <span class="snippet">genres</span> property and create a
+      <span class="snippet">Genre</span> node:
+    </p>
+    <pre class="code">
+MATCH (m:Movie)
+UNWIND m.genres AS genre
+WITH genre, collect(m) AS movies
+MERGE (l:Genre {name:genre})
+WITH l, movies
+UNWIND movies AS m
+WITH l,m
+MERGE (m)-[:IN_GENRE]->(l)
+SET m.genres = null
+    </pre>
+    <p class="text">Now the graph looks like this:</p>
+    <div class="devPic">
+      <img src="./assets/instance-add-genre-node.png" alt="" />
+    </div>
+    <p class="text center bold">Example: Complex data</p>
+    <p class="text">
+      Since nodes are used to store data about specific entities, you may have
+      initially modeled, for example, a Production node to contain the details
+      of the address for the production company.
+    </p>
+    <div class="devPic">
+      <img src="./assets/complex-data-in-nodes.png" alt="" />
+    </div>
+    <p class="text">
+      Storing complex data in the nodes like this may not be beneficial for a
+      couple of reasons:
+      <br />
+      1. Duplicate data. Many nodes may have production companies in a
+      particular location and the data is repeated in many nodes.
+      <br />
+      2. Queries related to the information in the nodes require that all nodes
+      be retrieved.
+    </p>
+    <p class="text center bold">Refactoring complex data</p>
+    <p class="text">
+      If there is a high amount of duplicate data in the nodes or if key
+      questions of your use cases would perform better if all nodes need not be
+      retrieved to get the complex data, then you might consider refactoring the
+      graph as shown here.
+    </p>
+    <div class="devPic">
+      <img src="./assets/add-nodes-for-complex-data.png" alt="" />
+    </div>
+    <p class="text">
+      In this refactoring, if there are queries that need to filter production
+      companies by their <span class="snippet">state</span>, then it will be
+      faster to query based upon the
+      <span class="snippet">State.name</span> value, rather than evaluating all
+      of the state properties for the
+      <span class="snippet">Production</span> nodes.
+    </p>
+    <p class="text">
+      How you refactor your graph to handle complex data will depend upon the
+      performance of the queries when your graph scales.
+    </p>
+    <p class="text center bold">Using Specific Relationships</p>
+    <p class="text">Relationships in the graph</p>
+    <p class="text">
+      Neo4j as a native graph database is implemented to traverse relationships
+      quickly. In some cases, it is more performant to query the graph based
+      upon relationship types, rather than properties in the nodes.
+    </p>
+    <p class="text">Let’s look at a new use case:</p>
+    <p class="text">
+      Use case #12: What movies did an actor act in for a particular year?
+    </p>
+    <p class="text">We can execute this query with the current graph:</p>
+    <pre class="code">
+MATCH (p:Actor)-[:ACTED_IN]-(m:Movie)
+WHERE p.name = 'Tom Hanks' AND
+m.released STARTS WITH '1995'
+RETURN m.title AS Movie
+    </pre>
+    <p class="text">
+      It returns the movie, <span class="snippet">Apollo 13</span>:
+    </p>
+    <p class="text">
+      What if Tom Hanks acted in 50 movies in the year 1995? The query would
+      need to retrieve all movies that Tom Hanks acted in and then check the
+      value of the released property. What if Tom Hanks acted in a total of 1000
+      movies? All of these Movie nodes would need to be evaluated.
+    </p>
+    <p class="text">And here is another new use case:</p>
+    <p class="text">
+      Use case #13: What actors or directors worked in a particular year?
+    </p>
+    <p class="text">Again, we can execute this query with the current graph:</p>
+    <pre class="code">
+MATCH (p:Person)--(m:Movie)
+WHERE  m.released STARTS WITH '1995'
+RETURN DISTINCT p.name as `Actor or Director`
+   </pre
+    >
+    <p class="text">It returns Tom Hanks and Martin Scorsese:</p>
+    <p class="text">
+      This query is even worse for performance because in order to return
+      results, it must retrieve all Movie nodes. You can imagine, if the graph
+      contained millions of movies, it would be a very expensive query.
+    </p>
+    <p class="text center bold">Refactoring to specialize relationships</p>
+    <p class="text">
+      Relationships are fast to traverse and they do not take up a lot of space
+      in the graph. In the previous two queries, the data model would benefit
+      from having specialized relationships between the nodes.
+    </p>
+    <p class="text">
+      So, for example, in addition to the
+      <span class="snippet">ACTED_IN</span> and
+      <span class="snippet">DIRECTED</span> relationships, we add relationships
+      that have year information.
+    </p>
+    <p class="text">
+      ACTED_IN_1992
+      <br />
+      ACTED_IN_1993
+      <br />
+      DIRECTED_1992
+      <br />
+      DIRECTED_1995
+    </p>
+    <p class="text">
+      At first, it seems like a lot of relationships for a large, scaled movie
+      graph, but if the latest two new queries are important use cases, it is
+      worth it.
+    </p>
+    <p class="text">This is what our instance model will now look like:</p>
+    <div class="devPic">
+      <img src="./assets/instance-specialize-acted-directed.png" alt="" />
+    </div>
+    <p class="text">
+      So sometimes in order to efficiently extend a graph's specificity, it can
+      be beneficial to increase the number of relations.
+    </p>
+    <p class="text">
+      In most cases where we specialize relationships, we keep the original
+      generic relationships as existing queries still need to use them.
+    </p>
+    <p class="text">
+      The code to refactor the graph to add these specialized relationships uses
+      the
+      <span class="snippet">
+        <a href="https://neo4j.com/developer/neo4j-apoc/" target="_blank"
+          >APOC</a
+        >
+      </span>
+      library.
+    </p>
+    <p class="text">
+      This is the code to refactor the
+      <span class="snippet">ACTED_IN</span> relationships in the graph that you
+      will execute in the next Challenge:
+    </p>
+    <pre class="code">
+MATCH (n:Actor)-[r:ACTED_IN]->(m:Movie)
+CALL apoc.merge.relationship(n,
+                              'ACTED_IN_' + left(m.released,4),
+                              {},
+                              m ) YIELD rel
+RETURN COUNT(*) AS `Number of relationships merged`
+    </pre>
+    <p class="text">
+      It has a <span class="snippet"> apoc.merge.relationship </span>
+      <span class="snippet">
+        <a
+          href="https://neo4j.com/docs/operations-manual/current/reference/procedures/#_procedure_descriptions"
+          target="_blank"
+          >procedure</a
+        >
+      </span>
+      that allows you to dynamically create relationships in the graph. It uses
+      the 4 leftmost characters of the released property for a Movie node to
+      create the name of the relationship.
+    </p>
+    <p class="text">
+      As a result of the refactoring, the previous two queries can be rewritten
+      and will definitely perform better for a large graph:
+    </p>
+    <p class="text">Here is the rewrite of the first query:</p>
+    <pre class="code">
+MATCH (p:Actor)-[:ACTED_IN_1995]-(m:Movie)
+WHERE p.name = 'Tom Hanks'
+RETURN m.title AS Movie
+    </pre>
+    <p class="text">
+      For this query the specific relationship is traversed, but fewer Movie
+      nodes are retrieved.
+    </p>
+    <p class="text">And here is how we rewrite the second query:</p>
+    <pre class="code">
+MATCH (p:Person)-[:ACTED_IN_1995|DIRECTED_1995]-()
+RETURN p.name as `Actor or Director`
+   </pre
+    >
+    <p class="text">
+      For this query, because the year is in the relationship type, we do not
+      have to retrieve any Movie nodes.
+    </p>
+    <p class="text">
+      Here's a query example that will create a new set of relationships based
+      on the year of the <span class="snippet">released</span> property of each
+      node (e.g. Apollo 13 was released in 1995 so it will create a
+      <span class="snippet">ACTED_IN_1995</span> relationship between the movie
+      and any actor).
+    </p>
+    <pre class="code">
+MATCH (n:Actor)-[:ACTED_IN]->(m:Movie)
+CALL apoc.merge.relationship(n,
+  'ACTED_IN_' + left(m.released,4),
+  {},
+  {},
+  m ,
+  {}
+) YIELD rel
+RETURN count(*) AS `Number of relationships merged`;
+    </pre>
+    <p class="text">This query will create 5 relationships.</p>
+    <p class="text center bold">Intermediate nodes</p>
+    <p class="text">
+      You sometimes find cases where you need to connect more data to a
+      relationship than can be fully captured in the properties. In other words,
+      you want a relationship that connects more than two nodes. Mathematics
+      allows this, with the concept of a hyperedge. This is impossible in Neo4j,
+      but a solution is to create intermediate nodes.
+    </p>
+    <p class="text">You create intermediate nodes when you need to:</p>
+    <p class="text">
+      . Connect more than two nodes in a single contex
+      <br />
+      . Hyperedges (n-ary relationships)
+      <br />
+      . Relate something to a relationship.
+      <br />
+      . Share data in the graph between entities.
+    </p>
+    <p class="text">
+      These three use cases are used to make the graphs relationships more
+      meaningful and sharable between nodes.
+    </p>
+    <p class="text center bold">Example: Need for intermediate nodes</p>
+    <div class="devPic">
+      <img src="./assets/before-person-company.png" alt="" />
+    </div>
+    <p class="text">
+      Here we have the <span class="snippet">WORKS_AT</span> hyperedge that has
+      the from and to properties, but we need to associate the role with this
+      period of work. In Neo4j, there is no way to create a relationship that
+      connects a relationship to a third node. Neo4j relationships can only
+      connect two nodes.
+    </p>
+    <p class="text center bold">Adding an intermediate node to the model</p>
+    <div class="devPic">
+      <img src="./assets/after-person-company.png" alt="" />
+    </div>
+    <p class="text">
+      The solution is to replace the hyperedge with a connection point node.
+      Since nodes are connection points, you simply create a node in the middle
+      of the hyperedge.
+    </p>
+    <p class="text">
+      In this example, we replace the
+      <span class="snippet">WORKS_AT</span> hyperedge with an
+      <span class="snipept">Employment</span>
+      intermediate node. This provides a connection point that allows us to
+      connect any amount of information to Mary's term of employment at Acme. In
+      addition, Person nodes can have a shared Role or Company, and allow us to
+      very easily trace either the full details of a single person's career, or
+      the overlap between different individuals.
+    </p>
+    <p class="text center bold">Example: Intermediate nodes for sharing dat</p>
+    <p class="text">
+      In many cases relationships can share data which enables your graph to
+      contain less duplicate data.
+    </p>
+    <p class="text">Here is what the graph looks like before we refactor it:</p>
+    <div class="devPic">
+      <img src="./assets/before-email.png" alt="" />
+    </div>
+    <p class="text">
+      Intermediate nodes also allow you to deduplicate information. We mentioned
+      a similar principle when we discussed
+      <span class="snippet">fanout</span> where splitting a property onto its
+      own node allows you to reference it via a relationship instead of a
+      repeated property.
+    </p>
+    <div class="devPic">
+      <img src="./assets/after-email.png" alt="" />
+    </div>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      So when multiple 'cases' are centered around a single element (in this
+      case the <span class="snippet">Email</span> ), we can add an extra
+      <span class="snippet">node</span>
+      (for that central element, in this case
+      <span class="snippet">Email</span> ) and create
+      <span class="snippet">relations</span> pointing to it (and thus removing
+      duplicate relationship properties)
+    </p>
+    <p class="text">
+      In this case, the Email intermediate node spares us having to repeat the
+      email content on every single relationship.
+    </p>
+    <p class="text center bold">Intermediate nodes for the movie graph?</p>
+    <p class="text">
+      Here is our current instance model for the movie graph we have been
+      working with:
+    </p>
+    <div class="devPic">
+      <img src="./assets/instance-specialize-rated.png" alt="" />
+    </div>
+    <p class="text">
+      In looking at the data, we can see that if we were able to perform further
+      analysis of the <span class="snippet">roles</span>
+      <span class="snippet">property</span> of the
+      <span class="snippet">ACTED_IN</span>
+      <span class="snippet">relationships</span>, we would be able to answer
+      questions about how the same role is used in multiple movies. Furthermore,
+      we might want to analyze how different roles interact with each other,
+      even across different movies.
+    </p>
+    <p class="text">
+      This is the refactored graph model (this way we would add an
+      <span class="snippet">intermediate node</span> represeting the
+      <span class="snippet">role</span> property of the
+      <span class="snippet">ACTED_IN</span>
+      <span class="snippet">relationship</span>):
+    </p>
+    <div class="devPic">
+      <img src="./assets/instance-add-role-node.png" alt="" />
+    </div>
+    <p class="text">
+      We add a <span class="snippet">Role</span> node using the
+      <span class="snippet">role</span>
+      <span class="snippet">property</span> from the
+      <span class="snippet">ACTED_IN</span>
+      <span class="snippet">relationship</span>.
+    </p>
+    <p class="text">
+      The query should:
+
+      <br />
+      1. Find an actor that acted in a Movie
+      <span class="snippet">(MATCH (a:Actor)-[r:ACTED_IN]→(m:Movie)</span> )
+      <br />
+      2. Create (using <span class="snippet">MERGE</span> ) a Role node setting
+      it's name to the role in the
+      <span class="snippet">ACTED_IN</span> relationship.
+      <br />
+      3. Create (using <span class="snippet">MERGE</span> ) the
+      <span class="snippet">PLAYED</span>
+      relationship between the Actor and the Role nodes.
+      <br />
+      4. Create (using <span class="snippet">MERGE</span> ) the
+      <span class="snippet">IN_MOVIE</span> relationship between the Role and
+      the Movie nodes.
+    </p>
+    <p class="text">
+      The query will create 5 nodes and 10 relationships in this case:
+    </p>
+    <pre class="code">
+// Find an actor that acted in a Movie
+MATCH (a:Actor)-[r:ACTED_IN]->(m:Movie)
+
+// Create a Role node
+MERGE (rol:Role {name: r.role})
+
+// Create the PLAYED relationship
+// relationship between the Actor and the Role nodes.
+MERGE (a)-[:PLAYED]->(rol)
+
+// Create the IN_MOVIE relationship between
+// the Role and the Movie nodes.
+MERGE (x)-[:IN_MOVIE]->(m)
+    </pre>
+
+    <!-- new Module -->
+    <p class="text center bold">#### Importing CSV data into Neo4j ###</p>
+
+    <p class="text center bold">What does importing data mean?</p>
+
+    <p class="text">
+      When you import data into Neo4j, you typically have a set of source files
+      that were obtained from:
+    </p>
+
+    <p class="text">
+      . RDBMS
+      <br />
+      . WEB APIs
+      <br />
+      . Public data directories
+      <br />
+      . BI Tools
+      <br />
+      . Excel
+    </p>
+
+    <p class="text">
+      The file types are typically
+      <span class="snippet">CSV, JSON, XML, etc.</span>
+    </p>
+
+    <p class="text">
+      In Neo4j we can import <span class="snippet">CSV</span> data as
+      <span class="snippet">nodes</span>,
+      <span class="snippet">relationships</span>, and their
+      <span class="snippet">properties</span>.
+      <span class="snippet">Cypher</span> has a built-in clause,
+      <span class="snippet">LOAD CSV</span> for importing CSV files. If you have
+      a <span class="snippet">JSON</span> or
+      <span class="snippet">XML</span> file, you must use the
+      <span class="snippet">APOC</span> library to import the data, but you can
+      also import <span class="snippet">CSV</span> with
+      <span class="snippet">APOC</span>. And the
+      <span class="snippet">Neo4j Data Importer</span> enables you to import
+      <span class="snippet">CSV</span> data without writing any
+      <span class="snippet">Cypher</span> code.
+    </p>
+
+    <p class="text">
+      The data in the source files may contain more data than what you need in
+      your graph. There may not be a 1-1 mapping of the data in a
+      <span class="snippet">CSV</span> file to what you would use as a
+      <span class="snippet">node</span> in a graph data model. In addition, the
+      data in the source files may represent data types that are not supported
+      in Neo4j or specified in the data model you are implementing. Some data in
+      the source files may need to be transformed into the appropriate types.
+    </p>
+
+    <p class="text">
+      The types of data that you can store as properties in Neo4j include:
+    </p>
+
+    <p class="text">
+      . String
+      <br />
+      . Long (integer values)
+      <br />
+      . Double (decimal value)
+      <br />
+      . Boolean
+      <br />
+      . Date/Time
+      <br />
+      . Point (spatial)
+      <br />
+      . StringArray (comma separated list of strings)
+      <br />
+      . LongArray (comma separated list of integer values)
+      <br />
+      . DoubleArray (comma separated list of decimal values)
+    </p>
+
+    <p class="text">
+      After you understand the source data you have to work as well as the graph
+      data model you will be implementing, you can import the data into Neo4j.
+      There are two ways that you can import CSV data into Neo4j that you will
+      learn in this course:
+    </p>
+    <p class="text">1. Using the Neo4j Data Importer.</p>
+    <p class="text">2. Writing Cypher code to perform the import.</p>
+
+    <p class="text">
+      In both cases, the import involves reading the source data and using it to
+      create nodes, relationships, and properties in the graph.
+    </p>
+
+    <p class="text center bold">Requirements for importing CSV data</p>
+
+    <p class="text">
+      You must have one or more <span class="snippet">CSV</span> files that
+      represent the nodes and relationships that will be created in the graph.
+      You must also have an existing
+      <span class="snippet">Neo4j DBMS</span> that is started. You typically
+      start with a graph that has nothing in it.
+    </p>
+
+    <p class="text center bold">Steps for preparing for importing data</p>
+    <p class="text">
+      . Understand the data in the source CSV files.
+      <br />
+      . Inspect and clean (if necessary) the data in the source data files.
+      <br />
+      . Create or understand the graph data model you will be implementing
+      during the import.
+    </p>
+
+    <p class="text center bold">Understanding the Source Data</p>
+    <p class="text">CSV file structure</p>
+    <p class="text">
+      A CSV file represents rows of data that could be exported from relational
+      and other databases, Web APIs, and other sources. When you are given CSV
+      files, you must determine:
+    </p>
+    <p class="text">
+      . Whether the CSV file will have header information, describing the names
+      of the fields.
+      <br />
+      . What the delimiter will be for the fields in each row.
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      Including headers in the CSV file reduces syncing issues and is a
+      recommended Neo4j best practice.
+    </p>
+
+    <p class="text center bold">Example of CSV files</p>
+    <div class="devPic">
+      <img src="./assets/with-without-headers.png" alt="" />
+    </div>
+
+    <p class="text">
+      In these examples, the comma (<span class="snippet">,</span> ) is the
+      field terminator. This is the default that
+      <span class="snippet">Cypher</span> uses. If the source
+      <span class="snippet">CSV</span> files use a different field terminator,
+      you must specify the <span class="snippet">FIELDTERMINATOR</span> in your
+      Cypher <span class="snippet">LOAD CSV</span> clause.
+    </p>
+
+    <p class="text center bold">Normalized data</p>
+
+    <p class="text">
+      Data normalization is common in relational models. This enables you to
+      have <span class="snippet">CSV</span> files that correspond to a
+      relational table where an <span class="snippet">ID</span> is used to
+      identify the relationships.
+    </p>
+
+    <p class="text">
+      Here is an example where we have normalized data for people, movies, and
+      roles:
+    </p>
+
+    <div class="devPic">
+      <img src="./assets/normalized-data.png" alt="" />
+    </div>
+
+    <p class="text">
+      Notice that the <span class="snippet">people.csv</span> file has a unique
+      <span class="snippet">ID</span> for every person and the
+      <span class="snippet"> movies1.csv</span> file has a unique
+      <span class="snippet">ID</span> for every movie. The
+      <span class="snippet">roles.csv</span> file is used to relate a person to
+      a movie and provide the characters. This is the roles data that could be
+      used to create the <span class="snippet">:ACTED_IN</span> relationship
+      that you have seen in the Movie graph.
+    </p>
+
+    <p class="text center bold">De-normalized data</p>
+
+    <p class="text">
+      Here is an example where we have de-normalized data for the same dataset:
+    </p>
+
+    <div class="devPic">
+      <img src="./assets/denormalized-data.png" alt="" />
+    </div>
+
+    <p class="text">
+      With <span class="snippet">de-normalized</span> data, the data is
+      <span class="snippet">represented</span> by
+      <span class="snippet"> multiple rows</span> corresponding to the
+      <span class="snippet"> same entity</span>, which will be loaded as a node.
+      The difference, however, is that
+      <span class="snippet">de-normalized</span> data typically represents data
+      from multiple tables in the <span class="snippet">RDBMS</span>. For
+      example, the <span class="snippet">movie</span> and
+      <span class="snippet">person</span> data (including the ID) is repeated in
+      multiple rows in the file, but a row represents a particular actor's role
+      in a particular movie. That is, a Movie and Person data will be
+      represented in multiple rows, but an actor's role will be represented by a
+      single row.
+    </p>
+
+    <p class="text center bold">IDs must be unique</p>
+
+    <p class="text">
+      When you load data from <span class="snippet">CSV</span> files, you rely
+      heavily upon the <span class="snippet">IDs</span> specified in the file. A
+      <span class="snippet">Neo4j</span> best practice is to use an
+      <span class="snippet">ID</span> as a unique property value for each node.
+      If the <span class="snippet">IDs</span> in your
+      <span class="snippet">CSV</span> file are not unique for the same entity
+      (node), you will have problems when you load the data and try to create
+      relationships between existing nodes.
+    </p>
+
+    <div class="devPic">
+      <img src="./assets/unique-ids.png" alt="" />
+    </div>
+
+    <p class="text center bold">Inspecting the Data for Import</p>
+
+    <p class="text">
+      Before you start working with the source CSV data, you must understand how
+      delimiters, quotes, and special characters are used for each row.
+    </p>
+
+    <p class="text">
+      If the headers do not correspond to the data representing the fields, you
+      cannot load the data. You must also know whether you can assume the use of
+      the <span class="snippet">default delimiter</span> "<span class="snippet"
+        >,</span
+      >
+      ", otherwise, you will need to use the
+      <span class="snippet">FIELDTERMINATOR</span> keyword along with
+      <span class="snippet">LOAD CSV</span>
+      when you use <span class="snippet">Cypher</span> to import the data.
+    </p>
+
+    <p class="text">
+      You should have a local copy of the <span class="snippet">CSV</span> files
+      so you can inspect the data in them. In fact, when using the Neo4j Data
+      Importer you will need a local copy of the CSV files.
+    </p>
+
+    <p class="text bold">Step 1: Acquire or download the CSV</p>
+    <p class="text">
+      If the CSV file is a URL, you can simply download it in a Web browser and
+      save it locally.
+    </p>
+    <p class="text bold">Step 2: Determine the delimiter</p>
+    <p class="text">
+      You should view the contents (at least the beginning rows) of the file to
+      determine the delimiter.
+    </p>
+    <p class="text">
+      For example, here is what the movies.csv file looks like in an editor:
+    </p>
+    <div class="devPic">
+      <img src="./assets/file-in-editor.png" alt="" />
+    </div>
+    <p class="text">
+      We can see that the <span class="snippet">CSV </span> file indeed has a
+      header row and the delimiter is a comma. It also looks like fields do not
+      have quotes around values that are strings.
+    </p>
+    <p class="text bold">Step 3: Determine if headers match fields</p>
+    <p class="text">
+      Depending on the length of each row, it may be hard to determine if the
+      values for fields look consistent. With a
+      <span class="snippet">CSV</span> file, you can open it in a spreadsheet to
+      understand the data a little better.
+    </p>
+    <p class="text">
+      Here is what the movies.csv file looks like in a spreadsheet:
+    </p>
+    <div class="devPic">
+      <img src="./assets/file-in-sheet.png" alt="" />
+    </div>
+    <p class="text">
+      Here we see that the data in the rows corresponds to the header row.
+    </p>
+    <p class="text">
+      <span class="snippet">Important!</span>: By default all of these fields in
+      each row will be read in as string types.
+    </p>
+    <p class="text">
+      Notice also that for this <span class="snippet">CSV</span> file, a
+      <span class="snippet">multi-value </span> field such as
+      <span class="snippet">countries</span> or
+      <span class="snippet">languages</span> has values delimited by the "<span
+        class="snippet"
+        >|</span
+      >" character.
+    </p>
+    <p class="text bold">Step 4: Determine if all data is readable</p>
+    <p class="text">
+      You must make sure that all records can be read from the
+      <span class="snippet">CSV</span> file without error.
+    </p>
+    <p class="text">
+      Here is the <span class="snippet">Cypher</span> code that will read all
+      data in a <span class="snippet">CSV</span> file that contains headers and
+      is specified as a URL:
+    </p>
+    <pre class="code">
+LOAD CSV WITH HEADERS
+FROM 'https://data.neo4j.com/importing/ratings.csv'
+AS row
+RETURN count(row)
+    </pre>
+    <p class="text">
+      It will read every row from the <span class="snippet">CSV</span> file and
+      will return the number of rows successfully read. If an error occurs
+      during the reading of the <span class="snippet">CSV</span> file, an error
+      will be raised as shown here when we attempt to read the
+      <span class="snippet">test.csv</span> file.
+    </p>
+    <div class="devPic">
+      <img src="./assets/error-reading-csv.png" alt="" />
+    </div>
+    <p class="text">
+      In this case, you would need to investigate why the error occurred and fix
+      the <span class="snippet">CSV</span> file.
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text bold">Step 5: Is the data clean?</p>
+    <p class="text">
+      Here are some additional things that you will check before you begin
+      working with the data, depending on the data:
+    </p>
+    <p class="text">
+      . Are quotes used correctly?
+      <br />
+      . If an element has no value will an empty string be used?
+      <br />
+      Are UTF-8 prefixes used (for example \uc)?
+      <br />
+      . Do some fields have trailing spaces?
+      <br />
+      . Do the fields contain binary zeros?
+      <br />
+      . Understand how lists are formed (default is to use colon(:) as the
+      separator).
+      <br />
+      . Any obvious typos?
+    </p>
+
+    <p class="text center bold">Understanding the Data Model</p>
+    <p class="text bold">Movie data model</p>
+    <p class="text">For this exercise we will use the below graph data model</p>
+    <div class="devPic">
+      <img src="./assets/movie-data-model-import-csv.png" alt="" />
+    </div>
+    <p class="text">Here we see the node labels that will be created:</p>
+    <p class="text">
+      . Person
+      <br />
+      . Actor
+      <br />
+      . Director
+      <br />
+      . Movie
+      <br />
+      . Genre
+      <br />
+      . User
+    </p>
+
+    <p class="text">And we have the relationships:</p>
+    <p class="text">
+      . <span class="snippet">ACTED_IN</span> (with a
+      <span class="snippet">role</span> property)
+      <br />
+      . <span class="snippet">DIRECTED</span> (with
+      <span class="snippet">role</span> property)
+      <br />
+      . <span class="snippet">RATED</span> (with
+      <span class="snippet">rating</span> and
+      <span class="snippet">timestamp</span> properties)
+      <br />
+      . IN_GENRE
+    </p>
+    <p class="text">
+      Also notice that the <span class="snippet">nodes</span> have a number of
+      <span class="snippet">properties</span>, along with the type of data that
+      will be used for each property. It is important that you adhere to the
+      property types defined in the data model.
+    </p>
+    <p class="text">
+      Each node with a given label has a property that uniquely identifies the
+      node.
+    </p>
+    <p class="text">
+      <span class="snippet">Movie</span> nodes use
+      <span class="snippet">movieId</span>.
+      <br />
+      <span class="snippet">Person</span> nodes use
+      <span class="snippet">tmdbId</span>.
+      <br />
+      <span class="snippet">User</span> nodes use
+      <span class="snippet">userId</span>.
+      <br />
+      <span class="snippet">Genre</span> nodes use
+      <span class="snippet">name</span>.
+    </p>
+
+    <p class="text center bold">Using the Neo4j Data Importer</p>
+    <p class="text bold">What is the Neo4j Data Importer</p>
+    <p class="text">
+      <span class="snippet">Neo4j Data Importer</span> is a graph app the allows
+      you to import <span class="snippet">CSV</span> files from your local
+      system into the graph. With this graph app, you can examine the
+      <span class="snippet">CSV</span> file headers, and map them to nodes and
+      relationships in a <span class="snippet">Neo4j</span> graph. You connect
+      to a running <span class="snippet">Neo4j</span>
+      <span class="snippet">DBMS</span> to perform the import. The benefit of
+      the Data Importer is that you need not know Cypher to load the data.
+    </p>
+    <p class="text">
+      It is useful for loading small to medium
+      <span class="snippet">CSV</span> files that contain fewer that 1M rows.
+    </p>
+    <p class="text">
+      Data that is imported into the graph can be interpreted as
+      <span class="snippet">string</span>, <span class="snippet">integer</span>,
+      <span class="snippet">float</span>, <span class="snippet">datetime</span>,
+      or <span class="snippet">boolean</span> data. If a field in a row needs to
+      be stored in the graph as a list, it will be by default stored in the
+      graph as a <span class="snippet">string</span> and you will need to
+      post-process the graph after the import.
+    </p>
+
+    <p class="text bold">NEO4J DATA IMPORTER VERSIONS</p>
+    <p class="text">Neo4j Data Importer Early Access is evolving rapidly.</p>
+    <p class="text">
+      Here are the URLs for launching the latest version of Neo4j Data Importer:
+    </p>
+
+    <p class="text">
+      For connecting to a remote DBMS:
+      <span class="snippet">
+        <a
+          href="https://data-importer.neo4j.io/?acceptTerms=true"
+          target="_blank"
+          >https://data-importer.neo4j.io/?acceptTerms=true</a
+        >
+      </span>
+    </p>
+    <p class="text">
+      For connecting to a remote DBMS:
+      <span class="snippet">
+        <a
+          href="https://data-importer.graphapp.io/?acceptTerms=true"
+          target="_blank"
+          >https://data-importer.graphapp.io/?acceptTerms=true</a
+        >
+      </span>
+    </p>
+    <p class="text">
+      For connecting to local DBMS:
+      <span class="snippet">
+        <a
+          href="
+        http://data-importer.graphapp.io/?acceptTerms=true"
+          target="_blank"
+        >
+          http://data-importer.graphapp.io/?acceptTerms=true</a
+        >
+      </span>
+    </p>
+    <p class="text bold">Requirements for using the Data Importer</p>
+    <p class="text">
+      . You must use <span class="snippet">CSV</span> files for import.
+      <br />
+      . <span class="snippet">CSV</span> files must reside on your local system
+      so you can load them into the graph app.
+      <br />
+      . <span class="snippet">CSV</span> data must be clean.
+      <br />
+      . <span class="snippet">IDs</span> must be unique for all nodes you will
+      be creating.
+      <br />
+      . The <span class="snippet">CSV</span> file must have headers.
+      <br />
+      . The <span class="snippet">DBMS</span> must be started.
+    </p>
+
+    <p class="text bold">Steps for using the Data Importer</p>
+
+    <p class="text">
+      Before you do the import, you should have a starting idea of how your
+      graph data model will be implemented. The UI for the Data Importer uses
+      the same UI elements that are used in the
+      <span class="snippet">
+        <a href="https://arrows.app/" target="_blank">Arrows App</a> </span
+      >.
+    </p>
+    <p class="text center bold">Steps:</p>
+    <p class="text bold">
+      Step 1: Placing the <span class="snippet">CSV</span> file(s) on your local
+      system and ensure they have headers and are clean.
+    </p>
+    <p class="text">
+      You will examine the files and make sure they have headers and are
+      "clean", as you learned about in an earlier lesson.
+    </p>
+    <p class="text bold">Step 2: Opening the Neo4j Data Importer</p>
+    <p class="text">
+      In the next Challenge, you will open the Data Importer app from any Web
+      browser using this URL:
+      <span class="snippet">
+        <a
+          href="https://data-importer.neo4j.io/versions/0.7.0/?acceptTerms=true"
+          target="_blank"
+          >https://data-importer.neo4j.io/versions/0.7.0/?acceptTerms=true</a
+        >
+      </span>
+    </p>
+    <div class="devPic">
+      <img src="./assets/data-importer.png" alt="" />
+    </div>
+    <p class="text">
+      When you open <span class="snippet">Data Importer</span>, it asks you to
+      connect to a running DBMS. This is where you provide the WebSocket Bolt
+      URL and password for the sandbox instance used for this course.
+    </p>
+    <div class="devPic">
+      <img src="./assets/connect.png" alt="" />
+    </div>
+    <p class="text bold">
+      Step 3: Loading the <span class="snippet">CSV files</span> on your local
+      system into the graph app
+    </p>
+    <p class="text">
+      You will either drag the <span class="snippet">CSV files</span> into the
+      Files pane on the left or use Browse to select them as shown here.
+    </p>
+    <div class="devPic">
+      <img src="./assets/select-files.png" alt="" />
+    </div>
+    <p class="text">
+      Here is what you will see after you have selected the files for import:
+    </p>
+    <div class="devPic">
+      <img src="./assets/files-selected.png" alt="" />
+    </div>
+    <p class="text bold">
+      Step 4: Examining the CSV header names used in the CSV files
+    </p>
+    <p class="text">
+      You will examine the first rows of each CSV file to determine:
+      <br />
+      . Files to be used to create nodes.
+      <br />
+      . Files to be used to create relationships.
+      <br />
+      . How IDs are used to uniquely identify data.
+    </p>
+    <p class="text bold">Step 5: Adding a node</p>
+    <p class="text">
+      You will:
+      <br />
+      1. Add the node in the UI by clicking the Add Node icon.
+    </p>
+    <div class="devPic">
+      <img src="./assets/add-node.png" alt="" />
+    </div>
+    <p class="text">
+      2. Specify a label for the node in the Mapping Details pane.
+    </p>
+    <div class="devPic">
+      <img src="./assets/add-person-label.png" alt="" />
+    </div>
+    <p class="text">
+      3. Select the CSV file to use in the Mapping Details pane.
+    </p>
+    <div class="devPic">
+      <img src="./assets/select-csv-file.png" alt="" />
+    </div>
+    <p class="text bold">Step 6: Defining mapping details for the node</p>
+    <p class="text">You will:</p>
+    <p class="text">
+      1. Specify properties for the node (select Add from File where we select
+      all fields).
+    </p>
+    <div class="devPic">
+      <img src="./assets/add-all-properties.png" alt="" />
+    </div>
+    <p class="text">
+      2. If you want a property to use a different name or type, edit the
+      property.
+    </p>
+    <div class="devPic">
+      <img src="./assets/modify-property-name.png" alt="" />
+    </div>
+    <p class="text">3. Specify the unique ID property for the node.</p>
+    <div class="devPic">
+      <img src="./assets/select-unique-id.png" alt="" />
+    </div>
+    <p class="text">
+      After you have mapped properties, they will be marked in green in the left
+      panel:
+    </p>
+    <div class="devPic">
+      <img src="./assets/person-properties-mapped.png" alt="" />
+    </div>
+    <p class="text bold">Step 7: Creating the relationships between nodes</p>
+    <p class="text">You will:</p>
+    <p class="text">
+      1. Add the relationship in the UI by dragging the edge of a node to itself
+      or another node.
+    </p>
+    <div class="devPic">
+      <img src="./assets/add-relationship.png" alt="" />
+    </div>
+    <p class="text">
+      2. Specify a type for the relationship in the Mapping Details pane.
+    </p>
+    <div class="devPic">
+      <img src="./assets/add-DIRECTED-label.png" alt="" />
+    </div>
+    <p class="text">
+      3. Select the CSV file to use in the Mapping Details pane.
+    </p>
+    <div class="devPic">
+      <img src="./assets/add-DIRECTED-file.png" alt="" />
+    </div>
+    <p class="text bold">
+      Step 8: Defining the mapping details for the relationship
+    </p>
+    <p class="text">You will:</p>
+    <p class="text">
+      1. In the Mapping Details pane, specify the from and to unique property
+      IDs to use.
+    </p>
+    <div class="devPic">
+      <img src="./assets/DIRECTED-IDs.png" alt="" />
+    </div>
+    <p class="text">
+      2. If applicable, add properties for the relationship from the file
+      (optional).
+    </p>
+    <p class="text">
+      3. Modify the names or types of the properties (if required by you data
+      model).
+    </p>
+    <p class="text">4. Confirm CSV in the left panel is all set for import.</p>
+    <div class="devPic">
+      <img src="./assets/confirm-DIRECTED-done.png" alt="" />
+    </div>
+    <p class="text bold">Step 9: Performing the import</p>
+    <p class="text">You will:</p>
+    <p class="text">1. Import the data.</p>
+    <p class="text">2. View the import results.</p>
+    <p class="text bold">Step 10: Viewing the imported data in Neo4j Browser</p>
+    <p class="text">
+      You will view the imported data in Neo4j Browser.
+      <br />
+      If you have de-normalized data, you will need to perform a
+      <span class="snippet">multi-pass import</span>. That is, you cannot create
+      multiple nodes and relationship types from a single CSV file.
+    </p>
+    <p class="text bold">Other features of the Neo4j Data Importer</p>
+    <p class="text">
+      You can import or export your mappings to a
+      <span class="snippet">JSON</span> file or to a
+      <span class="snippet">ZIP</span> file if you also want to include the
+      <span class="snippet">CSV</span>
+      files.
+    </p>
+    <!--     <p class="text">#bestPractice</p> -->
+  </body>
+</html>
