@@ -3463,6 +3463,2057 @@ RETURN count(row)
       <span class="snippet">CSV</span>
       files.
     </p>
+
+    <p class="text center bold">Post-import Steps</p>
+    <p class="text">Results of <span class="snippet">Data Importer</span></p>
+    <p class="text">
+      After you have run the import using the
+      <span class="snippet">Data Importer</span>, it is important that you
+      review the graph results.
+    </p>
+    <p class="text">
+      The most important behavior of the
+      <span class="snippet">Data Importer</span> you must understand is that
+      property values are written as <span class="snippet">strings</span>,
+      <span class="snippet">Longs</span>
+      (integer values), <span class="snippet">Doubles</span> (decimal values),
+      <span class="snippet">Datetimes</span>, or
+      <span class="snippet">Booleans</span>.
+    </p>
+    <p class="text">
+      In addition, the <span class="snippet">Data Importer</span> creates
+      uniqueness constraints on all nodes based upon the unique ID you specified
+      for each node
+    </p>
+    <p class="text bold">Moving toward the target data model</p>
+    <p class="text">
+      Again, here is our data model we would like to end up with:
+    </p>
+    <div class="devPic">
+      <img src="./assets/movie-data-model-import-csv.png" alt="" />
+    </div>
+    <p class="text">
+      In this target data model we see:
+      <br />
+      Some properties should be lists of strings.
+      <br />
+      We need Genre nodes in our graph.
+      <br />
+      We need Actor and Director labels.
+    </p>
+    <p class="text">
+      For example, here is what a current Movie node’s properties look like as a
+      result of the Data Importer:
+    </p>
+    <div class="devPic">
+      <img src="./assets/default-movie-properties.png" alt="" />
+    </div>
+    <p class="text">
+      Per our target model, we want to change how these properties are stored in
+      the graph for <span class="snippet">Movie</span> nodes:
+    </p>
+    <p class="text">
+      <span class="snippet">languages</span> to a list of strings
+      ["English","French:]
+    </p>
+    <p class="text">
+      <span class="snippet">countries</span> to a list of strings
+      ["Germany","USA"]
+    </p>
+    <p class="text">
+      <span class="snippet">genres</span> will not exist and will be used to
+      create <span class="snippet">Genre</span> nodes and their relationships to
+      Movie nodes.
+    </p>
+    <p class="bold text">Next steps</p>
+    <p class="text">
+      After having used the <span class="snippet">Data Importer</span> to import
+      the data, we need to use <span class="snippet">Cypher</span> to refactor
+      the imported data. Refactoring for this data model will involve:
+    </p>
+    <p class="text">
+      Transforming data types from string to multi-value list of strings.
+    </p>
+    <p class="text">
+      Adding the <span class="snippet">Actor</span> and
+      <span class="snippet">Director</span> labels to the Person nodes.
+    </p>
+    <p class="text">Adding more constraints per the graph data model.</p>
+    <p class="text">
+      Creating the <span class="snippet">Genre</span> nodes from the data in the
+      Movie nodes.
+    </p>
+
+    <p class="text center bold">Refactoring Imported Data</p>
+    <p class="text bold">Viewing Property Types Stored in the Graph</p>
+    <p class="text">Confirming types in the graph</p>
+    <p class="text">
+      <span class="snippet">Neo4j Browser</span> returns datetime properties as
+      strings and it is sometimes hard to determine what the type stored in the
+      graph is.
+    </p>
+    <p class="text">
+      For example, here we return the <span class="snippet">born</span> property
+      of five <span class="snippet">Person</span> nodes.
+    </p>
+    <div class="devPic">
+      <img src="./assets/return-new-born-property.png" alt="" />
+    </div>
+    <p class="text">
+      In <span class="snippet">Neo4j Browser</span>, the born property appears
+      like a string, but it is not a string. We can actually extract the year
+      from the property because it is a datetime:
+    </p>
+    <div class="devPic">
+      <img src="./assets/return-year-of-born-property.png" alt="" />
+    </div>
+    <p class="text">
+      As you move closer to the data model, you may want to confirm that the
+      properties in the graph represent the types in the data model.
+    </p>
+    <p class="text">
+      You can use this <span class="snippet">Cypher</span> code to show the
+      stored types for the node properties in the graph:
+    </p>
+    <pre class="code">
+CALL apoc.meta.nodeTypeProperties()
+YIELD nodeType, propertyName, propertyTypes
+    </pre>
+    <div class="devPic">
+      <img src="./assets/return-node-types.png" alt="" />
+    </div>
+    <p class="text">
+      And you can do the same type of investigation of types for relationship
+      properties:
+    </p>
+    <pre class="code">
+CALL apoc.meta.relTypeProperties()
+YIELD relType, propertyName, propertyTypes
+    </pre>
+    <div class="devPic">
+      <img src="./assets/return-rel-types.png" alt="" />
+    </div>
+    <p class="text center bold">Transforming Multi-value Properties</p>
+    <p class="text">What is a multi-value property?</p>
+    <p class="text">
+      A multi-value property is a property that can hold one or more values.
+      This type of data in <span class="snippet">Neo4j</span> is represented as
+      a <span class="snippet">list</span>. All values in a
+      <span class="snippet">list</span> must have the same type. For example:
+      <br />
+      . ["USA", "Germany", "France"]
+      <br />
+      . [100, 55, 4]
+    </p>
+    <p class="text bold">Multi-value properties in our data model</p>
+    <p class="text">
+      Our current data model defines lists for these properties:
+      <br />
+      . Movie: countries
+      <br />
+      . Movie: languages
+    </p>
+    <p class="text">
+      Because of the way that we imported the data, we have an additional
+      multi-value property, <span class="snippet">Movie</span>:
+      <span class="snippet">genres</span>. Although our data model does not
+      contain a genres property for <span class="snippet">Movie</span> nodes, we
+      will transform the data for this property as it will be a means to our
+      goal of creating the <span class="snippet">Genre</span> nodes in the graph
+      in a later transformation.
+    </p>
+    <p class="text">
+      All of these properties were imported as
+      <span class="snippet">strings</span> with data that looks as follows:
+    </p>
+    <div class="devPic">
+      <img src="./assets/multi-value-props.png" alt="" />
+    </div>
+    <p class="text">
+      Notice that for this particular set of CSV files, the "<span
+        class="snippet"
+        >|</span
+      >" character is specified as the separator.
+    </p>
+    <p class="text bold">Transforming list properties</p>
+    <p class="text">
+      Transforming multi-value fields as lists can be done as follows where we
+      use two <span class="snippet">Cypher</span> built-in functions to help us:
+    </p>
+    <pre class="code">
+MATCH (m:Movie)
+SET m.countries = split(coalesce(m.countries,""), "|"),
+m.languages = split(coalesce(m.languages,""), "|"),
+m.genres = split(coalesce(m.genres,""), "|")
+    </pre>
+    <p class="text">
+      <span class="snippet">coalesce()</span> returns an empty string if the
+      entry in <span class="snippet">m.countries</span> is
+      <span class="snippet">null</span>.
+      <span class="snippet">split()</span> identifies each element in the
+      multi-value field where the "<span class="snippet">|</span>" character is
+      the separator and create a list of each element.
+    </p>
+    <p class="text">So the resulting transformations will look like this:</p>
+    <div class="devPic">
+      <img src="./assets/transformed-lists.png" alt="" />
+    </div>
+    <p class="text bold">Checking the property types</p>
+    <p class="text">
+      Again, you can confirm that the property types for the three
+      <span class="snippet">Movie</span>
+      properties has been completed also by viewing the types again:
+    </p>
+    <div class="devPic">
+      <img src="./assets/check-string-array.png" alt="" />
+    </div>
+    <p class="text">
+      The three <span class="snippet">list</span> properties have been
+      transformed to the type <span class="snippet">StringArray</span>.
+    </p>
+    <p class="text center bold">Adding labels</p>
+    <p class="text bold">Moving toward the data model</p>
+    <p class="text">
+      Our data model has additional labels,
+      <span class="snippet">Actor</span> and
+      <span class="snippet">Director</span>.
+    </p>
+    <div class="devPic">
+      <img src="./assets/movie-data-model-import-csv.png" alt="" />
+    </div>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      Having these specific labels is a best practice so that key queries will
+      perform better, especially when the graph is large.
+    </p>
+    <p class="text">
+      We must transform the <span class="snippet">Person</span> nodes to have
+      these specific labels. If a person acted in a movie, then they will be
+      labeled as an <span class="snippet">actor</span>. If a person directed a
+      movie, they will be labeled as a <span class="snippet">director</span>.
+    </p>
+    <p class="text bold">Adding the labels</p>
+    <p class="text">
+      Here is the code that we can use the add the
+      <span class="snippet">Actor</span> label to all nodes that have the
+      <span class="snippet">ACTED_IN</span> relationship:
+    </p>
+    <pre class="code">
+MATCH (p:Person)-[:ACTED_IN]->()
+WITH DISTINCT p SET p:Actor
+    </pre>
+    <p class="text bold">Refactoring Properties as Nodes</p>
+    <p class="text">Final steps toward the data model</p>
+    <p class="text">
+      In order to improve query performance in a graph, we sometimes need to
+      refactor properties and turn them into nodes. Our target data model
+      contains <span class="snippet">Genre</span> nodes where each
+      <span class="snippet">Movie</span> node has an
+      <span class="snippet">IN_GENRE</span> relationship to one or more
+      <span class="snippet">Genre</span>
+      nodes.
+    </p>
+    <div class="devPic">
+      <img src="./assets/movie-data-model-import-csv.png" alt="" />
+    </div>
+    <p class="text">
+      Adding a uniqueness constraint for
+      <span class="snippet">Genre</span> nodes
+    </p>
+    <p class="text">
+      The <span class="snippet">Data Importer</span>, creates the uniqueness
+      constraints in the graph for the unique
+      <span class="snippet">IDs</span> specified when data was imported.
+    </p>
+    <p class="text">
+      We can view the constraints defined in the graph with the
+      <span class="snippet">SHOW CONSTRAINTS</span> command in
+      <span class="snippet">Neo4j Browser</span>:
+    </p>
+    <div class="devPic">
+      <img src="./assets/show-constraints.png" alt="" />
+    </div>
+    <p class="text">
+      Here we see that we have three constraints that were created for us by the
+      <span class="snippet">Data Importer</span>.
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      A best practice is to always have a
+      <span class="snippet">unique ID</span> for every type of node in the
+      graph. We want to also have a uniqueness constraint for the
+      <span class="snippet">Genre</span> nodes we will be creating in the graph.
+      Having a uniqueness constraint defined helps with performance when
+      creating nodes and also for queries. The
+      <span class="snippet">MERGE</span> clause looks up nodes using the
+      property value defined for the constraint. With a constraint, it is a
+      quick lookup and if the node already exists, it is not created.
+    </p>
+    <p class="text">
+      Here is the code we use to create this uniqueness constraint for the name
+      property of <span class="snippet">Genre</span> nodes:
+    </p>
+    <p class="text bold">
+      Creating the <span class="snippet">Genre</span> nodes from the
+      <span class="snippet">genres</span>
+      property of Movie nodes
+    </p>
+    <p class="text">
+      The next step is to retrieve all <span class="snippet">Movie</span> nodes
+      and use the values in the genres property to create the
+      <span class="snippet">Genre</span> node if it does not already exist and
+      point to it with the <span class="snippet">IN_GENRE</span> relationship.
+    </p>
+    <p class="text">Here is the code used to do this:</p>
+    <pre class="code">
+MATCH (m:Movie)
+UNWIND m.genres AS genre
+WITH m, genre
+MERGE (g:Genre {name:genre})
+MERGE (m)-[:IN_GENRE]->(g)
+    </pre>
+    <p class="text">
+      The <span class="snippet">UNWIND</span> clause expands the elements in
+      genres list for the node as rows. With this data, it creates the
+      <span class="snippet">Genre</span>
+      node using <span class="snippet">MERGE</span>. With
+      <span class="snippet">MERGE</span>, it only creates the node if it does
+      not already exist. Then it creates the
+      <span class="snippet">relationship</span> between the
+      <span class="snippet">Movie</span> node and the
+      <span class="snippet">Genre</span> node.
+    </p>
+    <p class="text bold">Removing the genres property</p>
+    <p class="text">
+      After you have created the <span class="snippet">Genre</span> nodes and
+      their relationships to the Movie nodes, you will simply remove the
+      <span class="snippet">genres</span>
+      property from the graph.
+    </p>
+    <pre class="code">
+MATCH (m:Movie)
+SET m.genres = null
+    </pre>
+    <p class="text bold">Confirming the final schema</p>
+    <p class="text">
+      Here we can view the visualization of the schema to confirm that it
+      matches our data mode
+    </p>
+    <div class="devPic">
+      <img src="./assets/db-schema-visualization.png" alt="" />
+    </div>
+    <p class="text center bold">Importing Large Datasets with Cypher</p>
+    <p class="text bold">Memory requirements for import</p>
+    <p class="text">
+      The <span class="snippet">Data Importer</span> can be used for small to
+      medium datasets containing less than <span class="snippet">1M</span> rows.
+      The <span class="snippet">Data Importer</span> is a generalized app that
+      creates all <span class="snippet">properties</span> in the graph as
+      <span class="snippet">strings</span>,
+      <span class="snippet">integers</span>,
+      <span class="snippet">decimals</span>,
+      <span class="snippet">datetimes</span>, or
+      <span class="snippet">boolean</span>, and you need to possibly
+      post-process or refactor the graph after the import. It is also designed
+      to handle a smaller memory footprint, so it may not be useful for all of
+      your data import needs.
+    </p>
+    <p class="text">
+      When using <span class="snippet">Cypher</span> statements for import, we
+      have control over the amount of memory used for the import. In
+      <span class="snippet">Cypher</span>, by default, the execution of code is
+      a <span class="snippet">single transaction</span>. In order to process
+      large CSV imports, we may need to break up the execution of the
+      <span class="snippet">Cypher</span> into
+      <span class="snippet">multiple transactions</span>.
+    </p>
+    <p class="text bold">Using a subquery for the import</p>
+    <p class="text">
+      We can use this code structure to import a large dataset:
+    </p>
+    <pre class="code">
+      CALL {
+        // add data to the graph for each row
+        }
+    </pre>
+    <p class="text">
+      If the <span class="snippet">CSV</span> data is too large, we may need to
+      modify as follows:
+    </p>
+    <pre class="code">
+LOAD CSV WITH HEADERS
+FROM 'https://xxx.com/xxx/large-file.csv'
+AS row
+CALL {
+  WITH row
+  // create data in the graph
+} IN TRANSACTIONS
+    </pre>
+    <p class="text bold">Planning for the import</p>
+    <p class="text">
+      One advantage of using <span class="snipept">Cypher</span> for loading
+      your <span class="snippet">CSV</span> data is that we can perform the
+      <span class="snippet">type transformations</span> and some of the
+      <span class="snippet"> "refactoring"</span> during the import. That is, we
+      can <span class="snippet">customize</span> how
+      <span class="snippet">property types</span> are managed so we need not do
+      any <span class="snippet">post-processing</span> after the load.
+    </p>
+    <p class="text">
+      We must inspect and possibly clean the data before you import it.
+    </p>
+    <p class="text">First we determine the number of rows in each file:</p>
+    <div class="devPic">
+      <img src="./assets/2-movie-data-count.png" alt="" />
+    </div>
+    <div class="devPic">
+      <img src="./assets/2-rating-data-count.png" alt="" />
+    </div>
+    <p class="text">
+      They do not exceed the <span class="snippet">1M</span> row limitation for
+      the <span class="snippet">Data Importer</span>, but you may run out of
+      memory during the import so we should yse
+      <span class="snippet">Cypher</span> to load these
+      <span class="snippet">CSV</span> files.
+    </p>
+    <p class="text bold">Planning the Movie, Genre, Person import</p>
+    <p class="text">
+      Next, we examine the fields in our first
+      <span class="snippet">CSV</span> file. Each row in the 2-movieData.csv
+      file represents either an <span class="snippet">Entity</span> or a
+      <span class="snippet">relationship</span> between two entities.
+    </p>
+    <p class="text bold">Entities</p>
+    <p class="text">
+      An <span class="snippet">Entity</span> row has a value of
+      <span class="snippet">Person</span> or <span class="snippet">Movie</span>,
+      where the <span class="snippet">Movie</span> rows have the
+      <span class="snippet">genre</span> data. We will continue to use these
+      unique <span class="snippet">IDs</span> for our
+      <span class="snippet">Movie</span>, <span class="snippet">Person</span>,
+      and <span class="snippet">Genre</span> nodes:
+      <br />
+      . Movie.movieId
+      <br />
+      . Person.tmdbId
+      <br />
+      . Genre.name
+    </p>
+    <p class="text">
+      Here is what the <span class="snippet">Movie</span> and
+      <span class="snippet">Person</span> entities look like in our
+      <span class="snippet">CSV</span> file:
+    </p>
+    <p class="text">
+      Here is what the <span class="snippet">Movie</span> and
+      <span class="snippet">Person</span> entities look like in our CSV file:
+    </p>
+    <div class="devPic">
+      <img src="./assets/movie-person-data.png" alt="" />
+    </div>
+    <p class="text">
+      The type of entity is either <span class="snippet">Person</span> or
+      <span class="snippet">Movie</span>
+      and each person has a value of <span class="snippet">tmdbId</span> that
+      uniquely identifies it. Each movie has a value of
+      <span class="snippet">movieId</span> that uniquely identifies it.
+      <span class="snippet">Movies</span>
+      have values for things such as <span class="snippet">title</span> and
+      people have values for things such as <span class="snippet">name</span>.
+      How we process the data will depend upon the type of entity in the CSV
+      file.
+    </p>
+    <p class="text bold">Relationships</p>
+    <p class="text">
+      A relationship row has an <span class="snippet">Entity</span> value of
+      Join.
+    </p>
+    <div class="devPic">
+      <img src="./assets/join-data-1.png" alt="" />
+    </div>
+    <p class="text">
+      Notice that for the join, we have both a
+      <span class="snippet">movieId</span> representing a
+      <span class="snippet">movie</span> and a
+      <span class="snippet">tmdbId</span>
+      representing a <span class="snippet">person</span>.
+    </p>
+    <p class="text">
+      In addition, for each join row we have a
+      <span class="snippet">Work</span> column that describes whether the data
+      will be used for creating the <span class="snippet">ACTED_IN</span> or
+      <span class="snippet">DIRECTED</span> relationships in the graph.
+      <span class="snippet">Actor</span>
+      rows will have a value for the <span class="snippet">role</span> and a few
+      <span class="snippet">director</span> rows also have a value for
+      <span class="snippet">role</span>.
+    </p>
+    <div class="devPic">
+      <img src="./assets/join-data-2.png" alt="" />
+    </div>
+    <p class="text bold">Multi-pass import processing</p>
+    <p class="text">We recommend several passes to process this CSV file:</p>
+    <p class="text">
+      1. Create the <span class="snippet">Movie</span> nodes and the
+      <span class="snippet">Genre</span>
+      nodes.
+    </p>
+    <p class="text">2. Create the <span class="snippet">Person</span> nodes.</p>
+    <p class="text">
+      3. Add the <span class="snippet">Actor</span> labels and the
+      <span class="snippet">ACTED_IN</span>
+      relationships.
+    </p>
+    <p class="text">
+      4. Add the <span class="snippet">Director</span> labels and the
+      <span class="snippet">DIRECTED</span>
+      relationships.
+    </p>
+    <p class="text">
+      The advantage of performing the import in multiple passes is that you can
+      check the graph after each import to see if it is getting closer to the
+      data model. If the <span class="snippet">CSV</span> file were extremely
+      large, you might want to consider a single pass.
+    </p>
+    <p class="text">Planning the <span class="snippet">User</span> import</p>
+    <p class="text">Here are the fields in our second CSV file.</p>
+    <div class="devPic">
+      <img src="./assets/row-rating-data.png" alt="" />
+    </div>
+    <p class="text">
+      The
+      <span class="snippet">userId</span> is the unique
+      <span class="snippet">ID</span> for
+      <span class="snippet">User</span> nodes and movieId is the unique
+      <span class="snippet">ID</span> for
+      <span class="snippet">Movie</span> nodes. We know from our previous import
+      using the <span class="snippet">Data Importer</span> that these
+      constraints already exist in the graph.
+    </p>
+
+    <p class="text">
+      Here is the big <span class="snipept">Cypher</span> query (if re'executed
+      it should be split into multiple queries) for importing the data from the
+      CSV files and setting up everything:
+    </p>
+    <pre class="code">
+      // clear the graph
+    MATCH (u:User) DETACH DELETE u;
+    MATCH (p:Person) DETACH DELETE p;
+    MATCH (m:Movie) DETACH DELETE m;
+    MATCH (n) DETACH DELETE n;
+    // make sure all constraints exist
+    CREATE CONSTRAINT Genre_name IF NOT EXISTS
+    FOR (x:Genre)
+    REQUIRE x.name IS UNIQUE;
+    CREATE CONSTRAINT Movie_movieId IF NOT EXISTS FOR (x:Movie) REQUIRE x.movieId IS UNIQUE;
+    CREATE CONSTRAINT Person_tmdbId IF NOT EXISTS FOR (x:Person) REQUIRE x.tmdbId IS UNIQUE;
+    CREATE CONSTRAINT User_userId IF NOT EXISTS FOR (x:User) REQUIRE x.userId IS UNIQUE;
+
+    // import the Movie data
+  CALL {
+  LOAD CSV WITH HEADERS
+    FROM 'https://data.neo4j.com/importing/2-movieData.csv'
+  AS row
+
+  //process only Movie rows
+  WITH row WHERE row.Entity = "Movie"
+  MERGE (m:Movie {movieId: row.movieId})
+  ON CREATE SET
+  m.tmdbId = row.tmdbId,
+  m.imdbId = row.imdbId,
+  m.imdbRating = toFloat(row.imdbRating),
+  m.released = row.released,
+  m.title = row.title,
+  m.year = toInteger(row.year),
+  m.poster = row.poster,
+  m.runtime = toInteger(row.runtime),
+  m.countries = split(coalesce(row.countries,""), "|"),
+  m.imdbVotes = toInteger(row.imdbVotes),
+  m.revenue = toInteger(row.revenue),
+  m.plot = row.plot,
+  m.url = row.url,
+  m.budget = toInteger(row.budget),
+  m.languages = split(coalesce(row.languages,""), "|")
+  WITH m,split(coalesce(row.genres,""), "|") AS genres
+  UNWIND genres AS genre
+  WITH m, genre
+  MERGE (g:Genre {name:genre})
+  MERGE (m)-[:IN_GENRE]->(g)
+  };
+
+  // import the Person data
+  CALL {
+  LOAD CSV WITH HEADERS
+  FROM 'https://data.neo4j.com/importing/2-movieData.csv'
+  AS row
+  WITH row WHERE row.Entity = "Person"
+  MERGE (p:Person {tmdbId: row.tmdbId})
+  ON CREATE SET
+  p.imdbId = row.imdbId,
+  p.bornIn = row.bornIn,
+  p.name = row.name,
+  p.bio = row.bio,
+  p.poster = row.poster,
+  p.url = row.url,
+  p.born = CASE row.born WHEN "" THEN null ELSE date(row.born) END,
+  p.died = CASE row.died WHEN "" THEN null ELSE date(row.died) END
+  };
+
+  // set ACTED_IN relationships and Actor labels
+  CALL {
+  LOAD CSV WITH HEADERS
+  FROM 'https://data.neo4j.com/importing/2-movieData.csv'
+  AS row
+  WITH row WHERE row.Entity = "Join" AND row.Work = "Acting"
+  MATCH (p:Person {tmdbId: row.tmdbId})
+  MATCH (m:Movie {movieId: row.movieId})
+  MERGE (p)-[r:ACTED_IN]->(m)
+  ON CREATE
+  SET r.role = row.role
+  SET p:Actor
+  };
+
+  // set DIRECTED relationships and Director labels
+  CALL {
+  LOAD CSV WITH HEADERS
+  FROM 'https://data.neo4j.com/importing/2-movieData.csv'
+  AS row
+  WITH row WHERE row.Entity = "Join" AND row.Work = "Directing"
+  MATCH (p:Person {tmdbId: row.tmdbId})
+  MATCH (m:Movie {movieId: row.movieId})
+  MERGE (p)-[r:DIRECTED]->(m)
+  ON CREATE
+  SET r.role = row.role
+  SET p:Director
+  };
+
+  // import the User data
+  CALL {
+  LOAD CSV WITH HEADERS
+  FROM 'https://data.neo4j.com/importing/2-ratingData.csv'
+  AS row
+  MATCH (m:Movie {movieId: row.movieId})
+  MERGE (u:User {userId: row.userId})
+  ON CREATE SET u.name = row.name
+  MERGE (u)-[r:RATED]->(m)
+  ON CREATE SET r.rating = toInteger(row.rating),
+  r.timestamp = toInteger(row.timestamp)
+  }
+    </pre>
+
+    <!--course module here -->
+
+    <p class="text center bold">Building Neo4j applications with NodeJS</p>
+
+    <p class="text bold">The Neo4j JavaScrpti Driver</p>
+
+    <p class="text">
+      To execute a <span class="snippet">Cypher</span> statement against a Neo4j
+      database you will use an object called a
+      <span class="snippet">Driver</span>.
+    </p>
+
+    <p class="text">
+      The <span class="snippet">Driver</span> object is a thread-safe,
+      application-wide fixture from which all
+      <span class="snippet">Neo4j</span> interaction derives. The
+      <span class="snippet">Driver API</span> is topology independent, so you
+      can run the same code against a <span class="snippet">Neo4j</span> cluster
+      or a single DBMS.
+    </p>
+
+    <p class="text">
+      To connect to and query <span class="snippet">Neo4j</span> from within a
+      <span class="snippet">Node.js</span> application, you use the
+      <span class="snippet">
+        <a href="https://neo4j.com/developer/javascript/" target="_blank"
+          >Neo4j JavaScript Driver</a
+        > </span
+      >.
+    </p>
+    <p class="text">#bestPractice</p>
+    <p class="text">
+      You should create a single instance of the
+      <span class="snippet">Driver</span> in your application per Neo4j cluster
+      or <span class="snippet">DBMS</span>, which can then be shared across your
+      application.
+    </p>
+
+    <p class="text bold">Installing the Driver</p>
+
+    <p class="text">
+      The Neo4j JavaScript Driver is available through the npm registry and can
+      be installed with either npm or yarn.
+    </p>
+
+    <pre class="code">
+      //npm
+      npm install --save neo4j-driver
+
+      //yarn
+      yarn add --save neo4j-driver
+    </pre>
+
+    <p class="text bold">Creating a Driver Instance</p>
+
+    <p class="text">
+      Each driver instance will connect to one
+      <span class="snippet">DBMS</span>, or
+      <span class="snippet">Neo4j cluster</span>, depending on the value
+      provided in the connection string.
+    </p>
+
+    <p class="text">
+      The <span class="snipept">neo4j-driver</span> package exports a default
+      <span class="snippet">neo4j</span> object. This object provides a
+      <span class="snippet">driver()</span> method for creating a new driver
+      instance. The <span class="snippet">driver()</span> method requires two
+      arguments:
+
+      <br />
+      1. A connection string for the <span class="snippet">Neo4j</span> cluster
+      or DBMS - for example
+      <span class="snippet">neo4j://localhost:7687</span> or
+      <span class="snippet">neo4j+s://dbhash.databases.neo4j.io:7687</span>
+
+      <br />
+      2. <span class="snippet">An authentication token</span> - Neo4j supports
+      basic username and password authentication, kerberos tokens or custom
+      authentication. You can create an authentication token by calling one of
+      the functions provided by <span class="snippet">neo4j.auth</span>.
+    </p>
+
+    <p class="text">Here is an example for how to create a driver instance:</p>
+
+    <pre class="code">
+// Import the neo4j dependency from neo4j-driver
+import neo4j from 'neo4j-driver'
+
+// Create a new Driver instance
+const driver = neo4j.driver('neo4j://localhost:7687',
+  neo4j.auth.basic('neo4j', 'neo'))
+    </pre>
+
+    <p class="text">
+      The above example creates an
+      <span class="snippet">unencrypted connection</span> to the
+      <span class="snippet">Neo4j</span> server at localhost on the default port
+      number of <span class="snippet">7687</span>. The driver then attempts to
+      authenticate against the server using a basic authentication with the
+      username <span class="snippet">neo4j</span> and password
+      <span class="snippet">neo</span>.
+    </p>
+
+    <p class="text bold">Verifying Connectivity</p>
+
+    <p class="text">
+      You can verify that the connection details used during driver
+      instantiation are correct by calling the
+      <span class="snippet">verifyConnectivity()</span> method. This function
+      returns a Promise which resolves if the connection details are correct, or
+      rejects with a
+      <span class="snippet">Neo.ClientError.Security.Unauthorized</span> error
+      if a connection could not be made.
+    </p>
+
+    <pre class="code">
+      // Verify the connection details
+      await driver.verifyConnectivity()
+    </pre>
+
+    <p class="text center bold">Connection Strings and Authentication</p>
+
+    <p class="text">
+      In the previous lesson, you saw some example code for creating a new
+      driver instance. Let's take a closer look at the
+      <span class="snippet">driver()</span> method and how it is used to create
+      a driver instance.
+    </p>
+    <pre class="code">
+  const driver = neo4j.driver(
+  connectionString, // (1)
+  authenticationToken, // (2)
+  configuration // (3)
+)
+    </pre>
+
+    <p class="text">
+      The neo4j.driver() function accepts the following arguments:
+    </p>
+    <p class="text">
+      1.A connection string
+      <br />
+      2. An authentication token
+      <br />
+      3. Optionally, an object containing additional driver configuration
+    </p>
+
+    <p class="text">Let's take a look at these arguments in more detail.</p>
+
+    <p class="text bold">1. The Connection String</p>
+    <p class="text">A connection string typically consists of four elements:</p>
+    <div class="devPic">
+      <img src="./assets/connection-string.png" alt="" />
+    </div>
+    <p class="text">
+      1. The <span class="snippet">scheme</span> used to connect to the Neo4j
+      instance - for example <span class="snippet">neo4j</span> or
+      <span class="snippet">neo4j+s</span>
+      (required)
+      <br />
+      2. The initial server address for the Neo4j DBMS - for example
+      <span class="snippet">localhost</span>
+      or <span class="snippet">dbhash.databases.neo4j.io</span> (required)
+      <br />
+      3. The port number that the DBMS is running on (required if the instance
+      is not running on the default port of <span class="snippet">7687</span>)
+      <br />
+      4. Additional connection configuration (for example the routing context)
+    </p>
+
+    <p class="text bold">Choosing your Scheme</p>
+    <p class="text">
+      Most likely, you will use a variation of the
+      <span class="snippet">neo4j</span> scheme within your connection string.
+    </p>
+    <p class="text">
+      . <span class="snippet">neo4j</span> - Creates an
+      <span class="snippet">unencrypted</span> connection to the DBMS. If you
+      are connecting to a local DBMS or have not explicitly turned on encryption
+      then this is most likely the option you are looking for.
+
+      <br />
+      . <span class="snippet">neo4j+s</span> - Creates an
+      <span class="snippet">encrypted</span> connection to the DBMS. The driver
+      will verify the authenticity of the certificate and fail to verify
+      connectivity if there is a problem with the certificate.
+      <br />
+      . <span class="snippet">neo4j+ssc</span> - Creates an encrypted connection
+      to the DBMS, but will not attempt to verify the authenticity of the
+      certificate.
+    </p>
+    <p class="text">
+      Variations of the <span class="snippet">bolt</span> scheme can be used to
+      connect directly to a single DBMS (within a clustered environment or
+      standalone). This can be useful if you have a single server configured for
+      data science or analytics.
+    </p>
+    <p class="text">
+      . <span class="snippet">bolt</span> - Creates an unencrypted connection
+      directly to a single DBMS.
+      <br />
+      . <span class="snippet">bolt+s</span> - Creates an encrypted connection
+      directly to a single DBMS and verify the certificate.
+      <br />
+      . <span class="snippet">bolt+ssc</span> - Creates an encrypted connection
+      to directly to a single DBMS but will not attempt to verify the
+      authenticity of the certificate.
+    </p>
+
+    <p class="text bold">WHICH SCHEME STRING IS RIGHT FOR YOU?</p>
+    <p class="text">
+      You can verify
+      <span class="snippet">the encryption level of your DBMS</span> by checking
+      the dbms.connector.bolt.enabled key in
+      <span class="snippet">neo4j.conf</span>. <br />If you are connecting to a
+      DBMS hosted on Neo4j Aura, you will always use the
+      <span class="snippet">neo4j+s</span> scheme.
+    </p>
+
+    <p class="text bold">Additional Connection Information</p>
+    <p class="text">
+      Additional connection information can be appended to the connection string
+      after a <span class="snippet">?</span>. For example, in a multi-data
+      centre cluster, you may wish to take advantage of locality to reduce
+      latency and improve performance.
+    </p>
+
+    <p class="text">
+      In this case, you could configure a
+      <span class="snippet">routing policy</span> for a set of application
+      <span class="snippet">servers</span> to connect to Neo4j instances that
+      are within the <span class="snippet">same data centre</span>.
+    </p>
+
+    <p class="text bold">2. An Authentication Token</p>
+    <p class="text">
+      In most cases, you will connect to the DBMS using basic authentication
+      consisting of a username and password. You can create a basic
+      authentication token by calling the
+      <span class="snippet">basic()</span> method on the
+      <span class="anippet">neo4j.auth</span> object.
+    </p>
+    <pre class="code">neo4j.auth.basic(username, password)</pre>
+    <p class="text bold">3. Additional Driver Configuration (Optional)</p>
+    <p class="text">
+      The <span class="snippet">driver()</span> method also accepts a third
+      additional configuration object. This object allows you to provide
+      advanced configuration options, for example setting the connection pool
+      size or changing timeout limits.
+    </p>
+    <pre class="code">
+      {
+        maxConnectionPoolSize: 100,
+        connectionTimeout: 30000, // 30 seconds
+        logging: {
+          level: 'info',
+          logger: (level, message) => console.log(level + ' ' + message)
+        },
+      }
+    </pre>
+    <p class="text bold">What happens next?</p>
+    <p class="text">
+      The driver will attempt to connect to the DBMS using the supplied
+      credentials. If everything is successful, the driver will then communicate
+      with the DBMS and figure out the best way to execute each query.
+    </p>
+    <p class="text">
+      You do not need to do any additional configuration when connecting to a
+      single DBMS or a Neo4j cluster. This means you do not have to adapt your
+      application code, regardless of which environment you connect to.
+    </p>
+    <p class="text">
+      Once the connection has been successfully made, your application can start
+      to interact with the data in the graph.
+    </p>
+
+    <p class="text bold center">Interacting with Neo4j</p>
+    <p class="text bold">Sessions and Transactions</p>
+    <p class="text">Sessions</p>
+    <p class="text">
+      Through the Driver, we open <span class="snippet">Sessions</span>.
+    </p>
+    <p class="text">
+      A <span class="snippet">session</span> is a container for a sequence of
+      transactions. <span class="snippet">Sessions</span> borrow connections
+      from a pool as required and are considered lightweight and disposable.
+    </p>
+
+    <p class="text">
+      It is important to remember that <span class="snippet">sessions</span>
+      <span class="snippet">are not</span> the same as
+      <span class="snippet">database connections</span>. When the
+      <span class="snippet">Driver</span>
+      <span class="snippet">connects</span> to the
+      <span class="snippet">database</span>, it
+      <span class="snippet">opens</span> up multiple
+      <span class="snippet">TCP connections</span> that can be
+      <span class="snippet">borrowed</span> by the
+      <span class="snippet">session</span>.
+      <span class="snippet">A query </span> may be sent over
+      <span class="snippet">multiple connections</span>, and
+      <span class="snippet">results</span> may be
+      <span class="snippet">received</span> by the driver
+      <span class="snippet">over multiple connections</span>.
+    </p>
+
+    <p class="text">
+      Instead, <span class="snippet">sessions</span> should be considered a
+      <span class="snippet">client-side abstraction</span> for
+      <span class="snippet">grouping units of work</span>, which also
+      <span class="snippet">handle</span> the underlying
+      <span class="snippet">connections</span>. The
+      <span class="snippet">connections</span> themselves are
+      <span class="snippet">managed</span> internally by the driver and are
+      <span class="snippet">not</span>
+      directly <span class="snippet">exposed</span> to the
+      <span class="snippet">application</span>.
+    </p>
+
+    <p class="text">
+      To open a new <span class="snippet">session</span>, call the
+      <span class="snippet">session()</span>
+      method on the <span class="snippet">driver</span>.
+    </p>
+    <pre class="code">
+      // Open a new session
+      const session = driver.session()
+    </pre>
+    <p class="text">
+      This <span class="snippet">session</span> method takes an optional
+      configuration argument, which can be used to set the database to run any
+      queries against in a multi-database setup, and the default access mode for
+      any queries run within the transaction (either
+      <span class="snippet">READ</span> or <span class="snippet">WRITE</span>).
+    </p>
+    <pre class="code">
+import neo4j, { session } from 'neo4j-driver'
+
+// ...
+
+// Create a Session for the `people` database
+const session = driver.session({
+  // Run sessions in WRITE mode by default
+  defaultAccessMode: session.WRITE,
+  // Run all queries against the `people` database
+  database: 'people',
+})
+
+    </pre>
+
+    <p class="text">
+      If no database is supplied, the default database will be used. This is
+      configured in the <span class="snippet">dbms.default_database</span> in
+      <span class="snippet"> neo4j.conf</span>, the default value is
+      <span class="snippet">neo4j</span>. You cannot create multiple databases
+      in Neo4j Aura or in Neo4j Community Edition.
+    </p>
+
+    <p class="text">
+      The default access mode is set to <span class="snippet">WRITE</span>, but
+      this can be overwritten by explicitly calling the
+      <span class="snippet">executeRead()</span> or
+      <span class="snippet">executeWrite()</span> methods.
+    </p>
+
+    <p class="text bold">Transactions</p>
+
+    <p class="text">
+      Through a <span class="snippet">Session</span>, we can run one or more
+      <span class="snippet">Transactions</span>.
+    </p>
+
+    <p class="text">
+      A transaction comprises a unit of work performed against a database. It is
+      treated in a coherent and reliable way, independent of other transactions.
+    </p>
+    <p class="text">
+      ACID TRANSACTIONS
+      <br />
+      A transaction, by definition, must be <span class="snippet">atomic</span>,
+      <span class="snippet">consistent</span>,
+      <span class="snippet">isolated</span>, and
+      <span class="snippet">durable</span>. Many developers are familiar with
+      <span class="snippet">ACID</span> transactions from their work with
+      relational databases, and as such the
+      <span class="snippet">ACID</span> consistency model has been the norm for
+      some time.
+    </p>
+
+    <p class="text">
+      There are three types of transaction exposed by the driver:
+
+      <br />
+      . Auto-commit Transactions
+      <br />
+      . Read Transactions
+      <br />
+      . Write Transactions
+    </p>
+
+    <p class="text bold">Auto-commit Transactions</p>
+    <p class="text">
+      <span class="snippet">Auto-commit transactions</span> are a single unit of
+      work that are <span class="snippet">immediately executed</span> against
+      the DBMS and acknowledged immediately. You can run an auto-commit
+      transaction by calling the <span class="snippet">run()</span> method on
+      the <span class="snippet">session</span> object, passing in a Cypher
+      statement as a string and optionally an object containing a set of
+      parameters.
+    </p>
+    <pre class="code">
+// Run a query in an auto-commit transaction
+const res = await session.run(query, params)
+    </pre>
+
+    <p class="text red">
+      FOR ONE-OFF QUERIES ONLY
+      <br />
+      In the event that there are any transient errors when running a query, the
+      driver will not attempt to retry a query when using
+      <span class="snippet">session.run()</span>. For this reason, these should
+      only be used for one-off queries and shouldn't be used in production.
+    </p>
+    <p class="text bold">Read Transactions</p>
+    <p class="text">
+      When you intend to read data from <span class="snippet">Neo4j</span>, you
+      should execute a <span class="snippet">Read</span> Transaction. In a
+      clustered environment (including <span class="snippet">Neo4j</span> Aura),
+      read queries are distributed across the cluster.
+    </p>
+    <p class="text">
+      The session provides an <span class="snippet">executeRead()</span> method,
+      which expects a single parameter, a function that represents the unit of
+      work. The function will accept a single parameter, a Transaction object,
+      on which you can call the <span class="snippet">run()</span> method with
+      two arguments: the Cypher statement as a string and an optional object
+      containing a set of parameters.
+    </p>
+    <pre class="code">
+    // Run a query within a Read Transaction
+      const res = await session.executeRead(tx => {
+        return tx.run(
+          `MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+          WHERE m.title = $title // (1)
+          RETURN p.name AS name
+          LIMIT 10`,
+          { title: 'Arthur' } // (2)
+        )
+      })</pre
+    >
+    <p class="text blue">
+      PARAMETERIZED QUERIES
+      <br />
+      In the query above, the the <span class="snippet">$</span> prefix of
+      <span class="snippet">$title</span> (1) indicates that this value relates
+      to the parameter defined in the second argument (2) of the
+      <span class="snippet">run()</span> method call.
+    </p>
+    <p class="text">You do not need to explicitly commit a read transaction.</p>
+    <p class="text bold">Write Transactions</p>
+    <p class="text">
+      If you intend to write data to the database, you should execute a
+      <span class="snippet">Write</span>
+      Transaction.
+    </p>
+    <p class="text">
+      In clustered environments, <span class="snippet">write queries</span> are
+      sent exclusively <span class="snippet">to the leader</span> of the
+      <span class="snippet">cluster</span>. The
+      <span class="snippet">leader</span> of the cluster is then responsible for
+      <span class="snippet">processing the query</span> and
+      <span class="snippet">synchronising the transaction</span> across the
+      <span class="snippet">followers and read-replica servers</span> in the
+      cluster.
+    </p>
+    <p class="text">The process is identical to running a Read Transaction.</p>
+    <pre class="code">
+      const res = await session.executeWrite(tx => {
+        return tx.run(
+          'CREATE (p:Person {name: $name})',
+          { name: 'Michael' }
+        )
+      })
+    </pre>
+    <p class="text">
+      <span class="snippet">If</span> anything
+      <span class="snippet">goes wrong</span> within of the unit of work or
+      there is a problem on Neo4j's side, the
+      <span class="snippet">transaction</span> will be automatically
+      <span class="snippet">rolled back</span>
+      and the <span class="snippet">database</span> will remain in its
+      <span class="snippet">previous state</span>.
+      <span class="snippet">If</span> the unit of
+      <span class="snippet">work</span> succeeds, the
+      <span class="snippet">transaction</span> will be automatically
+      <span class="snippet">committed</span>.
+    </p>
+    <p class="text blue">
+      Unlike <span class="snippet">session.run()</span>, if a transient error is
+      received by the driver, for example a connectivity issue with the DBMS,
+      the driver will automatically retry the unit of work.
+    </p>
+
+    <p class="text">Manually Creating Transactions</p>
+    <p class="text">
+      It is also possible to explicitly create a transaction object by calling
+      the <span class="snippet">beginTransaction()</span> method on the session.
+    </p>
+    <pre class="code">
+import neo4j, { session } from 'neo4j-driver'
+
+// ...
+
+// Open a new session
+const session = driver.session({
+  defaultAccessMode: session.WRITE
+})
+
+// Manually create a transaction
+const tx = session.beginTransaction()
+    </pre>
+
+    <p class="text">
+      This returns a <span class="snippet">Transaction</span> object identical
+      to the one passed in to the unit of work function when calling
+      <span class="snippet">executeRead()</span> or
+      <span class="snippet">executeWrite()</span>.
+    </p>
+
+    <p class="text">
+      This method differs from the <span class="snippet">executeRead</span> and
+      <span class="snippet">executeWrite()</span> methods, in that the
+      transaction will have to be
+      <span class="snippet">manually</span> committed or
+      <span class="snippet">rolled back</span> depending on the outcome of the
+      unit of work.
+    </p>
+
+    <p class="text">
+      You can commit a transaction by calling the
+      <span class="snippet">tx.commit()</span> method, or roll back the
+      transaction by calling <span class="snippet">tx.rollback()</span>.
+    </p>
+    <pre class="code">
+      try {
+        // Perform an action
+        await tx.run(query, params)
+      
+        // Commit the transaction
+        await tx.commit()
+      }
+      catch (e) {
+        // If something went wrong, rollback the transaction
+        await tx.rollback()
+      }
+      finally {
+        // Finally, close the session
+        await session.close()
+      }
+      
+    </pre>
+
+    <p class="text bold">Closing the Session</p>
+    <p class="text">
+      Once you are finished with your session, you call the
+      <span class="snippet">close()</span> method to release any database
+      connections held by that session.
+    </p>
+    <pre class="code">
+// Close the session
+await session.close()
+    </pre>
+    <p class="text">A Working Example</p>
+    <pre class="code">
+      //create a Person node in the customers DB
+
+      async function createPerson(name) {
+        // Create a Session for the `people` database
+        const session = driver.session({
+          // Run sessions in WRITE mode by default
+          defaultAccessMode: session.WRITE,
+          // Run all queries against the `people` database
+          database: 'people',
+        })
+      
+        // Create a node within a write transaction
+        const res = await session.executeWrite(tx => {
+          return tx.run('CREATE (p:Person {name: $name}) RETURN p', { name })
+        })
+      
+        // Get the `p` value from the first record
+        const p = res.records[0].get('p')
+      
+        // Close the sesssion
+        await session.close()
+      
+        // Return the properties of the node
+        return p.properties
+      }
+    </pre>
+    <p class="text center bold">Processing Results</p>
+    <p class="text">
+      The Neo4j JavaScript Driver provides you with two APIs for consuming
+      results:
+      <br />
+      . Promise API
+      <br />
+      . Streaming API
+    </p>
+
+    <p class="text bold">The Promise API</p>
+    <p class="text">
+      The most common method of consuming results is with the Promise API.
+    </p>
+    <p class="text">
+      When using <span class="snippet">session.run()</span>,
+      <span class="snippet">tx.run()</span>, or one of the two transaction
+      functions, the query will return a Promise.
+    </p>
+
+    <p class="text">
+      Once the query has finished and all results have been streamed back to the
+      Driver, each method will resolve with a
+      <span class="snippet">Result</span> object.
+    </p>
+    <pre class="code">
+    try {
+      const res = await session.executeRead(tx =>
+        tx.run(
+          'MATCH (p:Person) RETURN p.name AS name LIMIT 10'
+        )
+      )
+    
+      const names = res.records.map(row => {
+        return row.get('name')
+      })
+    
+      // `names` is an array of strings
+      console.log(names)
+    }
+    catch (e) {
+      // There was a problem with the
+      // database connection or the query
+      console.log(e)
+    }
+    finally {
+      await session.close()
+    }</pre
+    >
+    <p class="text bold">The Result</p>
+
+    <p class="text">
+      The <span class="snippet">Result</span> object, defined as
+      <span class="snippet">res</span> in the examples above, contains the total
+      number of records received by the Driver along with a set of additional
+      meta data about the query.
+    </p>
+    <p class="text">
+      An individual row of results is referred to as a
+      <span class="snippet">record</span>, and can be accessed by the
+      <span class="snippet">res.records</span> array. A record refers to the
+      keyed set of values specified in the
+      <span class="snippet">RETURN</span> portion of the statement. If no
+      <span class="snippet">RETURN</span>
+      values are specified, the query will not return any results, and as a
+      result res.records will be an empty array.
+    </p>
+    <p class="text">
+      The meta data included in the Result include statistics on how many nodes
+      and relationships were created, updated, or deleted as a result of the
+      query.
+    </p>
+    <p class="text bold">Records</p>
+    <p class="text">
+      You can access the records returned by the query through the
+      <span class="snippet">records</span>
+      property. This property is a native JavaScript array which can be iterated
+      over, for example using the <span class="snippet">.map()</span> or
+      <span class="snippet">.foreach()</span> methods.
+    </p>
+    <pre class="code">
+  const names = res.records.map(row => {
+      return row.get('name')
+    })</pre
+    >
+    <p class="text blue">
+      KEY OR INDEX
+      <br />
+      You can either access a value within the record by using the alias as
+      specified in the <span class="snippet">RETURN</span> portion of the Cypher
+      statement or by specifing the column number as an integer. The available
+      keys can be accessed through <span class="snippet">res.keys()</span>.
+    </p>
+    <p class="text">
+      You can also iterate over a result within a
+      <span class="snippet">for</span> loop.
+    </p>
+    <pre class="code">
+      for (const record in res.records) {
+        console.log(record.get('name'))
+      }
+    </pre>
+    <p class="text bold">Result Summary</p>
+    <p class="text">
+      You can access summary information about the query through the
+      <span class="snippet">summary</span>
+      property. Included in this summary is information about the server, the
+      query, execution times, and a <span class="snippet">counters</span> object
+      which provide statistics about the query.
+    </p>
+    <p class="text">
+      For example, to get information about how long the query took to complete,
+      you can use the following property:
+    </p>
+    <pre class="code">
+// Time in milliseconds before receiving the first result
+console.log(res.summary.resultAvailableAfter) // 10
+
+// Time in milliseconds once the final result was consumed
+console.log(res.summary.resultConsumedAfter) // 30
+    </pre>
+
+    <p class="text">
+      Another interesting part of the summary is the
+      <span class="snippet">counters</span> property, which holds numerical data
+      about the queries execution. To access statistics as a result of a Write
+      Transaction, you can call the
+      <span class="snippet">updates()</span> method on the
+      <span class="snippet">counters</span> property:
+    </p>
+    <pre class="code">
+console.log(res.summary.counters.updates())
+
+/*
+{
+  nodesCreated: 10,
+  nodesDeleted: 0,
+  relationshipsCreated: 5,
+  relationshipsDeleted: 0,
+  propertiesSet: 20,
+  labelsAdded: 10,
+  labelsRemoved: 0,
+  indexesAdded: 0,
+  indexesRemoved: 0,
+  constraintsAdded: 0,
+  constraintsRemoved: 0
+}
+*/
+    </pre>
+    <p class="text bold">The Streaming API</p>
+    <p class="text">
+      The <span class="snippet">drawback</span> to the
+      <span class="snippet">Promise API</span> method of consuming results, is
+      that the <span class="snippet">Promise</span> will
+      <span class="snippet">only resolve </span> after
+      <span class="snippet">all results</span> have been
+      <span class="snippet">received</span> by the Driver.
+    </p>
+    <p class="text">
+      There may be occasions where you have more complex, or slower-running
+      queries in your application but wish to update a front-end application as
+      results become available. For example, many Flight search websites have
+      complex queries that take up to a minute to complete, but simple, more
+      expensive flights may be available immediately.
+    </p>
+    <p class="text">
+      There may be <span class="snippet">occasions</span> where you have
+      <span class="snippet">more complex</span>, or
+      <span class="snippet">slower-running queries</span> in your application
+      but wish to <span class="snippet">update</span> a front-end application
+      <span class="snippet">as results become available</span>. For example,
+      many Flight search websites have complex queries that take up to a minute
+      to complete, but simple, more expensive flights may be available
+      immediately.
+    </p>
+    <p class="text">
+      In this case, you can use the
+      <span class="snippet">subscribe()</span> method to
+      <span class="snippet">consume</span> results as they
+      <span class="snippet">become available</span>. This method can be used
+      when calling <span class="snippet">session.run()</span> or
+      <span class="snippet">tx.run()</span> within a transaction function.
+    </p>
+    <p class="text">
+      You can use this method with websockets, or a similar technology to update
+      the front-end application with new results as they are made available.
+    </p>
+    <p class="text">
+      The <span class="snippet">subscribe()</span> method accepts one argument,
+      an object of callbacks:
+      <br />
+      . onKeys - is called when keys are made available for all records
+      <br />
+      . onNext - called when the next record is available
+      <br />
+      . onError - called if an error is thrown
+      <br />
+      . onCompleted - called when all records have been consumed and no error
+      has been thrown
+    </p>
+    <pre class="code">
+// Run a Cypher statement, reading the result in a streaming manner as records arrive:
+session
+  .run('MERGE (alice:Person {name : $nameParam}) RETURN alice.name AS name', {
+    nameParam: 'Alice'
+  })
+  .subscribe({
+    onKeys: keys => {
+      console.log(keys) // ['name]
+    },
+    onNext: record => {
+      console.log(record.get('name')) // 'Alice'
+    },
+    onCompleted: (summary) => {
+      // `summary` holds the same information as `res.summary`
+
+      // Close the Session
+      session.close()
+    },
+    onError: error => {
+      console.log(error)
+    }
+  })
+    </pre>
+
+    <p class="text blue">
+      REACTIVE STREAMS WITH RXJS
+      <br />
+      The Drivers also offer out-of-the-box support for RxJS streams. To create
+      a reactive session, call the rxSession() method on the driver.
+      <br />
+      The execution of the query is almost identical, with the exception of a
+      records() method which returns an RxJS Observable, to which you can apply
+      operators.
+    </p>
+    <pre class="code">
+const res = await rxSession
+  .executeWrite(txc =>
+    txc
+      .run('MERGE (p:Person) RETURN p.name AS name LIMIT 10')
+      .records()
+      .pipe(
+        map(record => record.get('name'))
+      )
+  )
+    </pre>
+    <p class="text center bold">The Neo4j Type System</p>
+    <p class="text">
+      At this point, we should take a look at the
+      <span class="snippet">Cypher type system</span>. As Neo4j is written in
+      Java (the j in Neo4j stands for Java after all), there are some
+      discrepancies between the types stored in the Neo4j database and native
+      <span class="snippet">JavaScript types</span>.
+    </p>
+    <p class="text">
+      Some values like strings, floats, booleans, and nulls map directly to
+      <span class="snippet">JavaScript types</span>, but more complex types need
+      special handling.
+    </p>
+    <p class="text bold">Integers</p>
+    <p class="text">
+      Due to a discrepancy between <span class="snippet">integers</span> in
+      <span class="snippet">JavaScript</span> and the
+      <span class="snippet">Neo4j</span> type system, we need to take extra care
+      when working with <span class="snippet">integers</span> in the Neo4j
+      JavaScript Driver.
+    </p>
+    <p class="text">
+      The <span class="snippet">Neo4j</span> type system uses 64-bit signed
+      integer values (with a range of <span class="snippet">-(264- 1)</span> and
+      <span class="snippet">(263- 1)</span> ) while
+      <span class="snippet">JavaScript</span> can only safely represent integers
+      between <span class="snippet">-(253- 1)</span>
+      <span class="snippet">(Number.MIN_SAFE_INTEGER)</span>
+      and <span class="snippet">253- 1</span> (and
+      span.snippetNumber.MAX_SAFE_INTEGER).
+    </p>
+    <p class="text">
+      To conform with the Neo4j type system, the driver will not automatically
+      convert to JavaScript integers. Instead, the driver will convert integers
+      to a <span class="snippet">float</span> to ensure no data is lost.
+    </p>
+    <p class="text">
+      The driver provides an <span class="snippet">Integer</span> type and an
+      <span class="snippet">int()</span> function for sending and receiving
+      integers with neo4j.
+    </p>
+    <p class="text">
+      The Driver will convert any integer values it receives into an instance of
+      an <span class="snippet">Integer</span> class. The
+      <span class="snippet">Integer</span> class has a
+      <span class="snippet">toNumber()</span> method which can be called to
+      safely convert the value back into a JavaScript
+      <span class="snippet">number</span>.
+    </p>
+    <p class="text">
+      If the number is outside of the valid range, it will be returned as a
+      string.
+    </p>
+    <pre class="code">
+// import { int, isInt } from 'neo4j-driver'
+
+// Convert a JavaScript 'number' into a Neo4j Integer
+const thisYear = int(2022)
+
+// Check if a value is a Neo4j integer
+console.log(isInt(thisYear)) // true
+
+// Convert the Neo4j integer into a JavaScript number
+console.log(thisYear.toNumber()) // 2022
+    </pre>
+
+    <p class="text bold">Nodes & Relationships</p>
+    <p class="text">As an example, let’s take the following code snippet:</p>
+    <pre class="code">
+// Execute a query within a read transaction
+const res = await session.executeRead(tx => tx.run(`
+  MATCH path = (person:Person)-[actedIn:ACTED_IN]->(movie:Movie)
+  RETURN path, person, actedIn, movie
+  LIMIT 1
+`))
+
+// Get the first row
+const row = res.records[0]
+    </pre>
+    <p class="text">
+      The query will return one row for each
+      <span class="snippet">:Person</span> and
+      <span class="snippet">:Movie</span> node with an
+      <span class="snippet"></span> relationship between them.
+    </p>
+    <p class="text bold">Nodes</p>
+    <p class="text">
+      We can retrieve the movie value using the
+      <span class="snippet">.get()</span> method on the row.
+    </p>
+    <pre class="code">
+      const movie = row.get('movie')
+    </pre>
+    <p class="text">
+      The value assigned to the <span class="snippet">person</span> variable
+      will be the instance of a <span class="snippet">Node</span>.
+      <span class="snippet">Node</span> is a class provided by the Driver to
+      hold the information held in Neo4j for a
+      <span class="snippet">node</span>.
+    </p>
+    <p class="text">
+      An instance of a <span class="snippet">Node</span> has three properties:
+    </p>
+    <pre class="code">
+person.elementId // (1)
+person.labels // (2)
+person.properties // (3)
+    </pre>
+    <p class="text">
+      1. <span class="snippet">elementId</span> - a
+      <span class="snippet">string</span> representing the the unique identifier
+      for the node. eg.
+      <span class="snippet">Integer {high: 1234, low: 0}</span>
+      <br />
+      2. <span class="snippet">labels</span> - an Array of
+      <span class="snippet">String</span> values, one per label stored against
+      the node. eg.
+      <span class="snippet">['Person', 'Actor']</span>
+      <br />
+      3. <span class="snippet">properties</span> - A JavaScript object
+      containing all the properties for the node. eg.
+      <span class="snippet">{name: 'Tom Hanks', tmdbId: '31' }</span>
+    </p>
+    <p class="text blue">
+      INTERNAL IDS
+      <br />Internal IDs represent the position in the Neo4j store files where
+      the record is held. These numbers may be re-used so it is recommended that
+      nodes are found by an an indexed property instead.
+    </p>
+    <p class="text bold">Relationships</p>
+    <p class="text">
+      <span class="snippet">Relationship</span> objects are similar to
+      <span class="snippet">Node</span> in that they also include an
+      <span class="snippet">elementId</span>
+      and <span class="snippet">properties</span> properties.
+    </p>
+    <pre class="code">
+const actedIn = row.get('actedIn')
+
+actedIn.elementId // (1)
+actedIn.type // (2)
+actedIn.properties // (3)
+actedIn.startNodeElementId // (4)
+actedIn.endNodeElementId // (5)
+    </pre>
+    <p class="text">
+      1. <span class="snippet">elementId</span> - a
+      <span class="snippet">string</span> representing the the unique identifier
+      for the relationship. eg.
+      <span class="snippet">Integer {high: 9876, low: 0}</span>
+      <br />
+      2. <span class="snippet">type</span> - the type of the relationship eg.
+      <span class="snippet">ACTED_IN</span>
+      <br />
+      3. <span class="snippet"></span> - A JavaScript
+      <span class="snippet">object</span> containing all the properties for the
+      node. eg. <span class="snippet">{role: 'Woody' }</span>
+      <br />
+      4. <span class="snippet">startNodeElementId</span> - a string representing
+      the unique identifier for the node at the start of the relationship
+      <br />
+      5. <span class="snippet">endNodeElementId</span> - a string representing
+      the unique identifier for the node at the end of the relationship
+    </p>
+    <p class="text bold">Paths</p>
+    <p class="text">
+      If you return a path of nodes and relationships, they will be returned as
+      an instance of a <span class="snippet">Path</span>.
+    </p>
+    <pre class="code">
+      const path = row.get('path')
+
+      path.start // (1)
+      path.end // (2)
+      path.length // (3)
+      path.segments // (4) 
+    </pre>
+    <p class="text">
+      1. <span class="snippet">start</span> - a Neo4j
+      <span class="snippet">Integer</span> representing the internal ID for the
+      node at the start of the path
+      <br />
+      2. <span class="snippet">end</span> - a Neo4j
+      <span class="snippet">Integer</span> representing the internal ID for the
+      node at the end of the path
+      <br />
+      3. <span class="snippet">length</span> - A count of the number of segments
+      within the path
+      <br />
+      4. <span class="snippet">segments</span> - An array of
+      <span class="snippet">PathSegment</span>
+      objects.
+    </p>
+    <p class="text bold">Path Segments</p>
+    <p class="text">
+      A path is split into <span class="snippet">segments</span> representing
+      each relationship in the path.
+      <br />
+      For example, say we have a path of
+      <span class="snippet"
+        >(p:Person)-[:ACTED_IN]→(m:Movie)-[:IN_GENRE]→(g:Genre)</span
+      >, there would be two segments:
+      <br />
+      1. <span class="snippet">(p:Person)-[:ACTED_IN]→(m:Movie)</span>
+      <br />
+      2. <span class="snippet">(m:Movie)-[:IN_GENRE]→(g:Genre)</span>
+    </p>
+    <pre class="code">
+      //iterate over segments with JS
+
+      path.segments.forEach(segment => {
+        console.log(segment.start)
+        console.log(segment.end)
+        console.log(segment.relationship)
+      })
+    </pre>
+    <p class="text">
+      The <span class="snippet">PathSegment</span> object has three properties:
+    </p>
+    <p class="text">
+      . <span class="snippet">relationship</span> - A
+      <span class="snippet">Relationship</span> object representing that part of
+      the path.
+      <br />
+      . <span class="snippet">start</span> - The internal ID for the start node
+      for this path segment <span class="snippet">*</span>
+      <br />
+      . <span class="snippet">end</span> - ID for the end node for this path
+      segment
+      <span class="snippet">*</span>
+    </p>
+    <p class="text blue">
+      * START AND END NODES WITHIN THE PATH SEGMENT OBJECT
+      <br />The start and end nodes on the
+      <span class="snippet">PathSegment</span> may differ from the start and end
+      nodes of the relationship itself if the relationship was traversed in the
+      reverse direction.
+    </p>
+    <p class="text bold">Temporal Types</p>
+    <p class="text">
+      The Temporal types used in the Cypher type system are also handled
+      differently. The driver exports helper functions to assist in checking the
+      type.
+    </p>
+    <div class="devPic">
+      <img src="./assets/temporal-types-cypher.png" alt="" />
+    </div>
+    <p class="text">
+      Each type has a <span class="snippet">toString()</span> method that can be
+      used in conjunction with <span class="snippet">Date.parse()</span> in
+      JavaScript to convert the Cypher date into a native
+      <span class="snippet">Date</span> object.
+    </p>
+    <pre class="code">
+      //working with temporal types 
+      
+      // import { isDateTime, isDate } from 'neo4j-driver'
+
+      // Convert a native Date into a Neo4j DateTime
+      const now = new Date()
+      const createdAt = DateTime.fromStandardDate(now)
+
+      console.log(isDateTime(createdAt)) // true
+      console.log(isDate(createdAt)) // false
+
+      // Convert a Neo4j DateTime back into a native Date
+      const dateNumber = Date.parse(driverDate.toString())
+      const nativeDate = new Date(dateNumber)
+    </pre>
+
+    <p class="text bold">Spatial Types</p>
+    <p class="text">
+      Cypher has built-in support for handling spatial values (points), and the
+      underlying database supports storing these point values as properties on
+      nodes and relationships.
+    </p>
+    <p class="text bold">Point</p>
+    <p class="text">
+      When using the <span class="snippet">Point</span> spatial type, regardless
+      of the coordinate reference system, an instance of the
+      <span class="snippet">Point</span> is returned. The
+      <span class="snippet">Point</span> object has three public members:
+      <br />
+      . <span class="snippet">srid</span> - The coordinate reference system
+      (CRS) identifier (<span class="snippet">4326</span> for
+      <span class="snippet">the wsg-84</span> or
+      <span class="snippet">wsg-84-3d</span> CRS).
+      <br />
+      . <span class="snippet">x</span> - The x coordinate of the point.
+      <br />
+      . <span class="snippet">y</span> - The y coordinate of the point.
+      <br />
+      . <span class="snippet">z</span> - The z coordinate of the point or
+      undefined if point is 2-dimensional.
+    </p>
+
+    <p class="text">
+      The <span class="snippet">isPoint()</span> helper function will allow you
+      to check whether a variable is an instance of a
+      <span class="snippet">Point</span>
+    </p>
+    <pre class="code">
+//working with points
+import { Point, isPoint } from 'neo4j-driver'
+
+const london = new Point(-0.118092, 51.509865)
+const shard = new Point(-0.086500, 51.504501, 310) // 310m high
+
+const cartesian2d = new Point(10, 5)
+const cartesian3d = new Point(10, 5, 20)
+
+console.log(london) // Point({srid:4326, x:-0.118092, y:51.509865})
+console.log(shard) // Point({srid:4979, x:-0.0865, y:51.504501, z:310})
+
+console.log(catesian2d) // Point({srid:7203, x:5, y:10})
+console.log(catesian3d) // Point({srid:9157, x:5, y:10, z:20})
+
+console.log(isPoint(london)) // true
+console.log(isPoint('string')) // false
+    </pre>
+
+    <p class="text red">
+      <span class="snippet">X</span>, <span class="snippet">Y</span> AND Z
+      <span class="snippet"></span> <br />Regardless of the
+      <span class="snippet">srid</span> or whether the point is created using
+      <span class="snipppet">latitude</span>,
+      <span class="snippet">longitude</span> (and
+      <span class="snippet">height</span>), the object returned by the Driver
+      will always contain <span class="snippet">x</span>,
+      <span class="snippet">y</span> and
+      <span class="snippet">z</span> properties. When using
+      <span class="snippet">wsg-84</span> or
+      <span class="snippet">wsg-84-3d</span> coordinates,
+      <span class="snippet">x</span> will represent
+      <span class="snippet">longitude</span>,
+      <span class="snippet">y</span> will represent
+      <span class="snipppet">latitude</span> and
+      <span class="snippet">z</span> will represent the
+      <span class="snippet">height</span>.
+    </p>
+
+    <p class="text bold">Distance</p>
+    <p class="text">
+      When using the <span class="snippet">distance()</span> function in Cypher,
+      the distance calculated between two points is returned as a float.
+    </p>
+    <pre class="code">
+    WITH point({x: 1, y:1}) AS one,
+    point({x: 10, y: 10}) AS two
+
+    RETURN distance(one, two) // 12.727922061357855
+    </pre>
+
+    <p class="text bold">Converting these values en masse</p>
+    <p class="text">
+      There may be times when you need to convert many Neo4j types back into
+      native JavaScript types. For example, when retrieving a set of properties.
+    </p>
+
+    <p class="text center bold">Handling Driver Errors</p>
+    <p class="text">
+      When executing a Cypher statement, certain
+      <span class="snippet">exceptions</span> and
+      <span class="snippet">error</span> cases may arise. One error could be a
+      <span class="snippet">transient error</span> that may be resolved if
+      retried, for example a <span class="snippet">problem connecting</span> to
+      the database instance. Another type of error could be something more
+      permanent, for example a <span class="snippet">Syntax Error</span> or a
+      <span class="snippet">Constraint Error</span>.
+    </p>
+    <p class="text">
+      In the Neo4j JavaScript Driver, the Promise returned by the
+      <span class="snippet">run()</span> method will be rejected, and an
+      instance of a <span class="snippet">Neo4jError</span> will be returned.
+    </p>
+    <p class="text">
+      The <span class="snippet">Neo4jError</span> class extends the native
+      JavaScript <span class="snippet">Error</span>, and as such contains a
+      message property that contains detailed information about the error that
+      has occurred.
+    </p>
+    <p class="text bold">Error Codes</p>
+    <p class="text">
+      The <span class="snippet">Neo4jError</span> also includes a
+      <span class="snippet">code</span> property, which provides higher-level
+      information about the query.
+    </p>
+    <p class="text">
+      Each status code follows the same format, and includes four parts:
+    </p>
+    <pre class="code">
+      Neo.[Classification].[Category].[Title]
+      (1)        (2)          (3)       (4)
+    </pre>
+    <p class="text">
+      1. Every Neo4j Error code is prefixed with
+      <span class="snippet">Neo</span>.
+      <br />
+      2. The Classification provides a high-level classification of the error -
+      for example, a client-side error or an error with the database.
+      <br />
+      3. The Category provides a higher-level category for the error - for
+      example, a problem with clustering, a procedure or the database schema.
+      <br />
+      4. The Title provides specific information about the error that has
+      occurred.
+    </p>
+    <p class="text bold">
+      Example Error Codes:
+
+      <br />
+      .
+      <span class="snippet">Neo.ClientError.Procedure.ProcedureCallFailed</span>
+      - Failed to invoke a procedure. See the detailed error description for
+      exact cause.
+      <br />
+      .
+      <span class="snippet">Neo.ClientError.Schema.ConstraintViolation</span> -
+      Added or changed index entry would violate constraint.
+      <br />
+      . <span class="snippet">Neo.ClientError.Security.Forbidden</span> - An
+      attempt was made to perform an unauthorized action.
+      <br />
+      . <span class="snippet">Neo.ClientError.Security.Unauthorized</span> - The
+      client is unauthorized due to authentication failure.
+      <br />
+      .
+      <span class="snippet">Neo.ClientError.Statement.ParameterMissing</span> -
+      The statement refers to a parameter that was not provided in the request.
+      <br />
+      . <span class="snippet">Neo.ClientError.Statement.SyntaxError</span> - The
+      statement contains invalid or unsupported syntax.
+      <br />
+      .
+      <span class="snippet"
+        >Neo.TransientError.General.TransactionMemoryLimit</span
+      >
+      - There is not enough memory to perform the current task.
+    </p>
+
+    <p class="text bold">Catching Errors</p>
+    <p class="text">
+      When using <span class="snippet">async/await</span>, you will need to use
+      <span class="snippet">try</span> and
+      <span class="snippet">catch</span> blocks to catch any errors.
+    </p>
+    <pre class="code">
+// Open the session
+const session = this.driver.session()
+
+try {
+  // Run the query...
+  const res = await session.executeWrite(tx => tx.run(`
+    CREATE (:User {email: $email})
+  `, { email: 'uniqueconstraint@example.com' }))
+
+  // The query ran successfully
+  console.log(res.records[0])
+}
+catch (e) {
+  if (e.code === 'Neo.ClientError.Schema.ConstraintValidationFailed') {
+    console.log(e.message) // Node(33880) already exists with...
+
+    throw new ValidationError(`An account already exists with the email address ${email}`, {
+      email: e.message
+    })
+  }
+
+  throw e
+}
+finally {
+  // Finally, close the session
+  await session.close()
+}
+    </pre>
+
+    <p class="text center bold">User Autehntication</p>
+    <p class="text bold">Passport & Authentication</p>
+    <p class="text">
+      For this project, a <span class="snippet">Local Strategy</span> is
+      exported from the passport-local library to handle the authentication
+      request. <br />The purpose of a Local Strategy is to authenticate a user
+      using a username and password.
+    </p>
+    <p class="text">
+      When a user submits the Sign In form from the UI, the following process
+      occurs:
+      <br />
+      1. A route handler in
+      <span class="snippet">src/routes/auth.routes.js</span> listens for a
+      <span class="snippet">POST</span>
+      request.
+      <br />
+      2 .The <span class="snippet">passport.authenticate</span> middleware
+      triggers the local authentication strategy.
+      <br />
+      3. This calls the callback function defined in
+      <span class="snippet">src/passport/neo4j.strategy.js</span>
+      <br />
+      4. The strategy creates a new instance of the
+      <span class="snippet">AuthService</span> and calls the
+      <span class="snippet">authenticate()</span>
+      method with the username and password defined in the request.
+      <br />
+      The <span class="snippet">authenticate()</span> method performs the
+      following actions:
+      <br />
+      . Attempt to find the user by their email address.
+      <br />
+      . If the user does not exist, return <span class="snippet">false</span>
+      <br />
+      . Compare the encrypted password in the database against the unencrypted
+      password sent with the request.
+      <br />
+      . If the passwords don't match, return "false"
+      <br />
+      . Otherwise, return an object containing the user’s safe properties, and a
+      JWT token with a set of claims that can be used in the UI
+    </p>
+
+    <p class="text">
+      For this strategy to work correctly, the
+      <span class="snippet">authenticate()</span> method must return an object
+      which represents the user on successful login, or return
+      <span class="snippet">false</span> if the credentials are incorrect.
+    </p>
+
+    <p class="text">
+      If the returned value is anything other than false, the value will be
+      appended to the request, and will be accessible through req.user on any
+      route handlers that use the
+      <span class="snippet">passport.authenticate</span> middleware.
+    </p>
+
+    <p class="text center bold">
+      Running Multiple Queries within a Transaction
+    </p>
+
+    <p class="text">We can do this through a reusable method such as:</p>
+    <pre class="code">
+      async getUserFavorites(tx, userId) {
+        // If userId is not defined, return an empty array
+        if ( userId === undefined ) {
+          return []
+        }
+        //first query
+        const favoriteResult = await tx.run(
+          `
+            MATCH (:User {userId: $userId})-[:HAS_FAVORITE]->(m)
+            RETURN m.tmdbId AS id
+          `,
+          { userId, }
+        )
+      
+        // Extract the `id` value returned by the cypher query (second query)
+        return favoriteResult.records.map(
+          row => row.get('id')
+        )
+      }
+    </pre>
+    <p class="text">
+      * Note how instead of returning the results directly,we update the query
+      to be an async function which awaits the the results of a call to
+      <span class="snippet">getUserFavorites(tx, userId)</span>, and then passes
+      the results as a parameter to the existing query.
+    </p>
     <!--     <p class="text">#bestPractice</p> -->
   </body>
 </html>
