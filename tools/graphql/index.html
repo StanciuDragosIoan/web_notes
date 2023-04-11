@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+    <title>GraphQL</title>
+  </head>
+
+  <body>
+    <h1 class="header">GraphQL</h1>
+    <p class="text center bold underline">Introduction</p>
+    <p class="text">
+      <span class="snippet">GraphQL</span> is a new API standard that provides a
+      more efficient, powerful and flexible
+      <span class="snippet">alternative</span> to
+      <span class="snippet">REST</span>. It was developed and open-sourced by
+      Facebook and is now maintained by a large community of companies and
+      individuals from all over the world.
+    </p>
+
+    <p class="text">
+      <span class="snippet">APIs</span> have become ubiquitous components of
+      software infrastructures. In short, an
+      <span class="snippet">API</span> defines how a client can load data from a
+      server.
+    </p>
+    <p class="text">
+      At its core, <span class="snippet">GraphQL</span> enables
+      <span class="snippet">declarative data fetching</span> where a
+      <span class="snippet">client</span> can
+      <span class="snippet">specify</span> exactly what
+      <span class="snippet">data it needs</span> from an API. Instead of
+      multiple endpoints that return fixed data structures, a
+      <span class="snippet">GraphQL server</span>
+      only <span class="snippet">exposes</span> a
+      <span class="snippet">single endpoint</span> and responds with precisely
+      the data a client asked for.
+    </p>
+    <p class="text bold">GraphQL - A Query Language for APIs</p>
+    <p class="text">
+      Most <span class="snippet">applications</span> today have the need to
+      <span class="snippet"> fetch data</span> from a server where that data is
+      stored in a <span class="snippet">database</span>. It's the responsibility
+      of the API to provide an interface to the stored data that fits an
+      application's needs.
+    </p>
+    <p class="text">
+      <span class="snippet">GraphQL</span> is often confused with being a
+      database technology. This is a misconception,
+      <span class="snippet">GraphQL</span> is a
+      <span class="snippet">query language for APIs</span> - not databases. In
+      that sense it's <span class="snippet">database agnostic</span> and
+      effectively can be used in any context where an API is used.
+    </p>
+    <p class="text bold">A more efficient Alternative to REST</p>
+    <p class="text">
+      <span class="snippet">
+        <a
+          href="https://en.wikipedia.org/wiki/Representational_state_transfer"
+          target="_blank"
+          >REST</a
+        >
+      </span>
+      has been a popular way to expose data from a server. When the concept of
+      <span class="snippet">
+        <a
+          href="https://en.wikipedia.org/wiki/Representational_state_transfer"
+          target="_blank"
+          >REST</a
+        >
+      </span>
+      was developed, client applications were relatively simple and the
+      development pace wasn't nearly where it is today.
+      <span class="snippet">
+        <a
+          href="https://en.wikipedia.org/wiki/Representational_state_transfer"
+          target="_blank"
+          >REST</a
+        >
+      </span>
+      thus was a good fit for many applications. However, the
+      <span class="snippet">API landscape</span> has
+      <span class="snippet">radically changed</span> over the last couple of
+      years. In particular, there are three factors that have been challenging
+      the way APIs are designed:
+    </p>
+    <p class="text">
+      1. <span class="snippet">Increased mobile usage</span> creates need for
+      efficient data loading
+      <br />
+      <span class="snippet">Increased mobile usage</span>,
+      <span class="snippet">low-powered devices</span>
+      and <span class="snippet">sloppy networks</span> were the
+      <span class="snippet">initial reasons</span>
+      why Facebook developed <span class="snippet">GraphQL</span>.
+      <span class="snippet">GraphQL</span> minimizes the amount of data that
+      needs to be transferred over the network and thus majorly improves
+      applications operating under these conditions.
+    </p>
+    <p class="text">
+      2. Variety of different frontend frameworks and platforms
+      <br />
+      The <span class="snippet">heterogeneous</span> landscape of
+      <span class="snippet">frontend frameworks</span> and platforms that run
+      client applications makes it difficult to build and maintain one API that
+      would <span class="snippet">fit</span> the
+      <span class="snippet">requirements</span> of
+      <span class="snippet">all</span>. With GraphQL, each client can access
+      precisely the data it needs.
+    </p>
+    <p class="text">
+      3. Fast development & expectation for rapid feature development
+      <br />
+      Continuous deployment has become a standard for many companies, rapid
+      iterations and frequent product updates are indispensable. With
+      <span class="snippet">REST APIs</span>, the way data is exposed by the
+      server <span class="snippet">often</span> needs to be
+      <span class="snippet">modified</span> to account for specific requirements
+      and design changes on the client-side. This hinders fast development
+      practices and product iterations.
+    </p>
+
+    <p class="text center bold">History, Context & Adoption</p>
+    <p class="text bold">
+      <span class="snippet">GraphQL</span> is not only for React Developers
+    </p>
+    <p class="text">
+      Facebook started using <span class="snippet">GraphQL</span> in 2012 in
+      their native mobile apps. Interestingly though,
+      <span class="snippet">GraphQL</span> has mostly been picked up to be used
+      in the context of web technologies and has gained only little traction in
+      the native mobile space.
+    </p>
+    <p class="text center bold underline">GraphQL is the better REST</p>
+    <p class="text">
+      Over the past decade, <span class="snippet">REST</span> has become the
+      standard (yet a fuzzy one) for designing web
+      <span class="snippet">APIs</span>. It offers some great ideas, such as
+      stateless servers and structured access to resources. However,
+      <span class="snippet">REST</span> <span class="snippet">APIs</span> have
+      shown to be too inflexible to keep up with the rapidly changing
+      requirements of the clients that access them.
+    </p>
+    <p class="text">
+      <span class="snippet">GraphQL</span> was developed to cope with the need
+      for more flexibility and efficiency! It solves many of the
+      <span class="snippet">shortcomings</span>
+      and <span class="snippet">inefficiencies</span> that developers experience
+      when interacting with <span class="snippet">REST APIs</span>.
+    </p>
+
+    <p class="text">
+      To illustrate the major <span class="snippet">differences</span> between
+      <span class="snippet">REST</span> and
+      <span class="snippet">GraphQL</span> when it comes to fetching data from
+      an API, let's consider a simple example scenario:
+      <br />
+      In a blogging application, an app needs to display the titles of the posts
+      of a specific user.
+      <br />The same screen also displays the names of the last 3 followers of
+      that user. How would that situation be solved with
+      <span class="snippet">REST</span> and
+      <span class="snippet">GraphQL</span>?
+    </p>
+    <p class="text bold">Data Fetching with REST vs GraphQL</p>
+    <p class="text">
+      With a <Rspan class="snippet">EST API</Rspan>, you would typically gather
+      the data by accessing multiple <span class="snippet">endpoints</span>. In
+      the example, these could be
+      <span class="snippet">/users/:id</span> endpoint to fetch the initial user
+      data. Secondly, there's likely to be a
+      <span class="snippet">/users/:id/posts</span> endpoint that returns all
+      the posts for a user. The third endpoint will then be the
+      <span class="snippet">/users/:id/followers</span> that returns a list of
+      followers per user.
+    </p>
+    <div class="devPic">
+      <img src="./img/VRyV7Jh.png" alt="" />
+    </div>
+    <p class="text">
+      With <span class="snippet">REST</span>, you have to make three requests to
+      different endpoints to fetch the required data. You're also overfetching
+      since the endpoints return additional information that's not needed.
+    </p>
+    <p class="text">
+      In <span class="snippet">GraphQL</span> on the other hand, you'd simply
+      send a <span class="snippet">single query</span> to the
+      <span class="snippet">GraphQL</span> server that includes the concrete
+      data requirements. The server then responds with a JSON object where these
+      requirements are fulfilled.
+    </p>
+    <div class="devPic">
+      <img src="./img/z9VKnHs.png" alt="" />
+    </div>
+    <p class="text">
+      Using <span class="snippet">GraphQL</span>, the client can specify exactly
+      the data it needs in a query. Notice that the structure of the server's
+      response follows precisely the nested structure defined in the query.
+    </p>
+
+    <p class="text bold">No more Over- and Underfetching</p>
+
+    <p class="text">
+      One of the most common problems with REST is that of over- and
+      underfetching. This happens because the only way for a client to download
+      data is by hitting endpoints that return fixed data structures. It's very
+      difficult to design the API in a way that it's able to provide clients
+      with their exact data needs.
+    </p>
+
+    <p class="text bold">
+      <span class="snippet">Overfetching</span>: Downloading superfluous data
+    </p>
+
+    <p class="text">
+      <span class="snippet">Overfetching</span> means that a
+      <span class="snippet">client downloads more information</span> than is
+      actually required in the app. <br />Imagine for example a screen that
+      needs to display a list of users only with their names. In a
+      <span class="snippet">REST API</span>, this app would usually hit the
+      <span class="snippet">/users</span> endpoint and receive a JSON array with
+      user data. This response however might contain more info about the users
+      that are returned, e.g. their birthdays or addresses - information that is
+      useless for the client because it only needs to display the users' names.
+    </p>
+
+    <p class="text bold">
+      <span class="snippet">Underfetching</span> and the n+1 problem
+    </p>
+    <p class="text">
+      Another issue is <span class="snippet">underfetching</span> and the
+      n+1-requests problem. <span class="snippet">Underfetching</span>
+      generally means that a specific endpoint doesn't provide enough of the
+      required information. The client will have to make additional requests to
+      fetch everything it needs. This can escalate to a situation where a client
+      needs to first download a list of elements, but then needs to make one
+      additional request per element to fetch the required data.
+    </p>
+
+    <p class="text">
+      As an example, consider the same app would also need to display the last
+      three followers per user. The API provides the additional endpoint
+      <span class="snippet">/users/:userId/followers</span>. In order to be able
+      to display the required information, the app will have to make one request
+      to the /users endpoint and then hit the
+      <span class="snippet">/users/:userId/followers</span> endpoint for each
+      user.
+    </p>
+
+    <p class="text bold">Rapid Product Iterations on the Frontend</p>
+    <p class="text">
+      A <span class="snippet">common pattern</span> with
+      <span class="snippet">REST APIs</span> is to
+      <span class="snippet">structure</span> the
+      <span class="snippet">endpoints</span>
+      <span class="snippet">according to the views</span> that you have inside
+      your app. This is handy since it allows for the client to get all required
+      information for a particular view by simply accessing the corresponding
+      endpoint.
+    </p>
+
+    <p class="text">
+      The major drawback of this approach is that it doesn't allow for rapid
+      iterations on the frontend. With every
+      <span class="snippet">change</span> that is made to the
+      <span class="snippet">UI</span>, there is a high risk that now there is
+      <span class="snippet">more (or less) data required</span> than before.
+      Consequently, the backend needs to be adjusted as well to account for the
+      new data needs. This kills productivity and notably slows down the ability
+      to incorporate user feedback into a product.
+    </p>
+
+    <p class="text">
+      With <span class="snippet">GraphQL</span>, this problem is solved. Thanks
+      to the flexible nature of <span class="snippet">GraphQL</span>,
+      <span class="snippet">changes</span> on the
+      <span class="snippet">client-side</span> can be made
+      <span class="snippet">without</span> any extra
+      <span class="snippet">work</span>
+      <span class="snippet">on the server</span>. Since
+      <span class="snippet">clients</span> can
+      <span class="snippet">specify</span> their exact
+      <span class="snippet">data requirements</span>, no backend engineer needs
+      to make adjustments when the design and data needs on the frontend change.
+    </p>
+
+    <p class="text bold">Insightful Analytics on the Backend</p>
+
+    <p class="text">
+      <span class="snippet">GraphQL</span> allows you to have
+      <span class="snippet">fine-grained insights</span> about the
+      <span class="snippet">data</span> that's requested on the backend.
+      <br />As each client specifies exactly what information it's interested
+      in, it is possible to gain a
+      <span class="snippet">deep understanding</span> of how the available data
+      is being used. This can for example help in evolving an API and
+      deprecating specific fields that are not requested by any clients any
+      more.
+    </p>
+
+    <p class="text">
+      With <span class="snippet">GraphQL</span>, you can also do
+      <span class="snippet">low-level performance monitoring</span> of the
+      <span class="snippet">requests</span> that are processed by your server.
+      <span class="snippet">GraphQL</span> uses the concept of
+      <span class="snippet">
+        <a
+          href="https://www.apollographql.com/docs/apollo-server/data/resolvers/"
+          target="_blank"
+          >resolver</a
+        >
+      </span>
+      functions to collect the data that's requested by a client. Instrumenting
+      and measuring performance of these
+      <span class="snippet">
+        <a
+          href="https://www.apollographql.com/docs/apollo-server/data/resolvers/"
+          target="_blank"
+          >resolvers</a
+        >
+      </span>
+      provides crucial insights about bottlenecks in your system.
+    </p>
+
+    <p class="text bold">Benefits of a Schema & Type System</p>
+
+    <p class="text">
+      <span class="snippet">GraphQL</span> uses a strong type system to define
+      the capabilities of an API. All the types that are exposed in an API are
+      written down in a schema using the <span class="snippet">GraphQL</span>
+      <span class="snippet">
+        <a
+          href="https://www.apollographql.com/docs/apollo-server/schema/schema/#the-schema-definition-language"
+          target="_blank"
+          >Schema Definition Language (SDL)</a
+        > </span
+      >. This <span class="snippet">schema</span> serves as the
+      <span class="snippet">contract</span> between the
+      <span class="snippet">client</span> and the
+      <span class="snippet">server</span> to
+      <span class="snippet">define</span> how a
+      <span class="snippet">client</span> can
+      <span class="snippet">access the data</span>.
+    </p>
+
+    <p class="text">
+      Once the
+      <span class="snippet">schema</span> is defined, the teams working on
+      frontend and backends can do their work without further communication
+      since they both are aware of the definite structure of the data that's
+      sent over the network.
+    </p>
+
+    <p class="text center bold underline">Core Concepts</p>
+
+    <p class="text bold">The Schema Definition Language (SDL)</p>
+
+    <p class="text">
+      <span class="snippet">GraphQL</span> has its own type
+      <span class="snippet">system</span> that's used to
+      <span class="snippet">define</span> the
+      <span class="snippet">schema</span> of an
+      <span class="snippet">API</span>. The syntax for writing schemas is called
+      <span class="snippet"
+        ><a
+          href="https://www.apollographql.com/docs/apollo-server/schema/schema/#the-schema-definition-language"
+          target="_blank"
+          >Schema Definition Language (SDL)</a
+        ></span
+      >.
+    </p>
+
+    <p class="text">
+      Here is an example of how we can use the
+      <span class="snippet">SDL</span> to <span class="snippet">define</span> a
+      simple type called <span class="snippet">Person</span>:
+    </p>
+
+    <pre class="code">
+      type Person {
+        name: String!
+        age: Int!
+      }
+    </pre>
+
+    <p class="text">
+      This <span class="snippet">type</span> has
+      <span class="snippet">two fields</span>, they're called
+      <span class="snippet">name</span> and <span class="snippet">age</span> and
+      are respectively of type <span class="snippet">String</span> and
+      <span class="snippet">Int</span>. The ! following the type means that this
+      field is required.
+    </p>
+
+    <p class="text">
+      It's also possible to
+      <span class="snippet">express relationships</span> between types. In the
+      example of a blogging application, a
+      <span class="snippet">Person</span> could be associated with a
+      <span class="snippet">Post</span>
+    </p>
+
+    <pre class="code">
+      type Post {
+        title: String!
+        author: Person!
+      }
+    </pre>
+
+    <p class="text">
+      Conversely, the other <span class="snippet">end</span> of the relationship
+      needs to be placed on the <span class="snippet">Person</span> type:
+    </p>
+
+    <pre class="code">
+      type Person {
+        name: String!
+        age: Int!
+        posts: [Post!]!
+      }
+    </pre>
+
+    <p class="text">
+      Note that we just created a
+      <span class="snippet">
+        <a
+          href="https://fmhelp.filemaker.com/help/18/fmp/en/index.html#page/FMP_Help/one-to-many-relationships.html"
+          target="_blank"
+          >one-to-many-relationship</a
+        >
+      </span>
+      between <span class="snippet">Person</span> and
+      <span class="snippet">Post</span> since the
+      <span class="snippet">posts</span> field on
+      <span class="snippet">Person</span> is actually an
+      <span class="snippet">array of posts</span>.
+    </p>
+
+    <p class="text bold">Fetching Data with Queries</p>
+
+    <p class="text">
+      When working with <span class="snippet">REST APIs</span>, data is loaded
+      from specific endpoints. Each endpoint has a clearly defined structure of
+      the information that it returns. This means that the data requirements of
+      a client are effectively encoded in the URL that it connects to.
+    </p>
+
+    <p class="text">
+      The <span class="snippet">approach</span> that's taken in
+      <span class="snippet">GraphQL</span> is radically different.
+      <span class="snippet">Instead</span> of having
+      <span class="snippet">multiple endpoints</span> that return fixed data
+      structures, <span class="snippet">GraphQL APIs</span> typically only
+      expose a <span class="snippet">single endpoint</span>. This works because
+      the <span class="snippet">structure</span> of the data that's returned is
+      not fixed. Instead, it's completely
+      <span class="snippet">flexible</span> and lets the client decide what data
+      is actually needed.
+    </p>
+
+    <p class="text">
+      That means that the <span class="snippet">client</span> needs to
+      <span class="snippet">send</span> more
+      <span class="snippet">information</span> to the
+      <span class="snippet">server</span> to
+      <span class="snippet">express its data needs</span> - this information is
+      called a <span class="snippet">query</span>.
+    </p>
+
+    <p class="text bold">Basic Queries</p>
+
+    <p class="text">
+      Let's take a look at an example query that a client could send to a
+      server:
+    </p>
+
+    <pre class="code">
+      {
+        allPersons {
+          name
+        }
+      }
+    </pre>
+
+    <p class="text">
+      The <span class="snippet">allPersons</span>
+      <span class="snippet">field</span> in this query is called the
+      <span class="snippet">root field</span> of the query. Everything that
+      follows the <span class="snippet">root field</span>, is called the
+      <span class="snippet">payload</span>
+      of the query. The only field that's specified in this query's
+      <span class="snippet">payload</span> is <span class="snippet">name</span>.
+    </p>
+    <p class="text">
+      This <span class="snippet">query</span> would
+      <span class="snippet">return</span> a <span class="snippet">list</span> of
+      all <span class="snippet">persons</span> currently stored in the database.
+      Here's an example response:
+    </p>
+
+    <pre class="code">
+      {
+        "allPersons": [
+          { "name": "Johnny" },
+          { "name": "Sarah" },
+          { "name": "Alice" }
+        ]
+      }
+    </pre>
+
+    <p class="text">
+      Notice that each <span class="snippet">person</span> only has the
+      <span class="snippet">name</span> in the response, but the age is not
+      returned by the server. That's exactly because name was the only field
+      that was specified in the query.
+    </p>
+
+    <p class="text">
+      If the client also needed the persons' <span class="snippet">age</span>,
+      all it has to do is slightly adjust the
+      <span class="snippet">query</span> and include the
+      <span class="snippet">new field</span> in the
+      <span class="snippet">query's payload</span>:
+    </p>
+
+    <pre class="code">
+      {
+        allPersons {
+          name
+          age
+        }
+      }
+    </pre>
+
+    <p class="text">
+      One of the major <span class="snippet">advantages</span> of
+      <span class="snippet">GraphQL</span> is that it allows for naturally
+      querying nested information. For example, if you wanted to load
+      <span class="snippet">all the posts</span> that a
+      <span class="snippet">Person</span> has written, you could simply follow
+      the structure of your types to request this information:
+    </p>
+    <pre class="code">
+      {
+        allPersons {
+          name
+          age
+          posts {
+            title
+          }
+        }
+      }
+    </pre>
+
+    <p class="text bold">Queries with Arguments</p>
+
+    <p class="text">
+      In <span class="snippet">GraphQL</span>, each field can have
+      <span class="snippet">zero or more arguments</span> if that's
+      <span class="snippet">specified</span> in the
+      <span class="snippet">schema</span>. For example, the
+      <span class="snippet">allPersons</span> field could have a last parameter
+      to only return up to a specific number of persons. Here's what a
+      corresponding query would look like:
+    </p>
+    <pre class="code">
+      {
+        allPersons(last: 2) {
+          name
+        }
+      }
+    </pre>
+
+    <p class="text bold">Writing Data with Mutations</p>
+    <p class="text">
+      Next to requesting information from a server, the majority of applications
+      also need some way of making changes to the data that's currently stored
+      in the backend. With <span class="snippet">GraphQL</span>, these changes
+      are made using so-called mutations. There generally are three kinds of
+      <span class="snippet">mutations</span>:
+      <br />
+      . creating new data
+      <br />
+      . updating existing data
+      <br />
+      . deleting existing data
+    </p>
+    <p class="text">
+      <span class="snippet">Mutations</span> follow the
+      <sspan class="snippet">ame syntactical structure as queries</sspan>, but
+      they always need to start with the
+      <span class="snippet">mutation</span> keyword. Here's an example for how
+      we might create a new Person:
+    </p>
+    <pre class="code">
+      mutation {
+        createPerson(name: "Bob", age: 36) {
+          name
+          age
+        }
+      }
+    </pre>
+    <p class="text">
+      Notice that <span class="snippet">similar</span> to the
+      <span class="snippet">query</span> we wrote before, the
+      <span class="snippet"></span> also has a
+      <span class="snippet">root field</span> - in this case it's called
+      <span class="snippet">createPerson</span>. We also already learned about
+      the concepts of <span class="snippet">arguments</span> for fields. In this
+      case, the <span class="snippet">createPerson</span> field takes
+      <span class="snippet">two arguments</span> that specify the new person's
+      <span class="snippet">name</span> and <span class="snippet">age</span>.
+    </p>
+  </body>
+</html>
+
+<!-- https://www.howtographql.com/advanced/5-common-questions/ -->

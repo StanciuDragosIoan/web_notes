@@ -86,12 +86,16 @@ body {
 }
 
 .bold {
-  font-weight: 800;
+  font-weight: 800 !important;
 }
 
 .thumbnail {
   max-width: 20rem !important;
   padding-top: 2rem;
+}
+
+.underline {
+  text-decoration: underline;
 }
 
 .link {
