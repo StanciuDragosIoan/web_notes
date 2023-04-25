@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/css/main.css" type="text/css" />
+  <title>Oauth2</title>
+</head>
+
+<body>
+  <h1 class="header">Oauth2</h1>
+  <p class="text">
+    <span class="snippet">OAuth 2.0</span> is the industry-standard protocol for authorization.
+    <br />
+    <span class="snippet">OAuth 2.0</span> focuses on client developer simplicity while providing specific authorization
+    flows for web applications, desktop applications, mobile phones, and living room devices.
+  </p>
+  <p class="text">
+    <span class="snippet">OAuth2.0</span> is a delegated authorisation framework. This means it allows application A to
+    access resources hosted by application B on behalf of a resource owner.
+  </p>
+  <p class="text center bold">
+    What is OAuth2?
+  </p>
+  <p class="text">
+    <span class="snippet">OAuth2.0</span> is a delegated authorisation framework. This means it allows application A to
+    access resources hosted by application B on behalf of a resource owner.
+  </p>
+  <p class="text">
+    Let's imagine we have a basic application, <span class="snippet">'Example App'</span>. Example App (application A)
+    would like to access some of a
+    user's (resource owner's) information currently hosted on <span class="snippet">Google</span> (application B). A
+    screen showing Example App
+    requesting access to the information Google holds on the user is below:
+  </p>
+  <div class="devPic">
+    <img src="./img/google.png" alt="">
+  </div>
+
+  <p class="text">
+    The user grants Example App access to some of their information they stored in Google (in this case their basic
+    profile info and email address). However, how does Example App retrieve this information, and how does Google know
+    to allow Example App access? This is the role of OAuth2.0.
+  </p>
+
+  <p class="text center">
+    Key concepts:
+  </p>
+  <p class="text">
+    Authentication:
+    <br />
+    Making sure you are who you say you are.
+  </p>
+
+  <p class="text">
+    Authorisation:
+    <br />
+    Making sure you are only allowed to do what you're supposed to.
+  </p>
+
+  <p class="text">
+    <span class="snippet"> OAuth2.0</span> is a framework for <span class="snippet">authorisation</span> and <span
+      class="snippet">not
+      authentication</span>. It allows an
+    application (Example App) access to
+    resources (basic profile info and email address) hosted by another application (Google). Google might handle the
+    authentication component, but this is outside OAuth2.0.
+  </p>
+  <p class="text">
+    Therefore, <span class="snippet">OAuth2.0 </span> cares about what you can do, but not who you are.
+  </p>
+
+  <p class="text center bold">
+    Basic OAuth2.0
+  </p>
+
+  <p class="text">
+    To introduce the main components of the framework, let's employ a popular analogy: visiting a hotel.
+  </p>
+
+  <p class="text">
+    We (the <span class="snippet">client</span>) are visiting a hotel (so we request access to <span
+      class="snippet">hotel resources</span> and the
+    hotel is their <span class="snippet">'owner'</span>).
+    <br />
+    We go to the front desk (this is the <span class="snippet">authorization server</span> responsible for giving access
+    to resources)
+    and it gives us a key card (this is an <span class="snippet">access token</span> a resource that the resource server
+    will check to see if we can access certain resources or not).
+    <br />
+    With the key from the front desk we can access the hotel's gym, sauna or bar (these are <span class="snippet">the
+      server resources</span>).
+    <br />
+    The resources will also have <span class="snippet">scopes</span> of access (saying what we can and cannot do with
+    the resource) for instance we can order a drink at the bar but not sleep on it.
+  </p>
+
+  <p class="text">
+    The order in which we do these teps is known as <span class="snippet">grant type/flows</span> and the picture below
+    illustrates it:
+  </p>
+  <div class="devPic">
+    <img src="./img/grant_flows.png" alt="">
+  </div>
+</body>
+
+<!-- https://jc1175.medium.com/a-crash-course-in-oauth-c4c00e418db0` -->
+
+</html>
