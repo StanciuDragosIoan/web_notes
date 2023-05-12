@@ -89,6 +89,12 @@ body {
   font-weight: 800 !important;
 }
 
+.title {
+  text-align: center;
+  font-size:2rem;
+  font-weight: 900;
+}
+
 .thumbnail {
   max-width: 20rem !important;
   padding-top: 2rem;
