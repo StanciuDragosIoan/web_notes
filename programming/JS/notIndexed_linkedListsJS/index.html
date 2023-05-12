@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../../../assets/css/main.css" type="text/css" />
+    <title>LinkedLists JS</title>
+</head>
+
+<body>
+    <h1 class="header">LinkedLists JS</h1>
+
+    <p class="text">
+        What is a <span class="snippet">Linked List</span>?
+    </p>
+    <p class="text">
+        A <span class="snippet">linked list</span> is a linear <span class="snippet">data structure</span> similar to an
+        array. However, unlike
+        arrays, elements are not stored in
+        a particular memory location or index. Rather each element is a separate object that contains a pointer or a
+        link to the next object in that list.
+    </p>
+    <p class="text">
+        Each element (commonly called nodes) contains two items: the <span class="snippet">data</span> stored and a
+        <span class="snippet">link</span>
+        to the next node. The data
+        can be any valid data type. You can see this illustrated in the diagram below.
+    </p>
+    <div class="devPic">
+        <img src="./img/Group_14_5_bvpwu0.png" alt="">
+    </div>
+    <p class="text">
+        The entry point to a linked list is called the head. The head is a reference to the first node in the linked
+        list. The last node on the list points to null. If a list is empty, the head is a null reference.
+    </p>
+    <p class="text">
+        In JavaScript, a linked list looks like this:
+    </p>
+    <pre class="code">
+        const list = {
+            head: {
+                value: 6
+                next: {
+                    value: 10                                             
+                    next: {
+                        value: 12
+                        next: {
+                            value: 3
+                            next: null	
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    </pre>
+</body>
+
+</html>

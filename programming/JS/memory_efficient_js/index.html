@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../../../assets/css/main.css" type="text/css" />
+    <title>Memory Efficient JS</title>
+</head>
+
+<body>
+    <h1 class="header">Memory Efficient JS</h1>
+
+    <p class="text">
+        <span class="snippet">JavaScript engines</span> such as Google's V8 (Chrome, Node) are specifically <span
+            class="snippet">designed</span> for
+        the fast execution of large
+        JavaScript applications.
+        <br /> As you develop, if you care about memory usage and performance, you should be aware of
+        some of what's going on in your user's browser's JavaScript engine behind the scenes.
+    </p>
+
+    <p class="text">
+        Whether it's <span class="snippet">V8</span>, <span class="snippet">SpiderMonkey</span> (Firefox), <span
+            class="snippet">Carakan</span>
+        (Opera), <span class="snippet">Chakra</span> (IE) or something
+        else, doing so can help you
+        better optimize your applications. That's not to say one should optimize for a single browser or engine. Never
+        do that.
+    </p>
+    <p class="text">
+        Questions we should ask ourselves about our code:
+        <br />
+        . Is there anything I could be doing more efficiently in my code?
+        <br />
+        . What (common) optimizations do popular JavaScript engines make?
+        <br />
+        . What is the engine unable to optimize for, and is the garbage collector able to clean up what I’m expecting it
+        to?
+    </p>
+
+    <p class="text">
+        There are some common pitfalls when it comes to writing memory-efficient and fast code
+    </p>
+
+    <p class="text center bold">
+        So, How Does <span class="snippet">JavaScript</span> Work In <span class="snippet">V8</span>?
+    </p>
+    <p class="text">
+        <span class="snippet">V8</span> is made of a few core pieces:
+    </p>
+    <p class="text">
+        * A <span class="snippet">base compiler</span>, which <span class="snippet">parses</span> your <span
+            class="snippet">JavaScript</span> and
+        <span class="snippet">generates native machine code</span>
+        before it is executed, rather
+        than executing bytecode or simply interpreting it. This code is initially not highly optimized.
+        <br> <br>
+
+        * <span class="snippet">V8</span> represents your objects in an <span class="snippet">object model</span>.
+        <span class="snippet">Objects</span> are represented as
+        <span class="snippet">associative arrays </span> in JavaScript,
+        but in <span class="snippet">V8</span> they are represented with <span class="snippet">hidden classes</span>,
+        which are an <span class="snippet">internal type
+            system for optimized lookups</span>.
+
+        <br> <br>
+        * The <span class="snippet">runtime profiler</span> monitors the system being run and <span
+            class="snippet">identifies “hot” functions</span>
+        (i.e. code that ends up
+        spending a long time running).
+
+        <br> <br>
+        * An <span class="snippet">optimizing compiler</span> recompiles and <span class="snippet">optimizes</span> the
+        <span class="snippet">“hot” code</span> identified by the
+        runtime profiler, and <span class="snippet">performs
+            optimizations</span> such as inlining (i.e. replacing a function call site with the body of the callee).
+
+        <br> <br>
+        *<span class="snippet">V8</span> supports <span class="snippet">deoptimization</span>, meaning the optimizing
+        compiler can bail out of code
+        generated if it discovers that
+        some of the assumptions it made about the optimized code were too optimistic.
+        <br> <br>
+
+
+        * It has a <span class="snippet">garbage collector</span>. Understanding how it works can be just as important
+        as the optimized JavaScript.
+    </p>
+
+    <p class="text center">Garbage Collection</p>
+    <p class="text">
+        <span class="snippet"> Garbage collection</span> is a form of <span class="snippet">memory management</span>.
+        It's where we have the notion
+        of a collector which <span class="snippet">attempts
+            to reclaim memory occupied by objects that are no longer being used</span>. In a garbage-collected language
+        such as
+        JavaScript, <span class="snippet">objects that are still referenced by your application are not cleaned
+            up</span>.
+    </p>
+    <p class="text">
+        <span class="snippet"> Manually de-referencing </span> objects is <span class="snippet">not necessary</span> in
+        most cases.
+        <br /> By simply <span class="snippet">putting
+            the variables where they need
+            to be</span> (ideally, <span class="snippet">as local as possible</span>, i.e. inside the function where
+        they are used versus an outer
+        scope),
+        things should just work.
+    </p>
+    <p class="text">
+        It's <span class="snippet">not possible</span> to <span class="snippet">force garbage collection</span> in
+        JavaScript. You wouldn't want to
+        do this, because the <span class="snippet">garbage
+            collection process</span> is <span class="snippet">controlled</span> by the <span
+            class="snippet">runtime</span>, and it generally <span class="snippet">knows
+            best when things should be
+            cleaned up</span>.
+    </p>
+
+    <p class="text bold">
+        DE-REFERENCING MISCONCEPTIONS
+    </p>
+    <p class="text">
+        In quite a few discussions online about reclaiming memory in JavaScript, the <span class="snippet">delete</span>
+        keyword is brought up, as
+        although it was <span class="snippet">supposed</span> to be <span class="snippet">used</span> for just <span
+            class="snippet">removing
+            keys from a map</span>, some
+        developers think you can force
+        de-referencing using it.
+        <br> <span class="snippet">Avoid</span> using <span class="snippet">delete</span> if you can. In the below
+        example, <span class="snippet">delete o.x</span> does a lot
+        more <span class="snippet">harm</span>
+        than good behind the scenes, as it changes o's hidden class and makes it a generic slow object.
+    </p>
+    <pre class="code">
+var o = { x: 1 };
+delete o.x; // true
+o.x; // undefined
+    </pre>
+    <p class="text">
+        That said, you are almost certain to <span class="snippet">find references</span> to <span
+            class="snippet">delete</span> in many popular
+        JavaScript <span class="snippet">libraries</span> - it does
+        have a <span class="snippet">purpose</span> in the language.
+        <br />The main <span class="snippet">takeaway</span> here is to <span class="snippet">avoid modifying the
+            structure of hot objects at
+            runtime</span>.
+        <br /><span class="snippet">JavaScript engines</span> can detect such “hot” objects and attempt to optimize
+        them. This is
+        easier if the
+        object's structure doesn't heavily change over its lifetime and delete can trigger such changes.
+    </p>
+    <p class="text">
+        There are also misconceptions about how <span class="snippet">null</span> works. Setting an object reference to
+        <span class="snippet">null</span> doesn't “null” the
+        object. It <span class="snippet">sets</span> the <span class="snippet">object reference</span> to <span
+            class="snippet">null</span>. Using
+        o.x = null is <span class="snippet">better than using
+            delete</span>, but it's probably
+        not even necessary.
+    </p>
+    <pre class="code">
+var o = { x: 1 };
+o = null;
+o; // null
+o.x // TypeError
+    </pre>
+    <p class="text">
+        If this reference was the <span class="snippet">last reference</span> to the object, the object is then <span
+            class="snippet">eligible
+            for garbage collection</span>. If
+        the reference was not the <span class="snippet">last reference</span> to the object, the object is reachable and
+        will <span class="snippet">not</span> be <span class="snippet">garbage
+            collected</span>.
+    </p>
+    <p class="text">
+        Another important note to be aware of is that <span class="snippet">global variables</span> are <span
+            class="snippet">not cleaned up
+            by the garbage collector</span>
+        during the life of your page. Regardless of how long the page is open, <span class="snippet"> variables scoped
+        </span><span class="snippet">to</span> the JavaScript
+        <span class="snippet">runtime global</span> object will stick around.
+    </p>
+    <pre class="code">
+        var myGlobalNamespace = {};
+    </pre>
+    <p class="text">
+        <span class="snippet">Globals</span> are <span class="snippet">cleaned up</span> when you <span
+            class="snippet">refresh the page</span>,
+        <span class="snippet">navigate</span> to a <span class="snippet">different page</span>,
+        <span class="snippet">close tabs</span> or <span class="snippet">exit</span> your browser.
+        <span class="snippet">Function-scoped</span> variables get <span class="snippet">cleaned up</span> when a
+        <span class="snippet">variable falls out of scope</span>. When
+        <span class="snippet">functions have exited</span> and
+        there aren't any more references to it, the variable gets <span class="snippet">cleaned up</span>.
+    </p>
+    <p class="text bold">
+        RULES OF THUMB
+    </p>
+    <p class="text">
+        To give the <span class="snippet">garbage collector</span> a <span class="snippet">chance</span> to <span
+            class="snippet">collect</span> as
+        many objects as possible as
+        <span class="snippet">early</span> as possible, don't hold
+        on to objects you no longer need. This mostly happens automatically; here are a few things to keep in mind.
+    </p>
+    <p class="text">
+        As mentioned earlier, a better <span class="snippet">alternative</span> to <span class="snippet">manual
+            de-referencing</span> is to <span class="snippet">use
+            variables with an appropriate
+            scope</span>. I.e. instead of a global variable that's nulled out, just use a function-local variable that
+        goes out of
+        scope when it's no longer needed. This means cleaner code with less to worry about.
+    </p>
+    <p class="text">
+        Ensure that you're <span class="snippet">unbinding event listeners</span> where they are no longer required,
+        especially when the DOM objects
+        they're bound to are about to be removed.
+    </p>
+    <p class="text">
+        If you're using a data cache locally, make sure to clean that cache or use an aging mechanism to avoid large
+        chunks of data being stored that you're unlikely to reuse
+    </p>
+    <p class="text bold">
+        FUNCTIONS
+    </p>
+    <p class="text">
+        Garbage collection works by reclaiming blocks of memory (objects) which are no longer reachable. To better
+        illustrate this, here are some examples.
+    </p>
+    <pre class="code">
+        function foo() {
+            var bar = new LargeObject();
+            bar.someCall();
+        }
+    </pre>
+    <p class="text">
+        When <span class="snippet">foo</span> returns, the object which <span class="snippet">bar</span> points to is
+        automatically available for
+        garbage collection, because
+        there is nothing left that has a reference to it.
+    </p>
+    <p class="text">
+        Compare this to:
+    </p>
+    <pre class="code">
+        function foo() {
+            var bar = new LargeObject();
+            bar.someCall();
+            return bar;
+        }
+        
+        // somewhere else
+        var b = foo();
+    </pre>
+    <p class="text">
+        We now have a <span class="snippet">reference</span> to the object which <span class="snippet">survives the
+            call</span> and persists until
+        the caller assigns something
+        else to <span class="snippet">b</span> (or <span class="snippet">b</span> goes out of scope).
+    </p>
+    <p class="text bold">
+        CLOSURES:
+    </p>
+    <p class="text">
+        When you see a <span class="snippet">function that returns an inner function</span>, that inner function will
+        have access to the outer scope
+        even after the outer function is executed. This is basically a closure — an expression which can work with
+        variables set within a specific context. For example:
+    </p>
+    <pre class="code">
+        function sum (x) {
+            function sumIt(y) {
+                return x + y;
+            };
+            return sumIt;
+        }
+        
+        // Usage
+        var sumA = sum(4);
+        var sumB = sumA(3);
+        console.log(sumB); // Returns 7
+    </pre>
+    <p class="text">
+        The function object created within the execution context of the call to <span class="snippet">sum</span> can't
+        be garbage collected, as it's
+        referenced by a global variable and is still very much accessible. It can still be executed via sumA(n).
+    </p>
+    <p class="text">
+        Let's look at another example. Here, can we access <span class="snippet">largeStr</span>?
+    </p>
+    <pre class="code">
+        var a = function () {
+            var largeStr = new Array(1000000).join('x');
+            return function () {
+                return largeStr;
+            };
+        }();
+    </pre>
+    <p class="text">
+        Yes, we can, via <span class="snippet">a()</span>, so it's not collected. How about this one?
+    </p>
+    <pre class="code">
+        var a = function () {
+            var smallStr = 'x';
+            var largeStr = new Array(1000000).join('x');
+            return function (n) {
+                return smallStr;
+            };
+        }();
+    </pre>
+    <p class="text">
+        We can't access it anymore (as it is not returned in the 'returned' function) and it's a candidate for garbage
+        collection.
+    </p>
+    <p class="text">
+        TIMERS
+    </p>
+    <p class="text">
+        One of the worst places to leak is in a loop, or in <span class="snippet">setTimeout()/setInterval()</span>, but
+        this is quite common.
+    </p>
+    <p class="text">
+        Consider the following example.
+    </p>
+    <pre class="code">
+        var myObj = {
+            callMeMaybe: function () {
+                var myRef = this;
+                var val = setTimeout(function () {
+                    console.log('Time is running out!');
+                    myRef.callMeMaybe();
+                }, 1000);
+            }
+        };
+    </pre>
+    <p class="text">
+        If we then run:
+    </p>
+    <pre class="code">
+        myObj.callMeMaybe();
+    </pre>
+    <p class="text">
+        to begin the timer, we can see every second “Time is running out!” If we then run:
+    </p>
+    <pre class="code">
+        myObj = null;
+    </pre>
+    <p class="text">
+        The timer will still fire. <span class="snippet">myObj</span> won't be garbage collected as the closure passed
+        to <span class="snippet">setTimeout</span> has to be kept
+        alive in order to be executed. In turn, it holds references to myObj as it captures <span
+            class="snippet">myRef</span>. This would be the
+        same if we'd passed the closure to any other function, keeping references to it.
+    </p>
+    <p class="text">
+        It is also worth keeping in mind that references inside a <span class="snippet">setTimeout/setInterval</span>
+        call, such as functions, will
+        need to execute and complete before they can be garbage collected.
+    </p>
+    <p class="text">
+        Be Aware Of Performance Traps
+    </p>
+    <p class="text">
+        It's important <span class="snippet">never to optimize</span> code until you actually <span
+            class="snippet">need</span> to. This can't be
+        stressed enough. It's easy to
+        see a number of micro-benchmarks showing that N is more optimal than M in <span class="snippet">V8</span>, but
+        test it in a real module of
+        code or in an actual application, and the true impact of those optimizations may be much more minimal than you
+        were expecting.
+    </p>
+    <p class="text">
+        Let's say we want to create a module which:
+    </p>
+    <p class="text">
+        * Takes a local source of data containing items with a numeric ID,
+    </p>
+    <p class="text">
+        * Draws a table containing this data,
+    </p>
+    <p class="text">`
+        * Adds event handlers for toggling a class when a user clicks on any cell.
+    </p>
+    <p class="text">
+        There are a few different <span class="snippet">factors</span> to this problem, even though it's quite
+        straightforward to solve. <span class="snippet">How</span> do we
+        <span class="snippet">store</span> the <span class="snippet">data</span>? <span class="snippet">How</span> do we
+        efficiently <span class="snippet">draw the table</span>
+        and append it to the <span class="snippet">DOM</span>?
+        <span class="snippet">How</span> do we <span class="snippet">handle events</span> on this
+        table optimally?
+    </p>
+    <p class="text">
+        Note: This is NOT what you should be doing
+    </p>
+    <pre class="code">
+        var moduleA = function () {
+
+            return {
+        
+                data: dataArrayObject,
+        
+                init: function () {
+                    this.addTable();
+                    this.addEvents();
+                },
+        
+                addTable: function () {
+        
+                    for (var i = 0; i &lt; rows; i++) {
+                        $tr = $('&lt;tr>&lt;/tr&gt;');
+                        for (var j = 0; j &lt; this.data.length; j++) {
+                            $tr.append('&lt;td&gt;' + this.data[j]['id'] + '&lt;/td&gt;');
+                        }
+                        $tr.appendTo($tbody);
+                    }
+        
+                },
+                addEvents: function () {
+                    $('table td').on('click', function () {
+                        $(this).toggleClass('active');
+                    });
+                }
+        
+            };
+        }();
+    </pre>
+    <p class="text">
+        Simple, but it gets the job done.
+    </p>
+    <p class="text">
+        In this case however, the only <span class="snippet">data</span> we're iterating are <span
+            class="snippet">IDs</span>, a numeric property
+        which could be more simply
+        represented in a standard array. Interestingly, directly using <span class="snippet">DocumentFragment</span> and
+        native <span class="snippet">DOM methods</span>
+        <arespan class="snippet"> more
+            optimal</arespan> than using <span class="snippet">jQuery</span> (in this manner) for our table generation,
+        and of course, <span class="snippet">event
+            delegation</span> is
+        typically more performant than binding each td individually.
+    </p>
+    <p class="text">
+        Note that <span class="snippet">jQuery</span> does use <span class="snippet">DocumentFragment</span> internally
+        behind the scenes, but in our
+        example, the code is calling
+        <span class="snippet">append()</span> within a loop and each of these calls has little knowledge of the other so
+        it may not be
+        able to
+        optimize for this example. This should hopefully not be a pain point, but be sure to benchmark your own code to
+        be sure.
+    </p>
+    <p class="text">
+        In our case, adding in these changes results in some good (expected) performance gains. Event delegation
+        provides decent improvement over simply binding, and opting for <span class="snippet">documentFragment</span>
+        was a real booster.
+    </p>
+    <pre class="code">
+        var moduleD = function () {
+
+            return {
+        
+                data: dataArray,
+        
+                init: function () {
+                    this.addTable();
+                    this.addEvents();
+                },
+                addTable: function () {
+                    var td, tr;
+                    var frag = document.createDocumentFragment();
+                    var frag2 = document.createDocumentFragment();
+        
+                    for (var i = 0; i < rows; i++) {
+                        tr = document.createElement('tr');
+                        for (var j = 0; j < this.data.length; j++) {
+                            td = document.createElement('td');
+                            td.appendChild(document.createTextNode(this.data[j]));
+        
+                            frag2.appendChild(td);
+                        }
+                        tr.appendChild(frag2);
+                        frag.appendChild(tr);
+                    }
+                    tbody.appendChild(frag);
+                },
+                addEvents: function () {
+                    $('table').on('click', 'td', function () {
+                        $(this).toggleClass('active');
+                    });
+                }
+        
+            };
+        
+        }();
+    </pre>
+    <p class="text">
+        We might then look to other ways of improving performance. You may have read somewhere that using the prototypal
+        pattern is more optimal than the module pattern (we confirmed it wasn't earlier), or heard that using JavaScript
+        templating frameworks are highly optimized. Sometimes they are, but use them because they make for readable
+        code. Also, precompile!. Let's test and find out how true this hold in practice.
+    </p>
+    <pre class="code">
+moduleG = function () {};
+
+moduleG.prototype.data = dataArray;
+moduleG.prototype.init = function () {
+    this.addTable();
+    this.addEvents();
+};
+moduleG.prototype.addTable = function () {
+    var template = _.template($('#template').text());
+    var html = template({'data' : this.data});
+    $tbody.append(html);
+};
+moduleG.prototype.addEvents = function () {
+   $('table').on('click', 'td', function () {
+       $(this).toggleClass('active');
+   });
+};
+
+var modG = new moduleG();
+    </pre>
+    <p class="text">
+        As it turns out, in this case the performance benefits are negligible. Opting for <span
+            class="snippet">templating</span> and <span class="snippet">prototypes</span>
+        didn't really offer anything more than what we had before. That said, performance isn't really the reason modern
+        developers use either of these things — it's the readability, inheritance model and maintainability they bring
+        to your codebase.
+    </p>
+    <p class="text">
+        More complex <span class="snippet">problems</span> include efficiently <span class="snippet">drawing
+            images</span> using <span class="snippet">canvas</span> and
+        manipulating <span class="snippet">pixel data</span> with or
+        without <span class="snippet">typed arrays</span>.
+    </p>
+
+    <p class="text bold">
+        V8 Optimization Tips
+    </p>
+    <p class="text">
+        Certain patterns will cause <span class="snippet">V8</span> to bail out of optimizations. A <span
+            class="snippet">try-catch</span>, for
+        example, will cause such a
+        bailout. For more information on what functions can and can't be optimized, you can use --trace-opt file.js with
+        the d8 shell utility that comes with V8.
+    </p>
+    <p class="text">
+        If you care about speed, try very hard to keep your functions <span class="snippet">monomorphic</span>, i.e.
+        make sure that variables
+        (including properties, arrays and function parameters) only ever contain objects with the same hidden class. For
+        example, don't do this:
+    </p>
+    <pre class="code">
+        function add(x, y) {
+            return x+y;
+         }
+         
+         add(1, 2);
+         add('a','b');
+         add(my_custom_object, undefined);
+    </pre>
+    <p class="text">
+        Don't load from uninitialized or deleted elements. This won't make a difference in output, but it will make
+        things slower.
+    </p>
+    <p class="text">
+        Don't write enormous functions, as they are more difficult to optimize
+    </p>
+    <p class="text">
+        OBJECTS VS. ARRAYS: WHICH SHOULD I USE?
+    </p>
+    <p class="text">
+        If you want to <span class="snippet">store</span> a bunch of <span class="snippet">numbers</span>, or a list of
+        <span class="snippet">objects of the same type</span>, use
+        an <span class="snippet">array</span>.
+    </p>
+    <p class="text">
+        If what you semantically need is an <span class="snippet">object</span> with a bunch of <span
+            class="snippet">properties</span> (of varying
+        types), use an object with
+        properties. That's pretty efficient in terms of memory, and it's also pretty fast.
+    </p>
+</body>
+
+</html>
