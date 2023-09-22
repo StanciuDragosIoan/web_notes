@@ -40,7 +40,7 @@ body {
 .header {
   padding: 5rem;
   font-size: 4rem;
-  line-height: 2rem;
+  line-height: 3.5rem;
   background: #fff;
   text-align: center;
   max-width: 1138px;
@@ -91,7 +91,7 @@ body {
 
 .title {
   text-align: center;
-  font-size:2rem;
+  font-size: 2rem;
   font-weight: 900;
 }
 

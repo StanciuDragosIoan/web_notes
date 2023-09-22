@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/main.css" type="text/css" />
+    <title>Algorithms</title>
+  </head>
+  <body>
+    <h1 class="header">Algorithms and Data Structures</h1>
+
+    <p class="text">
+      We will be looking at some of the most common algorithms using TypeScript.
+    </p>
+    <p class="text">
+      Fun fact! In JavaScript we cannot create a map. So we cannot distinguish
+      between 2 identhical objects as so:
+    </p>
+
+    <pre class="code">
+      const a =  {
+          foo: "test123"
+        }
+
+      const b =  {
+          foo: "test123"
+        }
+
+      console.log(a === b);//false
+      console.log(a == b); //false
+        </pre
+    >
+
+    <p class="text">
+      In <span class="snippet">JS</span> there is no way to distinguish between
+      identhical objects.
+    </p>
+
+    <p class="text center title">Big O</p>
+
+    <p class="text">
+      <span class="snippet">Big O</span> notation is a way to express how an
+      algorithm will peform with different inputs. It helps us decide which data
+      structure to use for a better algorithm.
+      <br />
+      If the input size grows, how fast does computation or memory use grow?
+    </p>
+
+    <p class="text">Here's an example:</p>
+    <pre class="code">
+      function sum_char_codes(n:string): number {
+        let sum = 0;
+
+        for (let i = 0; i &lt; n.length; i++) {
+          sum += n.charCodeAt(i);
+        }
+
+        return sum;
+      }
+    </pre>
+
+    <p class="text">
+      * this algorithm is of <span class="snippet">O(n)</span> complexity.
+    </p>
+
+    <p class="text">
+      Here's an example using <span class="snippet">2xO(n)</span> complexity:
+    </p>
+    <pre class="code">
+      function sum_char_codes_2xO(N)(n: string): number {
+        let sum = 0;
+      
+        for (let i = 0; i &lt; n.length; i++) {
+          sum += n.charCodeAt(i);
+        }
+      
+        for (let i = 0; i &lt; n.length; i++) {
+          sum += n.charCodeAt(i);
+        }
+      
+        return sum;
+      }
+    </pre>
+    <p class="text">
+      This is <span class="snippet">2XO(n)</span> as we loop twice through the
+      data set.
+    </p>
+    <p class="text">
+      It is also important to remember that in theory constants can get dropped
+      (as the algorithm's performance does not change). It will just iterate
+      over a larger data set (but it does not necessarily go 'slower').
+    </p>
+    <p class="text">
+      However, in practice the constants do matter. For instance
+      <span class="snippet">O(N)</span> is faster than
+      <span class="snippet">O(n^2)</span> but the algorightm will peform in the
+      same way.
+    </p>
+    <p class="text">Another example would be the following:</p>
+    <p class="text">
+      Often we will use <span class="snippet">insertion sort</span> for smaller
+      sets of data, because <span class="snippet">insertion sort</span> although
+      slower in theory as it is <span class="snippet">N^2 </span> it will be
+      faster than <span class="snippet">quicksort</span> which is
+      <span class="snippet">Log(N)</span> when it comes to smaller data sets
+      because practically speaking sometimes things that are
+      <span class="snippet">N^2</span> are faster than
+      <span class="snippet">N</span> (because <span class="snippet">N</span> is
+      sufficiently smaller and the constant that is dropped is larger enough so
+      it makes real speed impact).
+    </p>
+    <p class="text">
+      *Note that in computer science <span class="snippet">log(N)</span> refers
+      to <span class="snippet">base 2</span> so
+      <span class="snippet">log(1000)</span> will be
+      <span class="snippet">3</span>.
+    </p>
+    <p class="text">
+      An example using <span class="snippet">O(N)</span> complexity:
+    </p>
+    <pre class="code">
+      function sum_char_codes_O_of_N(n: string): number {
+        let sum = 0;
+      
+        for (let i = 0; i < n.length; i++) {
+          const charCode = n.charCodeAt(i);
+          //capital E
+          if (charCode === 69) {
+            return sum;
+          }
+        }
+      
+        return sum;
+      }
+    </pre>
+    <p class="text">
+      Running time of this will be <span class="snippet">O(N) </span> because we
+      will loop through the whole string in worst case scenario.
+    </p>
+    <p class="text">
+      Concepts to remain with regarding
+      <span class="snippet">Big O</span> notation:
+    </p>
+    <p class="text">1. Growth with respect to input</p>
+    <p class="text">2. Constants are dropped</p>
+    <p class="text">3. Worst case scenarios is usually what we measure</p>
+
+    <p class="text title">Common complexities</p>
+    <p class="text">
+      <span class="snippet">O(1)</span> - no matter how big the input, it will
+      do the same number of operations
+    </p>
+    <p class="text"><span class="snippet">O(logn)</span> - base 2 log ()</p>
+    <p class="text">
+      <span class="snippet"> O(N)</span> - computation requirements grow with
+      respect to the input (more input --&gt; more operations)
+    </p>
+    <p class="text">
+      <span class="snippet">O(NlogN)</span> same as 2nd example but multiplied
+      by <span class="snippet">N</span>
+    </p>
+    <p class="text">
+      <span class="snippet">O(N^)</span> - O N squared grows very fast
+    </p>
+    <p class="text">
+      <span class="snippet">O(2N^)</span> - grows twice as fast as the 1 above
+    </p>
+    <p class="text">
+      O(N!) - <span class="snippet">N</span> factorial (grows factorially ->
+      insane)
+    </p>
+  </body>
+</html>
