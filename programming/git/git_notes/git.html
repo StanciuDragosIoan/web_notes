@@ -453,5 +453,11 @@
       and you need it too (git only cloned the branches that were in the remote repo at the moment of your cloning so if someone else pushes an extra branch and you need it locally, you need
       to do a <span class="snippet">git fetch</span>).
     </p>
+
+    <p class="center text bold">How squash the last N commits</p>
+    <pre class="code">
+      git reset --soft HEAD~3 //N here
+      git commit -m 'msg'
+    </pre>
   </body>
 </html>

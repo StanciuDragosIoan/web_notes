@@ -173,5 +173,239 @@
       O(N!) - <span class="snippet">N</span> factorial (grows factorially ->
       insane)
     </p>
+    <p class="text title">Arrays Data Structure</p>
+    <p class="text">In the following example a is not an array:</p>
+    <pre class="code">
+      const a = [];
+    </pre>
+    <p class="text">
+      If it is not an array, then what actually is an
+      <span class="snippet">array</span>?
+    </p>
+    <p class="text">
+      An Array is a <span class="snippet">contiguous</span> (uniterrupted)
+      memory space where we store values. This unbreaking space contains a
+      certain amount of bytes. The most fundamental idea of an array, is that it
+      is a contiguous memory space (unbreaking) memory space in which contains a
+      certain amountof bytes. In the array we basically have zero or more pieces
+      of memory that are understood as a single type in a row.
+    </p>
+    <p class="text">Here's an example:</p>
+    <pre class="code">
+      const a = new ArrayBuffer(6); //this is the contiguous memory space
+      console.log(a); //logs: ArrayBuffer { [Uint8Contents]: <00 00 00 00 00 00>, byteLength: 6 }
+    </pre>
+    <p class="text">
+      This is the memory space and now I will interpret it as an array of 6 8bit
+      integers:
+    </p>
+    <pre class="code">
+      const a8 = new Uint8Array(a); // numbers between 0-255
+      a8[0] = 45;
+      console.log(a); //logs: ArrayBuffer { [Uint8Contents]: <2d 00 00 00 00 00>, byteLength: 6 }
+    </pre>
+    <p class="text">Note how I changed the first element of the array</p>
+    <pre class="code">
+      a8[2] = 45;
+      console.log(a); //logs: ArrayBuffer { [Uint8Contents]: <2d 00 2d 00 00 00>, byteLength: 6 }
+    </pre>
+    <p class="text">
+      Next, let's interpret our array as a 16bit integer array:
+    </p>
+    <pre class="code">
+      const a16 = new Uint16Array(a);
+      console.log(a16); //logs: ArrayBuffer { [Uint8Contents]: <2d 00 2d 00 00 00>, byteLength: 6 }
+    </pre>
+    <p class="text">
+      However, look what happens if I set the position 2 of the new array to a
+      value:
+    </p>
+    <pre class="code">
+      a16[2] 0x4545 // this is 17733
+      //note! how it put it at positions 4 and 5 
+      console.log(a16); //logs: ArrayBuffer { [Uint8Contents]: <2d 00 2d 00 45 45>, byteLength: 6 }
+    </pre>
+    <p class="text">
+      This happened because I interpreted the memory space in 2 different ways
+      (8 bit units or 16 bit units). An array means walking these positions in
+      the memory space. The array data structure 'knows' its data type (8 or 16
+      bit integers in our case) and it walks the memory space by the position we
+      give it (so the index 0, 1, etc..) it multiplies that by the type (so by 8
+      for 8bit integer type or by 16 for 16bit integer and then it edits or gets
+      that value). Even for deletion it simply 'clears' the position in the
+      array memory space.
+    </p>
+
+    <p class="text center">Operations we can do on array</p>
+    <p class="text">
+      <span class="snippet">Reading</span> values from array: the array takes
+      the position we give it, it multiplies by the width of the type (in our
+      example 8 or 16 bit) it has and it retrieves that position.
+    </p>
+    <p class="text">
+      <span class="snippet">Insertion</span> at specific index: insert basically
+      overwrites the position in the array (the array does not 'grow' into more
+      memory).
+    </p>
+    <p class="text">
+      <span class="snippet">Deletion</span>: the program just unallocates/clears
+      the value from the memory space at the respective position (it sets null
+      or 0 in there).
+    </p>
+    <p class="text">
+      The <span class="snippet">BigO</span> of getting the value of an array is
+      constant. (so <span class="snippet">O1</span>).
+    </p>
+
+    <p class="text title">Linear Search</p>
+    <p class="text">
+      This is the most basic type of search algorithm. In it we just loop
+      through all the values of the array, and check if they match the one we
+      are looking for. This algorithm has a time complexity of
+      <span class="snippet">O(N)</span> so its duration grows with the input.
+    </p>
+    <p class="text">A vanilla JS implementation for it looks like this:</p>
+    <pre class="code">
+      const linearSearch = (array, value) => {
+        for (let i = 0; i &lt; array.length; i++) {
+          if (array[i] === value) {
+            return true;
+          }
+        }
+      
+        return false;
+      };
+      
+    </pre>
+
+    <p class="text title">Binary Search</p>
+    <p class="text">
+      In this algorithm we will split the array in 2 and search for our value
+      depending on the middle value of the array. If our value is higher than
+      the middle, we search in 2nd half of the array, else if our value is lower
+      than middle we search in the first half of the array. Upon each comparison
+      with the middle point we need to reset the low or the high point of the
+      array. A pseudo-code implementation would look like so:
+    </p>
+    <div class="devPic">
+      <img src="./img/binary_pseudo.jpeg" alt="" />
+    </div>
+    <p class="text">A binary search TS implementation would look like so:</p>
+    <pre class="code">
+      export default function bs_list(
+        haystack: number[], 
+        needle: number
+      ): boolean {
+        
+        let lo = 0;
+        let hi = haystack.length;
+    
+        do {
+            let m = Math.floor(lo + (hi - lo) / 2);
+            const v = haystack[m];
+            if (v === needle) {
+                return true;
+            } else if (v > needle) {
+                lo = m;
+            } else {
+                lo = m + 1;
+            }
+        } while (lo &lt; hi);
+    
+        return false;
+    }
+    
+    </pre>
+
+    <p class="text title">The two crystal balls problem</p>
+    <p class="text">
+      Given two crystal balls that will break if dropped from high enough
+      distance, determine the exact spot in which it will break in the most
+      optimized way.
+    </p>
+    <p class="text">
+      For this problem we have to think that we'll have an array like so:
+    </p>
+    <pre class="code">
+      [false, false, false, ...., true....]
+    </pre>
+    <p class="text">
+      Note that we have only false values in the array but we will also have 2
+      true values.
+    </p>
+    <p class="text">
+      We could search linearly, or use the binary search but the runtime for
+      this would be too high since we have to be looking for two values. A
+      pseudo-code like implementation of this would be like so:
+    </p>
+    <div class="devPic">
+      <img src="./img/crystal_balls.jpeg" alt="" />
+    </div>
+    <p class="text">
+      As you can see, the most optimal way for this search would be to jump by
+      one square root of the array's length so the runtime of this will be:
+      <span class="snippet">O(&Sqrt;N)</span>
+    </p>
+    <p class="text">An implementation of this algorith would look like so:</p>
+    <pre class="code">
+      export default function two_crystal_balls(breaks: boolean[]): number {
+
+        const jmpAmount = Math.floor(Math.sqrt(breaks.length));
+
+        let i = jmpAmount;
+
+        for(; i< breaks.length; i+= jmpAmount;){
+          if(breaks[i]) {
+            break;
+          }
+        }
+
+        //go back one square root
+        i -= jmpAmount;
+
+        for(let j = 0; j++; j < jmpAmount.length && i < breaks.length; ++j, ++i){
+          if(breaks[i]){
+            return i;
+          }
+        }
+
+        return -1;
+      }
+    </pre>
+
+    <p class="text title">Bubble sort</p>
+    <p class="text">
+      This is a simple sorting algorithm in which we have to traverse the array
+      and to order the elements (so we compare them one by one and if the left
+      side is higher than right side, we swap it).
+    </p>
+    <div class="devPic" style="padding-top: 150px">
+      <img
+        style="transform: rotate(270deg)"
+        src="./img/bubble_sort.jpeg"
+        alt=""
+      />
+    </div>
+    <p class="text" style="padding-top: 180px">
+      So we have two nested loops (we loop once through the array and then
+      inside of that loop we loop through the array - 1 - currentIteration)
+    </p>
+    <div class="devPic" style="padding-top: 150px">
+      <img src="./img/bublle_sort_2.jpeg" alt="" />
+    </div>
+    <p class="text">An implementation of the bubble sort would look like so:</p>
+    <pre class="code">
+      export default function bubble_sort(arr: number[]): void {
+        for (let i = 0; i &lt; arr.length; ++i) {
+            for (let j = 0; j &lt; arr.length - 1 - i; ++j) {
+                if (arr[j] > arr[j + 1]) {
+                    const tmp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = tmp;
+                }
+            }
+        }
+    }
+    </pre>
   </body>
 </html>
