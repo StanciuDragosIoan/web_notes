@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Domine:wght@400;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../../../assets/css/main.css" type="text/css" />
+  <title>Document</title>
+</head>
+
+<body>
+  <h1 class="header">Demystifying the Reactor Design Pattern in Node.js</h1>
+
+  <p class="text">
+    <a target="_blank"
+      href="https://medium.com/@mohamed-khattab/demystifying-the-reactor-design-pattern-in-node-js-a8aabd73a315#:~:text=The%20Reactor%20pattern%20builds%20upon,non%2Dblocking%20and%20asynchronous%20manner.">Link</a>
+  </p>
+
+
+
+  <p class="text">
+    In the ever-accelerating realm of software development, where speed and responsiveness are paramount, the quest for
+    efficient I/O operations becomes a defining challenge. The contrast between lightning-fast in-memory computations,
+    measured in nanoseconds, and the sluggishness of disk or network access, clocking in at milliseconds, is a constant
+    source of concern. Traditional blocking I/O exacerbates this issue, as each operation pauses the program’s execution
+    until completion, leading to potential bottlenecks and diminished performance.
+  </p>
+  <p class="text">
+    In this pursuit of unlocking unprecedented efficiency, the Reactor design pattern emerges as a beacon of hope. This
+    formidable pattern lies at the very core of Node.js, propelling it into the forefront of asynchronous excellence. At
+    its heart, the Reactor pattern embraces non-blocking I/O, a paradigm shift where system calls return immediately,
+    freeing threads to perform other tasks while they await data. This fundamental departure from traditional blocking
+    I/O marks a pivotal moment in how Node.js handles concurrent connections and I/O operations, making it a platform of
+    choice for building highly responsive, scalable applications.
+  </p>
+
+  <p class="text strong center">
+    Blocking I/O vs. Non-Blocking I/O :
+  </p>
+
+  <p class="text">
+    In the traditional blocking I/O model, each operation halts program execution until completion, potentially leading
+    to delays and performance issues. In contrast, non-blocking I/O allows system calls to return immediately,
+    empowering threads to perform other tasks while awaiting data. This paradigm shift enhances resource utilization,
+    concurrency, and responsiveness in Node.js applications.
+  </p>
+
+  <p class="text strong center">
+    How concurrency be handled in a single-threaded
+    application ?
+
+  </p>
+
+  <p class="text">
+    In a single-threaded application, handling concurrency effectively is achieved through a synchronous event
+    demultiplexer or event notification interface. This mechanism allows the application to efficiently manage multiple
+    non-blocking resources without resorting to inefficient busy-waiting techniques.
+  </p>
+
+  <p class="text center bold">
+    Here's how the process unfolds:
+
+    <br>
+    1. Resources, such as sockets or pipes, are added to a data structure along with their associated operations, e.g.,
+    read operations.
+
+    <br>
+
+    2. The event notifier is set up with the group of resources to be watched. It blocks the flow until any of the
+    watched resources is ready for a read. When an event occurs, the event demultiplexer returns, providing a set of
+    events to be processed.
+
+    <br>
+
+    3. Each event returned by the event demultiplexer is processed without blocking, as the resources are guaranteed to
+    be ready to read. If a resource is closed, it is removed from the watched list. Otherwise, the data received is
+    processed accordingly.
+  </p>
+
+  <div class="devPic">
+    <img src="./img/1_Jy70KOheyuyQR5JmXoCkMw.webp" alt="">
+  </div>
+
+  <p class="text">
+    By employing this pattern, a single thread can efficiently handle multiple I/O operations concurrently without
+    resorting to busy-waiting. The event loop ensures that tasks are spread over time, minimizing idle time for the
+    thread.
+  </p>
+
+  <p class="text">
+    This single-threaded concurrency approach in Node.js has multiple benefits. It simplifies concurrency strategies and
+    eliminates in-process race conditions and the complexities associated with managing multiple threads. The absence of
+    these complications allows developers to focus on writing more straightforward and robust code, ultimately leading
+    to a more efficient and scalable application.
+  </p>
+
+  <p class="text center bold">
+    The reactor pattern
+  </p>
+
+  <p class="text">
+    The reactor pattern is an advanced design approach that builds upon the concepts discussed in the preceding section.
+    At its core, the pattern revolves around the concept of a handler, represented in Node.js as a callback function,
+    being linked to each input/output (I/O) operation. The fundamental idea is to efficiently handle events by
+    associating a dedicated callback function with them, which promptly executes when an event is generated and
+    subsequently processed by the event loop. This structure allows for non-blocking and asynchronous handling of I/O
+    operations, making it well-suited for high-performance applications that rely heavily on event-driven programming
+    paradigms. By utilizing the reactor pattern, developers can create more responsive and scalable systems that
+    effectively utilize system resources and optimize the handling of concurrent events.
+  </p>
+
+  <div class="devPic">
+    <img src="./img/reactor_pattern.webp" alt="">
+  </div>
+
+  <p class="text">
+    In an application utilizing the reactor pattern, the process of handling I/O operations follows a well-defined
+    sequence of steps:
+  </p>
+  <p class="text">
+    <br>
+    1. Application Initiates I/O: The application initiates a new I/O operation by submitting a request to the Event
+    Demultiplexer. Along with the request, the application also specifies a corresponding handler function, which will
+    be executed when the operation is completed. It’s important to note that this request submission is a non-blocking
+    call, meaning that the application continues its execution without waiting for the operation to finish.
+
+    <br>
+    2. Event Demultiplexer and Event Queue: The Event Demultiplexer is responsible for monitoring and managing multiple
+    I/O operations. When a set of I/O operations is completed, the Event Demultiplexer forwards the resulting events to
+    the Event Queue.
+
+
+    <br>
+    3. Event Loop Iteration: The Event Loop enters the picture at this point and starts iterating over the items in the
+    Event Queue.
+
+    <br>
+
+    4. Handler Invocation: For each event in the Event Queue, the associated handler function is invoked. The handler
+    function is a part of the application code and performs specific tasks related to the completed I/O operation. The
+    execution of the handler function may involve additional asynchronous operations.
+
+    <br>
+
+    5. Asynchronous Flow: During the execution of the handler function, it can delegate new asynchronous operations. In
+    this case, the application submits new requests to the Event Demultiplexer before the control is returned to the
+    Event Loop. This process continues recursively, enabling a smooth flow of asynchronous operations within the
+    application.
+
+    <br>
+
+    6. Event Loop Continuation: Once all items in the Event Queue are processed, the Event Loop returns to blocking
+    mode, waiting for new events to arrive from the Event Demultiplexer.
+  </p>
+
+  <p class="text">
+    The asynchronous nature of the reactor pattern is evident in the way the application expresses its interest in
+    accessing resources without blocking. Instead, it provides handlers that are executed at a later point in time when
+    the corresponding I/O operations are finished.
+  </p>
+
+  <p class="text">
+    In the context of Node.js, this pattern lies at the core of its design philosophy. Node.js efficiently handles I/O
+    by blocking only when necessary, maximizing resource utilization, and responding to events in a non-blocking and
+    asynchronous manner. As pending operations in the Event Demultiplexer are completed and there are no further events
+    in the Event Queue, the Node.js application automatically exits.
+  </p>
+
+  <pre class="code">
+        alert("Hello World");
+        </pre>
+</body>
+
+</html>
